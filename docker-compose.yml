@@ -1,0 +1,31 @@
+version: "3"
+services:
+  backend:
+    build: ./backend
+    working_dir: /back
+    ports:
+      - 6009:6009
+    environment:
+      PORT: 6009
+    networks:
+      - finanzasNetwork
+    depends_on:
+      - database
+  database:
+    build: ./database
+    hostname: finanzasDB
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: test123
+      MYSQL_DATABASE: db_finanzas
+    volumes:
+      - database_info:/var/lib/mysql
+    networks:
+      - finanzasNetwork
+volumes:
+  database_info:
+
+networks:
+  finanzasNetwork:
+    driver: bridge

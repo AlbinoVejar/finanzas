@@ -1,0 +1,9 @@
+FROM mariadb:lts
+
+#Variadbles
+ENV MYSQL_ROOT_PASSWORD=test123
+ENV MYSQL_DATABASE=db_finanzas
+
+COPY ./scripts/init-script.sql /docker-entrypoint-initdb.d/
+
+EXPOSE 3306
