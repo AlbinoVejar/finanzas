@@ -1,5 +1,9 @@
 import {
   Button,
+  Flex,
+  FormControl,
+  FormHelperText,
+  FormLabel,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -7,6 +11,8 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Select,
+  VStack,
   useDisclosure,
 } from '@chakra-ui/react'
 import React from 'react'
@@ -22,20 +28,49 @@ const ModalExample = () => {
       isCentered
       blockScrollOnMount
       closeOnOverlayClick={false}
-      size='xl'
+      size="xl"
     >
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Title</ModalHeader>
+        <ModalHeader>Agregar gasto</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Porro minus
-          dolores debitis. Ullam, cum quia nemo corrupti, doloremque sequi quod
-          doloribus molestiae nobis quis ipsam fugit, voluptatem quaerat!
-          Molestiae, voluptate.
+          <VStack spacing={2}>
+            <FormControl>
+              <FormLabel>Categoria</FormLabel>
+              <Select placeholder="Select categoria">
+                <option>Example 1</option>
+                <option>Example 2</option>
+              </Select>
+              <FormHelperText>We'll never share your email.</FormHelperText>
+            </FormControl>
+            <FormControl>
+              <FormLabel>Categoria</FormLabel>
+              <Select placeholder="Select categoria">
+                <option>Example 1</option>
+                <option>Example 2</option>
+              </Select>
+              <FormHelperText>We'll never share your email.</FormHelperText>
+            </FormControl>
+          </VStack>
         </ModalBody>
         <ModalFooter>
-          <Button onClick={() => setOpen(false)}>Close</Button>
+          <Flex gap={2}>
+            <Button
+              variant="outline"
+              colorScheme="gray"
+              onClick={() => setOpen(false)}
+            >
+              Cancelar
+            </Button>
+            <Button
+              variant="solid"
+              colorScheme="blue"
+              onClick={() => setOpen(false)}
+            >
+              Agregar
+            </Button>
+          </Flex>
         </ModalFooter>
       </ModalContent>
     </Modal>

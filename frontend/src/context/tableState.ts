@@ -1,0 +1,17 @@
+import { RecoilState, atom, selector } from "recoil";
+import { TableType } from "../types/table.style";
+
+export const TableState: RecoilState<TableType> = atom({
+  key: "tableState",
+  default: {
+    headers: [],
+    data: []
+  }
+});
+
+export const TableSelector = selector({
+  key: "tableSelect",
+  get: ({get}) => {
+    return get(TableState);
+  }
+})
