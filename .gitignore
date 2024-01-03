@@ -1,1 +1,11 @@
 frontend/node_modules
+*.env
+# GO
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out

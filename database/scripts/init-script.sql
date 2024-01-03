@@ -120,7 +120,7 @@ END;
 DELIMITER ;
 
 DELIMITER //
-CREATE PROCEDURE update_ccount(
+CREATE PROCEDURE update_account(
   _id_account integer,
   _name varchar(60),
   _is_credit bool
@@ -142,7 +142,7 @@ BEGIN
 	SELECT *
     FROM categories;
 END;
-//
+//RoutesUser(app)
 DELIMITER ;
 
 DELIMITER //
