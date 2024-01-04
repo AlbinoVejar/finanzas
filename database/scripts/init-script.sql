@@ -142,7 +142,7 @@ BEGIN
 	SELECT *
     FROM categories;
 END;
-//RoutesUser(app)
+//
 DELIMITER ;
 
 DELIMITER //
