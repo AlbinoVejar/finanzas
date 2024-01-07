@@ -12,7 +12,7 @@ create TABLE IF NOT EXISTS users (
   id INTEGER NOT NULL  PRIMARY KEY AUTO_INCREMENT,
   name varchar(60) NOT NULL,
   email varchar (80) NOT NULL,
-  password varchar (20) NOT NULL,
+  password text NOT NULL,
   created_at date NOT NULL DEFAULT CURRENT_DATE(),
   modified date,
   deleted date
@@ -66,7 +66,7 @@ DELIMITER //
 CREATE PROCEDURE create_user(
   _name varchar(60),
   _email varchar(80),
-  _password varchar(20)
+  _password text
 )
 BEGIN
 	INSERT INTO users(name, email, password)
@@ -80,7 +80,7 @@ CREATE PROCEDURE update_user(
   _id_user integer,
   _name varchar(60),
   _email varchar(80),
-  _password varchar(20)
+  _password text
 )
 BEGIN
 	UPDATE users
@@ -139,7 +139,7 @@ DELIMITER ;
 DELIMITER //
 CREATE PROCEDURE get_categories()
 BEGIN
-	SELECT *
+	SELECT id, name, created_at
     FROM categories;
 END;
 //
@@ -157,7 +157,7 @@ END;
 DELIMITER ;
 
 DELIMITER //
-CREATE PROCEDURE Update_Expense(
+CREATE PROCEDURE update_expense(
   _id_expense integer,
   _description text,
   _amount float

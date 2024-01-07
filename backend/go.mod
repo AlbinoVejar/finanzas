@@ -2,6 +2,8 @@ module gitlab.com/AlbinoVejar/finanzas/backend
 
 go 1.21.5
 
+require golang.org/x/crypto v0.17.0
+
 require (
 	github.com/MicahParks/keyfunc/v2 v2.1.0 // indirect
 	github.com/andybalholm/brotli v1.0.6 // indirect
@@ -16,6 +18,7 @@ require (
 	github.com/go-openapi/strfmt v0.21.7 // indirect
 	github.com/go-openapi/swag v0.22.3 // indirect
 	github.com/go-openapi/validate v0.22.1 // indirect
+	github.com/go-sql-driver/mysql v1.7.1 // indirect
 	github.com/gofiber/contrib/jwt v1.0.8 // indirect
 	github.com/gofiber/contrib/swagger v1.1.1 // indirect
 	github.com/gofiber/fiber/v2 v2.51.0 // indirect
