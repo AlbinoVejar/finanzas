@@ -53,6 +53,16 @@ CREATE TABLE IF NOT EXISTS rel_expense (
 
 
 DELIMITER //
+CREATE PROCEDURE login_user(
+  _email varchar(80)
+)
+BEGIN
+	SELECT * FROM users WHERE email like _email;
+END;
+//
+DELIMITER ;
+
+DELIMITER //
 CREATE PROCEDURE get_user(
   _id_user integer
 )

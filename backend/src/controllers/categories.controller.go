@@ -10,24 +10,10 @@ func GetCategories(context *fiber.Ctx) error {
 	var status int = fiber.StatusOK
 	db := config.Connection()
 	var categories []models.Category
-	rows, err := db.Query("CALL get_categories()")
+	err := db.Raw("CALL get_categories()").Scan(&categories).Error
 	if err != nil {
 		status = fiber.ErrNotAcceptable.Code
 		panic(err)
-	}
-	for rows.Next() {
-		var id int
-		var name string
-		var created_at string
-		if err := rows.Scan(&id, &name, &created_at); err != nil {
-			panic(err)
-		}
-		category := models.Category{
-			Id:         id,
-			Name:       name,
-			Created_At: created_at,
-		}
-		categories = append(categories, category)
 	}
 	status = fiber.StatusOK
 	return context.JSON(fiber.Map{
@@ -41,7 +27,7 @@ func CreateCategory(context *fiber.Ctx) error {
 	db := config.Connection()
 	var category models.Category
 	context.BodyParser(&category)
-	_, err := db.Exec("CALL create_category(?)", category.Name)
+	err := db.Raw("CALL create_category(?)", category.Name).Error
 	if err != nil {
 		status = fiber.ErrNotAcceptable.Code
 		panic(err)

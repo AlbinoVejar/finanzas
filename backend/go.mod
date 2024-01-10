@@ -5,6 +5,13 @@ go 1.21.5
 require golang.org/x/crypto v0.17.0
 
 require (
+	github.com/jinzhu/inflection v1.0.0 // indirect
+	github.com/jinzhu/now v1.1.5 // indirect
+	gorm.io/driver/mysql v1.5.2 // indirect
+	gorm.io/gorm v1.25.5 // indirect
+)
+
+require (
 	github.com/MicahParks/keyfunc/v2 v2.1.0 // indirect
 	github.com/andybalholm/brotli v1.0.6 // indirect
 	github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2 // indirect
@@ -22,6 +29,7 @@ require (
 	github.com/gofiber/contrib/jwt v1.0.8 // indirect
 	github.com/gofiber/contrib/swagger v1.1.1 // indirect
 	github.com/gofiber/fiber/v2 v2.51.0 // indirect
+	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/golang-jwt/jwt/v5 v5.2.0 // indirect
 	github.com/google/uuid v1.5.0 // indirect
 	github.com/josharian/intern v1.0.0 // indirect

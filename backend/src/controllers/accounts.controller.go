@@ -10,30 +10,9 @@ func GetAccounts(context *fiber.Ctx) error {
 	var status int = fiber.StatusOK
 	db := config.Connection()
 	var accounts []models.Account
-	rows, err := db.Query("CALL get_accounts()")
-	if err != nil {
-		status = fiber.ErrNotAcceptable.Code
-		panic(err)
-	}
-	for rows.Next() {
-		var id int
-		var name string
-		var credit bool
-		var created_at string
-		var modified string
-		var deleted string
-		if err := rows.Scan(&id, &name, &credit, &created_at, &modified, &deleted); err != nil {
-			panic(err)
-		}
-		account := models.Account{
-			Id:         id,
-			Name:       name,
-			Credit:     credit,
-			Created_At: created_at,
-			Modified:   modified,
-			Deleted:    deleted,
-		}
-		accounts = append(accounts, account)
+	errQuery := db.Raw("CALL get_accounts()").Scan(&accounts).Error
+	if errQuery != nil {
+		return context.SendStatus(fiber.ErrNotFound.Code)
 	}
 	status = fiber.StatusOK
 	return context.JSON(fiber.Map{
@@ -47,10 +26,10 @@ func CreateAccount(context *fiber.Ctx) error {
 	db := config.Connection()
 	var account models.Account
 	context.BodyParser(&account)
-	_, err := db.Exec("CALL create_account(?,?)", account.Name, account.Credit)
-	if err != nil {
+	errQuery := db.Raw("CALL create_account(?,?)", account.Name, account.Credit).Error
+	if errQuery != nil {
 		status = fiber.ErrNotAcceptable.Code
-		panic(err)
+		panic(errQuery)
 	}
 	status = fiber.StatusOK
 	return context.SendStatus(status)
@@ -61,10 +40,10 @@ func UpdateAccount(context *fiber.Ctx) error {
 	db := config.Connection()
 	var account models.Account
 	context.BodyParser(&account)
-	_, err := db.Exec("CALL update_account(?,?)", account.Name, account.Credit)
-	if err != nil {
+	errQuery := db.Raw("CALL update_account(?,?)", account.Name, account.Credit).Error
+	if errQuery != nil {
 		status = fiber.ErrNotAcceptable.Code
-		panic(err)
+		panic(errQuery)
 	}
 	status = fiber.StatusOK
 	return context.SendStatus(status)

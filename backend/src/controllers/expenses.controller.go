@@ -11,7 +11,7 @@ func UpdateExpense(context *fiber.Ctx) error {
 	db := config.Connection()
 	var expense models.Expense
 	context.BodyParser(&expense)
-	_, err := db.Exec("CALL update_expense(?,?)", expense.Description, expense.Amount)
+	err := db.Raw("CALL update_expense(?,?)", expense.Description, expense.Amount).Error
 	if err != nil {
 		status = fiber.ErrNotAcceptable.Code
 		panic(err)

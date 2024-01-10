@@ -1,15 +1,13 @@
 package config
 
 import (
-	"database/sql"
-
-	_ "github.com/go-sql-driver/mysql"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 )
 
-func Connection() *sql.DB {
-	db, err := sql.Open("mysql", db_connection_localhost)
+func Connection() *gorm.DB {
+	db, err := gorm.Open(mysql.Open(db_connection_localhost), &gorm.Config{})
 	if err != nil {
-		db.Close()
 		panic(err)
 	}
 	return db
