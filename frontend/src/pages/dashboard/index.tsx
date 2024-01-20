@@ -32,9 +32,10 @@ import { useRecoilState } from 'recoil'
 import { ModalState } from '../../context/modalState'
 import Quicktable from '../../shared/components/quicktable'
 import { TableState } from '../../context/tableState'
+import useCategories from '../../hooks/useCategories.hook'
 
 const Dashboard = () => {
-  const [, setModal] = useRecoilState(ModalState)
+  useCategories();
   const [, setDataTable] = useRecoilState(TableState)
   React.useEffect(() => {
     setDataTable({
@@ -49,50 +50,9 @@ const Dashboard = () => {
 
   return (
     <>
-      <Card>
-        <CardHeader>
-          <HStack divider={<StackDivider />} gap={8} align="center">
-            <Box>
-              <Avatar />
-            </Box>
-            <Box justifySelf="flex-start">
-              <Heading size="md">Gastos Diarios</Heading>
-              <Text>Creator, Chakra UI</Text>
-            </Box>
-            <Box>
-              <Stat>
-                <StatLabel>Totales</StatLabel>
-                <StatNumber>$0.00</StatNumber>
-                <StatHelpText>Dec 01 - Dec 31</StatHelpText>
-              </Stat>
-            </Box>
-            <Box>
-              <IconButton
-                isRound
-                variant="outline"
-                aria-label="Config"
-                icon={<RiSettings3Line />}
-              />
-            </Box>
-          </HStack>
-        </CardHeader>
-        <CardBody>
-          <Flex justify="flex-start" align="center" marginBottom={2}>
-            <Button
-              leftIcon={<RiAddCircleLine />}
-              onClick={() => setModal(true)}
-              size="sm"
-              colorScheme="blue"
-            >
-              Agregar
-            </Button>
-          </Flex>
-          <Box>
-            <Quicktable />
-          </Box>
-        </CardBody>
-      </Card>
-      <ModalExample />
+      {
+
+      }
     </>
   )
 }
