@@ -27,7 +27,7 @@ func CreateCategory(context *fiber.Ctx) error {
 	db := config.Connection()
 	var category models.Category
 	context.BodyParser(&category)
-	err := db.Raw("CALL create_category(?)", category.Name).Error
+	err := db.Exec("CALL create_category(?)", category.Name).Error
 	if err != nil {
 		status = fiber.ErrNotAcceptable.Code
 		panic(err)

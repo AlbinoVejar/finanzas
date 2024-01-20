@@ -58,7 +58,7 @@ func CreateUser(context *fiber.Ctx) error {
 	if err != nil {
 		panic(err)
 	}
-	errQuery := db.Raw("CALL create_user(?,?,?)", newUser.Name, newUser.Email, passEncoded).Error
+	errQuery := db.Exec("CALL create_user(?,?,?);", newUser.Name, newUser.Email, passEncoded).Error
 	if errQuery != nil {
 		status = fiber.ErrNotAcceptable.Code
 	}
@@ -75,7 +75,7 @@ func UpdateUser(context *fiber.Ctx) error {
 	if err != nil {
 		panic(err)
 	}
-	errQuery := db.Raw("CALL update_user(?,?,?)", newUser.Name, newUser.Email, passEncoded).Error
+	errQuery := db.Exec("CALL update_user(?,?,?)", newUser.Name, newUser.Email, passEncoded).Error
 	if errQuery != nil {
 		status = fiber.ErrNotAcceptable.Code
 	}
