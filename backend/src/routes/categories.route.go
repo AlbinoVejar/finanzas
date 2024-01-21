@@ -9,6 +9,6 @@ import (
 func RoutesCategories(app *fiber.App) {
 	route := app.Group("/categories")
 
-	route.Get("/", middlewares.Protected, controllers.GetCategories)
-	route.Post("/", middlewares.Protected, controllers.CreateCategory)
+	route.Get("/", middlewares.Protected(), controllers.GetCategories)
+	route.Post("/", middlewares.Protected(), controllers.CreateCategory)
 }

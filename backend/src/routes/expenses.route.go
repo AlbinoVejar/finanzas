@@ -9,5 +9,5 @@ import (
 func RoutesExpenses(app *fiber.App) {
 	route := app.Group("/expenses")
 
-	route.Put("/:id", middlewares.Protected, controllers.UpdateExpense)
+	route.Put("/:id", middlewares.Protected(), controllers.UpdateExpense)
 }
