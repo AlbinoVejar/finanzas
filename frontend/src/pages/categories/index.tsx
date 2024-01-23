@@ -30,9 +30,14 @@ import React from 'react'
 import Quicktable from '../../shared/components/quicktable'
 import { ModalState } from '../../context/modalState'
 import { useRecoilState } from 'recoil'
-import ModalExample from '../../shared/components/modal'
+import ModalExample from '../../shared/components/expense.modal'
+import { Category } from '../../types/category.type'
 
-const Categories = () => {
+interface propTypes {
+  category: Category
+}
+
+const Categories = ({ category }: propTypes) => {
   const [, setModal] = useRecoilState(ModalState)
   return (
     <>
@@ -43,7 +48,7 @@ const Categories = () => {
               <Avatar />
             </Box>
             <Box justifySelf="flex-start">
-              <Heading size="md">Gastos Diarios</Heading>
+              <Heading size="md">{category.Name}</Heading>
               <Text>Creator, Chakra UI</Text>
             </Box>
             <Box>

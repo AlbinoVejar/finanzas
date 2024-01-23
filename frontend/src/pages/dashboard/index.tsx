@@ -27,16 +27,18 @@ import {
 } from '@chakra-ui/react'
 import { RiAddCircleLine, RiSettings3Line } from '@remixicon/react'
 import React from 'react'
-import ModalExample from '../../shared/components/modal'
+import ModalExample from '../../shared/components/expense.modal'
 import { useRecoilState } from 'recoil'
 import { ModalState } from '../../context/modalState'
 import Quicktable from '../../shared/components/quicktable'
 import { TableState } from '../../context/tableState'
 import useCategories from '../../hooks/useCategories.hook'
+import Categories from '../categories'
+import { Category } from '../../types/category.type'
 
 const Dashboard = () => {
-  useCategories();
   const [, setDataTable] = useRecoilState(TableState)
+  const { isLoading, isError, data, error } = useCategories().query
   React.useEffect(() => {
     setDataTable({
       headers: [
@@ -50,9 +52,17 @@ const Dashboard = () => {
 
   return (
     <>
-      {
-
-      }
+      {isLoading ? (
+        <p>...</p>
+      ) : isError ? (
+        <span>Error:{error.message}</span>
+      ) : (
+        <HStack spacing={6} justify="center">
+          {data?.map((item: Category) => (
+            <Categories category={item}/>
+          ))}
+        </HStack>
+      )}
     </>
   )
 }

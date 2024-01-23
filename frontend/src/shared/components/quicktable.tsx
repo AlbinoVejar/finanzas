@@ -9,7 +9,7 @@ import {
 } from '@chakra-ui/react'
 import React from 'react'
 import { TableSelector } from '../../context/tableState'
-import { TableHeaderType, TableType } from '../../types/table.style'
+import { TableHeaderType, TableType } from '../../types/table.type'
 import { useRecoilValue } from 'recoil'
 
 const Quicktable = () => {

@@ -1,5 +1,5 @@
 import { RecoilState, atom, selector } from "recoil";
-import { TableType } from "../types/table.style";
+import { TableType } from "../types/table.type";
 
 export const TableState: RecoilState<TableType> = atom({
   key: "tableState",

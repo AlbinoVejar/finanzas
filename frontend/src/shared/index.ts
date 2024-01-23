@@ -1,4 +1,4 @@
-import ModalExample from './components/modal';
+import ModalExample from './components/expense.modal';
 
 const SharedComponents = {
   ModalExample
