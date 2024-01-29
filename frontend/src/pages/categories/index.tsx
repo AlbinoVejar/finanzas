@@ -8,29 +8,19 @@ import {
   Flex,
   HStack,
   Heading,
-  Icon,
   IconButton,
   StackDivider,
   Stat,
   StatHelpText,
   StatLabel,
   StatNumber,
-  Table,
-  TableContainer,
-  Tbody,
-  Td,
   Text,
-  Th,
-  Thead,
-  Tr,
-  useDisclosure,
 } from '@chakra-ui/react'
 import { RiSettings3Line, RiAddCircleLine } from '@remixicon/react'
-import React from 'react'
 import Quicktable from '../../shared/components/quicktable'
 import { ModalState } from '../../context/modalState'
 import { useRecoilState } from 'recoil'
-import ModalExample from '../../shared/components/expense.modal'
+import ExpenseModal from '../../shared/components/expense.modal'
 import { Category } from '../../types/category.type'
 
 interface propTypes {
@@ -84,7 +74,7 @@ const Categories = ({ category }: propTypes) => {
           </Box>
         </CardBody>
       </Card>
-      <ModalExample />
+      <ExpenseModal/>
     </>
   )
 }

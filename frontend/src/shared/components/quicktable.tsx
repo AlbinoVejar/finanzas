@@ -20,15 +20,15 @@ const Quicktable = () => {
         <Thead bg="gainsboro" textColor="black">
           <Tr>
             {headers.map((header: TableHeaderType) => (
-              <Th>{header.label}</Th>
+              <Th key={`header_key_${header.id}`}>{header.label}</Th>
             ))}
           </Tr>
         </Thead>
         <Tbody>
-          {data.map((item: any) => (
-            <Tr>
+          {data.map((item: any, index: number) => (
+            <Tr key={`table_row_${item.index}`}>
               {headers.map(({ id, empty }: TableHeaderType) => (
-                <Td>{item[id] ?? empty}</Td>
+                <Td key={`row_data_${id}`}>{item[id] ?? empty}</Td>
               ))}
             </Tr>
           ))}

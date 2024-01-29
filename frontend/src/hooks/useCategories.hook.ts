@@ -4,6 +4,7 @@ import { ResponseAPI } from '../types/response.type';
 import { Category } from '../types/category.type';
 import { useRecoilState } from 'recoil';
 import { CategoryState } from '../context/categoryState';
+import { useEffect } from 'react';
 
 
 const useCategories = () => {
@@ -18,7 +19,6 @@ const useCategories = () => {
       if(status !== 200){
         return [];
       }else{
-        setCategories(values);
         return values;
       }
     },
@@ -26,6 +26,12 @@ const useCategories = () => {
   const mutation = useMutation({
     mutationKey: ["create_category"]
   })
+
+  useEffect(() => {
+    if(query.isSuccess){
+      setCategories(query.data);
+    }  
+  }, [query.data, setCategories]);
 
   return {query, mutation}
 }
