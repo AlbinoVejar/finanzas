@@ -6,7 +6,7 @@ import { CreateExpense } from '../services/expenses.service'
 const useExpenses = () => {
   const mutation = useMutation({
     mutationKey: ["create_expense"],
-    mutationFn: async (value: Expense) => await CreateExpense()
+    mutationFn: async (value: Expense) => await CreateExpense(value)
   })
   return {mutation}
 }

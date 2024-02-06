@@ -10,4 +10,6 @@ func RoutesExpenses(app *fiber.App) {
 
 	// route.Put("/:id", middlewares.Protected(), controllers.UpdateExpense)
 	route.Put("/:id", controllers.UpdateExpense)
+	// route.Put("/", middlewares.Protected(), controllers.CreateExpense)
+	route.Post("/", controllers.CreateExpense)
 }

@@ -26,7 +26,7 @@ func CreateAccount(context *fiber.Ctx) error {
 	db := config.Connection()
 	var account models.Account
 	context.BodyParser(&account)
-	errQuery := db.Exec("CALL create_account(?,?)", account.Name, account.Credit).Error
+	errQuery := db.Exec("CALL create_account(?,?,?)", account.Name, account.Credit, 1).Error
 	if errQuery != nil {
 		status = fiber.ErrNotAcceptable.Code
 		panic(errQuery)

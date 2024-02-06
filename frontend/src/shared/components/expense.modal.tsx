@@ -21,6 +21,7 @@ import {
   InputGroup,
   InputLeftAddon,
   Textarea,
+  FormErrorMessage,
 } from '@chakra-ui/react'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { ModalState } from '../../context/modalState'
@@ -29,37 +30,68 @@ import { Category } from '../../types/category.type'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
+import { Expense } from '../../types/expense.type'
+import useExpenses from '../../hooks/useExpenses.hook'
 
 interface IExpenseInputs {
-  category: string
-  amount: number
-  description: string
+  account: string;
+  category: string;
+  amount: number;
+  description: string;
 }
 
 const schemaExpense = z.object({
-  category: z.string(),
-  amount: z.number().positive(),
-  description: z.string()
+  account: z.coerce.number().positive('Debe seleccionar una cuenta'),
+  category: z.coerce.number().positive('Debe seleccionar una categoría'),
+  amount: z.coerce.number().positive(),
+  description: z.string().optional(),
 })
 
 const ExpenseModal = () => {
   const [open, setOpen] = useRecoilState<boolean>(ModalState)
   const categories = useRecoilValue<Category[]>(CategorySelector)
+  const CreateExpense = useExpenses().mutation
   const {
     control,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm<IExpenseInputs>({
     defaultValues: {
       category: '',
       amount: 0,
       description: '',
     },
-    resolver: zodResolver()
+    resolver: zodResolver(schemaExpense),
   })
-  const onSubmit: SubmitHandler<IExpenseInputs> = (data) => {
-    console.log('hellow', data)
+  const onSubmit: SubmitHandler<IExpenseInputs> = async (
+    data: IExpenseInputs
+  ) => {
+    if (isValid) {
+      const newCategory: Expense = {
+        Amount: data.amount,
+        Id_Category: data.category,
+        Description: data.description,
+      }
+      const { data: response, status } = await CreateExpense.mutateAsync(
+        newCategory
+      )
+      if (status !== 404) {
+        console.log('data', response)
+      }
+    }
   }
+
+  const renderErrorsText = (
+    errorMessage: string | undefined,
+    helpText: string
+  ) => {
+    if (Boolean(errorMessage)) {
+      return <FormErrorMessage>{errorMessage}</FormErrorMessage>
+    } else {
+      return <FormHelperText>{helpText}</FormHelperText>
+    }
+  }
+
   return (
     <Modal
       isOpen={open}
@@ -76,7 +108,7 @@ const ExpenseModal = () => {
           <ModalCloseButton />
           <ModalBody>
             <VStack spacing={2}>
-              <FormControl isRequired>
+              <FormControl isInvalid={Boolean(errors?.category)}>
                 <FormLabel>Categoria</FormLabel>
                 <Controller
                   name="category"
@@ -91,10 +123,32 @@ const ExpenseModal = () => {
                     </Select>
                   )}
                 />
-
-                <FormHelperText>Seleccione la categoría.</FormHelperText>
+                {renderErrorsText(
+                  errors?.category?.message,
+                  'Seleccione la categoría.'
+                )}
               </FormControl>
-              <FormControl isRequired>
+              <FormControl isInvalid={Boolean(errors?.category)}>
+                <FormLabel>Categoria</FormLabel>
+                <Controller
+                  name="category"
+                  control={control}
+                  render={({ field }) => (
+                    <Select placeholder="Seleccione una categoría" {...field}>
+                      {categories.map(({ Name, Id }: Category) => (
+                        <option key={`option_value_${Id}`} value={Id}>
+                          {Name}
+                        </option>
+                      ))}
+                    </Select>
+                  )}
+                />
+                {renderErrorsText(
+                  errors?.category?.message,
+                  'Seleccione la categoría.'
+                )}
+              </FormControl>
+              <FormControl isInvalid={Boolean(errors?.amount)}>
                 <FormLabel>Monto</FormLabel>
                 <InputGroup>
                   <InputLeftAddon pointerEvents="none">$</InputLeftAddon>
@@ -118,7 +172,10 @@ const ExpenseModal = () => {
                     )}
                   />
                 </InputGroup>
-                <FormHelperText>Escriba el monto del Gasto.</FormHelperText>
+                {renderErrorsText(
+                  errors?.amount?.message,
+                  'Escriba el monto del Gasto.'
+                )}
               </FormControl>
               <FormControl>
                 <FormLabel>Descripción</FormLabel>
@@ -129,13 +186,15 @@ const ExpenseModal = () => {
                     <Textarea size="xs" resize="none" {...field} />
                   )}
                 />
-                <FormHelperText>
-                  No es obligatorio dejar una breve descripción.
-                </FormHelperText>
+                {renderErrorsText(
+                  errors?.description?.message,
+                  'No es obligatorio dejar una breve descripción.'
+                )}
               </FormControl>
             </VStack>
           </ModalBody>
           <ModalFooter>
+            <Flex></Flex>
             <Flex gap={2}>
               <Button
                 variant="outline"
