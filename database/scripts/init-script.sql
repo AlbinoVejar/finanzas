@@ -120,11 +120,14 @@ DELIMITER ;
 DELIMITER //
 CREATE PROCEDURE create_account(
   _name varchar(50),
-  _is_credit bool
+  _is_credit bool,
+  _id_user integer
 )
 BEGIN
 	INSERT INTO accounts(name, credit)
     VALUES(_name, _is_credit) RETURNING id;
+  INSERT INTO rel_user_account(id_user, id_account)
+    VALUES(_id_user, LAST_INSERT_ID()) RETURNING id;
 END;
 //
 DELIMITER ;
