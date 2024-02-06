@@ -182,3 +182,25 @@ BEGIN
 END;
 //
 DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE create_expense(
+  _id_category integer,
+  _description text,
+  _amount float,
+  _id_user_account integer
+)
+BEGIN
+    SET @id_expense = 0;
+    INSERT INTO expenses(amount,description) VALUES(_amount, _description) RETURNING id;
+    SELECT LAST_INSERT_ID() INTO @id_expense;
+    
+    INSERT INTO rel_expense(id_expense, id_category, id_rel_account)
+    VALUES(
+        @id_expense,
+        _id_category,
+        _id_user_account
+    ) RETURNING id;
+END;
+//
+DELIMITER ;
