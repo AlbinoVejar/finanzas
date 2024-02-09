@@ -7,10 +7,12 @@ import { TableState } from '../../context/tableState'
 import useCategories from '../../hooks/useCategories.hook'
 import Categories from '../categories'
 import { Category } from '../../types/category.type'
+import useAccounts from '../../hooks/useAccounts.hook'
 
 const Dashboard = () => {
   const [, setDataTable] = useRecoilState(TableState)
   const { isLoading, isError, data, error } = useCategories().query
+  useAccounts().query;
   React.useEffect(() => {
     setDataTable({
       headers: [

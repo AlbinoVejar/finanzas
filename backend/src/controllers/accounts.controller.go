@@ -10,7 +10,7 @@ func GetAccounts(context *fiber.Ctx) error {
 	var status int = fiber.StatusOK
 	db := config.Connection()
 	var accounts []models.Account
-	errQuery := db.Raw("CALL get_accounts()").Scan(&accounts).Error
+	errQuery := db.Raw("CALL get_accounts(1)").Scan(&accounts).Error
 	if errQuery != nil {
 		return context.SendStatus(fiber.ErrNotFound.Code)
 	}

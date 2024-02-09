@@ -32,6 +32,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { Expense } from '../../types/expense.type'
 import useExpenses from '../../hooks/useExpenses.hook'
+import { AccountSelector } from '../../context/accountState'
+import { Account } from '../../types/account.type'
 
 interface IExpenseInputs {
   account: string;
@@ -48,8 +50,9 @@ const schemaExpense = z.object({
 })
 
 const ExpenseModal = () => {
-  const [open, setOpen] = useRecoilState<boolean>(ModalState)
-  const categories = useRecoilValue<Category[]>(CategorySelector)
+  const [open, setOpen] = useRecoilState<boolean>(ModalState);
+  const categories = useRecoilValue<Category[]>(CategorySelector);
+  const accounts = useRecoilValue<Account[]>(AccountSelector);
   const CreateExpense = useExpenses().mutation
   const {
     control,
@@ -57,6 +60,7 @@ const ExpenseModal = () => {
     formState: { errors, isValid },
   } = useForm<IExpenseInputs>({
     defaultValues: {
+      account: '',
       category: '',
       amount: 0,
       description: '',
@@ -69,8 +73,9 @@ const ExpenseModal = () => {
     if (isValid) {
       const newCategory: Expense = {
         Amount: data.amount,
-        Id_Category: data.category,
+        Id_Category: Number(data.category),
         Description: data.description,
+        Id_Rel_Account: Number(data.account)
       }
       const { data: response, status } = await CreateExpense.mutateAsync(
         newCategory
@@ -108,14 +113,14 @@ const ExpenseModal = () => {
           <ModalCloseButton />
           <ModalBody>
             <VStack spacing={2}>
-              <FormControl isInvalid={Boolean(errors?.category)}>
-                <FormLabel>Categoria</FormLabel>
+              <FormControl isInvalid={Boolean(errors?.account)}>
+                <FormLabel>Cuenta</FormLabel>
                 <Controller
-                  name="category"
+                  name="account"
                   control={control}
                   render={({ field }) => (
-                    <Select placeholder="Seleccione una categoría" {...field}>
-                      {categories.map(({ Name, Id }: Category) => (
+                    <Select placeholder="Seleccione una cuenta" {...field}>
+                      {accounts.map(({ Name, Id }: Account) => (
                         <option key={`option_value_${Id}`} value={Id}>
                           {Name}
                         </option>
@@ -124,7 +129,7 @@ const ExpenseModal = () => {
                   )}
                 />
                 {renderErrorsText(
-                  errors?.category?.message,
+                  errors?.account?.message,
                   'Seleccione la categoría.'
                 )}
               </FormControl>
