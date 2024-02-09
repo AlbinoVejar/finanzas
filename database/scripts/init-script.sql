@@ -108,7 +108,7 @@ CREATE PROCEDURE get_accounts(
   _id_user integer
 )
 BEGIN
-	SELECT B.id, B.name, B.created_at 
+	SELECT A.id, B.name, B.created_at 
     FROM rel_user_account AS A 
     inner JOIN accounts AS B 
     	ON A.id_account = B.id 
