@@ -130,7 +130,7 @@ const ExpenseModal = () => {
                 />
                 {renderErrorsText(
                   errors?.account?.message,
-                  'Seleccione la categoría.'
+                  'Seleccione una cuenta.'
                 )}
               </FormControl>
               <FormControl isInvalid={Boolean(errors?.category)}>
