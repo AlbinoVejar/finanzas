@@ -3,5 +3,11 @@ export type Expense = {
   Description: string;
   Amount: number;
   Id_Category: number;
-  Id_Rel_Account?: number;
+}
+
+export type NewExpense = {
+  Description: string;
+  Amount: number;
+  Id_Category: number;
+  Id_Rel_Account: number;
 }

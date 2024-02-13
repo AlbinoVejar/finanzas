@@ -12,7 +12,8 @@ const Layout = () => {
       gridTemplateRows={'5% 1fr'}
       gridTemplateColumns={'20% 1fr'}
       height="100vh"
-      gap="0.5"
+      gap="1"
+      backgroundColor="ghostwhite"
     >
       <Navbar />
       <MainContent>

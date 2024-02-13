@@ -30,7 +30,7 @@ import { Category } from '../../types/category.type'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { Expense } from '../../types/expense.type'
+import { NewExpense } from '../../types/expense.type'
 import useExpenses from '../../hooks/useExpenses.hook'
 import { AccountSelector } from '../../context/accountState'
 import { Account } from '../../types/account.type'
@@ -71,7 +71,7 @@ const ExpenseModal = () => {
     data: IExpenseInputs
   ) => {
     if (isValid) {
-      const newCategory: Expense = {
+      const newCategory: NewExpense = {
         Amount: data.amount,
         Id_Category: Number(data.category),
         Description: data.description,
