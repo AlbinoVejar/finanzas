@@ -31,7 +31,7 @@ const Dashboard = () => {
       ) : isError ? (
         <span>Error:{error.message}</span>
       ) : (
-        <HStack spacing={6} justify="center">
+        <HStack spacing={6} justify="center" margin="1rem 1rem">
           {data?.map((item: Category) => (
             <Categories key={item.Id} category={item}/>
           ))}

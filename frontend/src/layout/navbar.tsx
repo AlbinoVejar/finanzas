@@ -1,5 +1,10 @@
-import { Box, Flex, GridItem, Select } from '@chakra-ui/react'
-import { RiArrowDownSLine } from '@remixicon/react'
+import { Box, Flex, GridItem, Icon, IconButton, Select } from '@chakra-ui/react'
+import {
+  RiAccountBoxFill,
+  RiArrowDownSLine,
+  RiUserSettingsLine,
+  RiWallet3Line,
+} from '@remixicon/react'
 import React from 'react'
 import { AccountSelector } from '../context/accountState'
 import { Account } from '../types/account.type'
@@ -16,7 +21,9 @@ const Navbar = () => {
         // borderWidth="2px"
         px={2}
       >
-        <Box>Logo</Box>
+        <Box>
+          <Icon aria-label="Logo Wallet" h={8} w={8} as={RiWallet3Line} />
+        </Box>
         <Box>
           <Select
             placeholder="Selecione una cuenta"
@@ -29,7 +36,13 @@ const Navbar = () => {
             ))}
           </Select>
         </Box>
-        <Box>UserConfig</Box>
+        <Box>
+          <IconButton
+            aria-label="Account Settings"
+            variant="outline"
+            icon={<RiUserSettingsLine size={28} />}
+          />
+        </Box>
       </Flex>
     </GridItem>
   )

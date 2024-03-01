@@ -5,8 +5,7 @@ import Breadcrum from './breadcrum'
 const MainContent = ({children}: any) => {
   return (
     <GridItem mx={1} bg="floralwhite" area={'main'} borderWidth="1px" borderRadius="lg" boxShadow="lg">
-      <VStack divider={<StackDivider />} spacing={3} align="stretch">
-        <Breadcrum />
+      <VStack divider={<StackDivider />} spacing={4} align="stretch">
         {children}
       </VStack>
     </GridItem>
