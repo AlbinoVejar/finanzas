@@ -132,7 +132,7 @@ VALUES
 INSERT INTO accounts(`name`) 
 VALUES 
   ('Debito');
-INSERT INTO rel_user_acCOUNT(id_user, id_account) 
+INSERT INTO rel_user_account(id_user, id_account) 
 VALUES 
   (
     @user_id, 
@@ -178,7 +178,7 @@ CREATE PROCEDURE create_account(
 ) BEGIN INSERT INTO accounts(name, credit) 
 VALUES 
   (_name, _is_credit) RETURNING id;
-INSERT INTO rel_user_acCOUNT(id_user, id_account) 
+INSERT INTO rel_user_account(id_user, id_account) 
 VALUES 
   (
     _id_user, 
