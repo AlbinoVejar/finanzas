@@ -238,8 +238,10 @@ END //
 
 DROP PROCEDURE IF EXISTS create_expense //
 CREATE PROCEDURE create_expense(
-  _id_category integer, _description text, 
-  _amount float, _id_user_account integer
+  _id_rel_category integer, 
+  _description text, 
+  _amount float, 
+  _id_user_account integer
 ) BEGIN 
 SET 
   @id_expense = 0;
@@ -249,11 +251,11 @@ VALUES
 SELECT 
   LAST_INSERT_ID() INTO @id_expense;
 INSERT INTO rel_expense(
-  id_expense, id_category, id_rel_account
+  id_expense, id_rel_category, id_rel_account
 ) 
 VALUES 
   (
-    @id_expense, _id_category, _id_user_account
+    @id_expense, _id_rel_category, _id_user_account
   ) RETURNING id;
 END // 
 
