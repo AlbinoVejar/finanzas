@@ -7,7 +7,8 @@ type Expense struct {
 }
 
 type NewExpense struct {
-	Description string
-	Amount      float32
-	Id_Category int
+	Description     string
+	Amount          float32
+	Id_rel_Category int
+	Id_rel_Account  int
 }

@@ -2,10 +2,7 @@ DROP TABLE IF EXISTS accounts;
 CREATE TABLE IF NOT EXISTS accounts (
   id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT, 
   name varchar(50) NOT NULL, 
-  credit bool NOT NULL DEFAULT false, 
-  created_at date NOT NULL DEFAULT CURRENT_DATE(), 
-  modified date, 
-  deleted date
+  credit bool NOT NULL DEFAULT false
 );
 DROP TABLE IF EXISTS users;
 CREATE TABLE IF NOT EXISTS users (
@@ -13,23 +10,25 @@ CREATE TABLE IF NOT EXISTS users (
   name varchar(60) NOT NULL, 
   email varchar(80) NOT NULL, 
   password text NOT NULL, 
-  created_at date NOT NULL DEFAULT CURRENT_DATE(), 
-  modified date, 
-  deleted date
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(), 
+  modified TIMESTAMP, 
+  deleted TIMESTAMP
 );
 DROP TABLE IF EXISTS rel_user_account;
 CREATE TABLE IF NOT EXISTS rel_user_account (
   id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT, 
   id_user INTEGER NOT NULL, 
   id_account INTEGER NOT NULL, 
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(), 
+  modified TIMESTAMP, 
+  deleted TIMESTAMP,
   FOREIGN KEY (id_user) REFERENCES users (id), 
   FOREIGN KEY (id_account) REFERENCES accounts (id)
 );
 DROP TABLE IF EXISTS category;
 CREATE TABLE IF NOT EXISTS categories (
   id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT, 
-  name varchar(50) NOT NULL, 
-  created_at date NOT NULL DEFAULT CURRENT_DATE()
+  name varchar(50) NOT NULL
 );
 DROP TABLE IF EXISTS expenses;
 CREATE TABLE IF NOT EXISTS expenses (
@@ -42,9 +41,9 @@ CREATE TABLE IF NOT EXISTS rel_user_category (
   id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT, 
   id_category INTEGER NOT NULL, 
   id_user INTEGER NULL, 
-  created_at date NOT NULL DEFAULT CURRENT_DATE(), 
-  modified date, 
-  deleted date, 
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(), 
+  modified TIMESTAMP, 
+  deleted TIMESTAMP, 
   FOREIGN KEY (id_category) REFERENCES categories (id), 
   FOREIGN KEY (id_user) REFERENCES users (id)
 );
@@ -54,9 +53,9 @@ CREATE TABLE IF NOT EXISTS rel_expense (
   id_expense INTEGER NOT NULL, 
   id_rel_category INTEGER NOT NULL, 
   id_rel_account INTEGER NULL, 
-  created_at date NOT NULL DEFAULT CURRENT_DATE(), 
-  modified date, 
-  deleted date, 
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(), 
+  modified TIMESTAMP, 
+  deleted TIMESTAMP, 
   FOREIGN KEY (id_rel_category) REFERENCES rel_user_category (id), 
   FOREIGN KEY (id_expense) REFERENCES expenses (id), 
   FOREIGN KEY (id_rel_account) REFERENCES rel_user_account (id)
@@ -241,7 +240,7 @@ CREATE PROCEDURE create_expense(
   _id_rel_category integer, 
   _description text, 
   _amount float, 
-  _id_user_account integer
+  _id_rel_account integer
 ) BEGIN 
 SET 
   @id_expense = 0;
@@ -255,7 +254,7 @@ INSERT INTO rel_expense(
 ) 
 VALUES 
   (
-    @id_expense, _id_rel_category, _id_user_account
+    @id_expense, _id_rel_category, _id_rel_account
   ) RETURNING id;
 END // 
 

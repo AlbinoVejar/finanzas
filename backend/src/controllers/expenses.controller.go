@@ -25,7 +25,7 @@ func CreateExpense(context *fiber.Ctx) error {
 	db := config.Connection()
 	var expense models.NewExpense
 	context.BodyParser(&expense)
-	err := db.Exec("CALL create_expense(?,?,?,?)", expense.Id_Category, expense.Description, expense.Amount, 1).Error
+	err := db.Exec("CALL create_expense(?,?,?,?)", expense.Id_rel_Category, expense.Description, expense.Amount, expense.Id_rel_Account).Error
 	if err != nil {
 		status = fiber.ErrNotAcceptable.Code
 		panic(err)
