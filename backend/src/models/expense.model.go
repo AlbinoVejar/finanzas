@@ -12,3 +12,15 @@ type NewExpense struct {
 	Id_rel_Category int
 	Id_rel_Account  int
 }
+
+type ResumeExpense struct {
+	Id int
+	Id_expense int
+	Amont float32
+	Description string
+	Id_account int
+	Account string
+	Credit bool
+	Id_category int
+	Category string
+}

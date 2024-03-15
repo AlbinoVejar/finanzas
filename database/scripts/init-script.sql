@@ -258,4 +258,51 @@ VALUES
   ) RETURNING id;
 END // 
 
+DROP PROCEDURE IF EXISTS get_resume_category //
+CREATE PROCEDURE get_resume_category(
+  _id_user integer
+) BEGIN
+select 
+  id, 
+  id_expense, 
+  amount, 
+  description, 
+  id_account, 
+  account, 
+  credit, 
+  id_category, 
+  category 
+from 
+  (
+    select 
+      a.id, 
+      b.id as id_expense, 
+      b.amount as amount, 
+      b.description as description, 
+      ca.id as id_account, 
+      ca.name as account, 
+      ca.credit as credit, 
+      da.id as id_category, 
+      da.name as category, 
+      row_number() over (
+        partition by a.id_rel_category 
+        order by 
+          a.created_at desc
+      ) as row_number 
+    from 
+      rel_expense as a 
+      inner join expenses as b on a.id_expense = b.id 
+      inner join rel_user_account as c on a.id_rel_account = c.id 
+      inner join accounts as ca on c.id_account = ca.id 
+      inner join rel_user_category as d on a.id_rel_category = d.id 
+      inner join categories as da on d.id_category = da.id 
+    where 
+      a.deleted is not null
+      and c.id_user = _id_user
+      and d.id_user = _id_user
+  ) as data 
+where 
+  row_number <= 3;
+END //
+
 DELIMITER ;
