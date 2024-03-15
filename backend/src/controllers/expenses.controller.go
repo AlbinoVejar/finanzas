@@ -37,16 +37,17 @@ func CreateExpense(context *fiber.Ctx) error {
 func GetResumeCategories(context *fiber.Ctx) error {
 	var status int = fiber.StatusOK
 	db := config.Connection()
-	var user models.[]ResumeExpense
+	var expenses []models.ResumeExpense
+	var user models.User
 	context.BodyParser(&user)
-	err := db.Exec("CALL get_resume_category(?)", user.Id_User).Error
+	err := db.Raw("CALL get_resume_category(?)", user.Id).Scan(expenses).Error
 	if err != nil {
 		status = fiber.ErrNotAcceptable.Code
 		panic(err)
 	}
 	status = fiber.StatusOK
 	return context.JSON(fiber.Map{
-		"data":   accounts,
+		"data":   expenses,
 		"status": status,
 	})
 }
