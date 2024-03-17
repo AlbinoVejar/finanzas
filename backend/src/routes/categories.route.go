@@ -12,4 +12,5 @@ func RoutesCategories(app *fiber.App) {
 	// route.Post("/", middlewares.Protected(), controllers.CreateCategory)
 	route.Get("/", controllers.GetCategories)
 	route.Post("/", controllers.CreateCategory)
+	route.Post("/details", controllers.GetDetailsCategory)
 }

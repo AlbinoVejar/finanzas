@@ -35,3 +35,20 @@ func CreateCategory(context *fiber.Ctx) error {
 	status = fiber.StatusOK
 	return context.SendStatus(status)
 }
+
+func GetDetailsCategory(context *fiber.Ctx) error {
+	var status int = fiber.StatusOK
+	db := config.Connection()
+	var expenses []models.ResumeExpense
+	var config models.DetailCategory
+	context.BodyParser(&config)
+	err := db.Raw("CALL get_details_category(?,?,?)", config.Id, config.Page_number, config.Row_per_page).Scan(&expenses).Error
+	if err != nil {
+		status = fiber.ErrNotAcceptable.Code
+	}
+	status = fiber.StatusOK
+	return context.JSON(fiber.Map{
+		"data":   expenses,
+		"status": status,
+	})
+}

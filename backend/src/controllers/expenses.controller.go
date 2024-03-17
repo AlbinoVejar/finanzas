@@ -39,15 +39,30 @@ func GetResumeCategories(context *fiber.Ctx) error {
 	db := config.Connection()
 	var expenses []models.ResumeExpense
 	var user models.User
+	var categories []models.Category
+	var accounts []models.Account
 	context.BodyParser(&user)
-	err := db.Raw("CALL get_resume_category(?)", user.Id).Scan(expenses).Error
+	errCategories := db.Raw("CALL get_categories()").Scan(&categories).Error
+	if errCategories != nil {
+		categories = nil
+		println(errCategories)
+	}
+	errAccounts := db.Raw("CALL get_accounts(?)", user.Id).Scan(&accounts).Error
+	if errAccounts != nil {
+		accounts = nil
+		println(errAccounts)
+	}
+	err := db.Raw("CALL get_resume_category(?)", user.Id).Scan(&expenses).Error
 	if err != nil {
 		status = fiber.ErrNotAcceptable.Code
+		println(err)
 		panic(err)
 	}
 	status = fiber.StatusOK
 	return context.JSON(fiber.Map{
-		"data":   expenses,
-		"status": status,
+		"data":       expenses,
+		"categories": categories,
+		"accounts":   accounts,
+		"status":     status,
 	})
 }

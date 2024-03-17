@@ -14,13 +14,13 @@ type NewExpense struct {
 }
 
 type ResumeExpense struct {
-	Id int
-	Id_expense int
-	Amont float32
+	Id          int
+	Id_expense  int
+	Amount      float32
 	Description string
-	Id_account int
-	Account string
-	Credit bool
+	Id_account  int
+	Account     string
+	Credit      bool
 	Id_category int
-	Category string
+	Category    string
 }

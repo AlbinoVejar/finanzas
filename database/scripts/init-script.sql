@@ -160,8 +160,7 @@ DROP PROCEDURE IF EXISTS get_accounts //
 CREATE PROCEDURE get_accounts(_id_user integer) BEGIN 
 SELECT 
   A.id, 
-  B.name, 
-  B.created_at 
+  B.name
 FROM 
   rel_user_account AS A 
   INNER JOIN accounts AS B ON A.id_account = B.id 
@@ -207,8 +206,7 @@ CREATE PROCEDURE get_categories()
 BEGIN 
 SELECT 
   id, 
-  name, 
-  created_at 
+  name
 FROM 
   categories;
 END //
@@ -303,6 +301,37 @@ from
   ) as data 
 where 
   row_number <= 3;
+END //
+
+DROP PROCEDURE IF EXISTS get_details_category //
+CREATE PROCEDURE get_details_category(
+  IN _id_rel_category integer,
+  IN _page_number integer,
+  IN _row_per_page integer
+) 
+BEGIN
+DECLARE offset_value INT;
+SET offset_value = _row_per_page * (_page_number - 1);
+SELECT
+  A.id,
+  B.id AS Id_expense,
+  B.amount AS Amount,
+  B.descriptiON AS Description,
+  CA.id AS Id_category,
+  CA.name AS Category
+FROM
+  rel_expense AS A
+  inner join expenses AS B ON A.id_expense = B.id
+  inner join rel_user_category AS C ON A.id_rel_category = C.id
+  inner join categories AS CA ON C.id_category = CA.id
+WHERE
+  A.deleted IS NOT NULL
+  AND C.id = _id_rel_category
+ORDER BY
+  A.created_at DESC
+LIMIT
+  _row_per_page
+OFFSET offset_value;
 END //
 
 DELIMITER ;
