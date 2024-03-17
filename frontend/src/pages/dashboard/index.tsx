@@ -4,15 +4,15 @@ import {
 import React from 'react'
 import { useRecoilState } from 'recoil'
 import { TableState } from '../../context/tableState'
-import useCategories from '../../hooks/useCategories.hook'
 import Categories from '../categories'
 import { Category } from '../../types/category.type'
 import useAccounts from '../../hooks/useAccounts.hook'
+import useResume from '../../hooks/useResume.hook'
 
 const Dashboard = () => {
   const [, setDataTable] = useRecoilState(TableState)
-  const { isLoading, isError, data, error } = useCategories().query
   useAccounts().query;
+  const { isLoading, isError, data, error } = useResume().query
   React.useEffect(() => {
     setDataTable({
       headers: [
