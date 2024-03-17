@@ -60,9 +60,11 @@ func GetResumeCategories(context *fiber.Ctx) error {
 	}
 	status = fiber.StatusOK
 	return context.JSON(fiber.Map{
-		"data":       expenses,
-		"categories": categories,
-		"accounts":   accounts,
-		"status":     status,
+		"data": fiber.Map{
+			"accounts":   accounts,
+			"categories": categories,
+			"expenses":   expenses,
+		},
+		"status": status,
 	})
 }
