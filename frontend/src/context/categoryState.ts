@@ -1,9 +1,12 @@
 import { RecoilState, atom, selector } from "recoil";
-import { Category } from "../types/category.type";
+import { ResumeCategory } from "../types/category.type";
 
-export const CategoryState: RecoilState<Category[]> = atom<Category[]>({
+export const CategoryState: RecoilState<ResumeCategory> = atom<ResumeCategory>({
   key: 'categoryState',
-  default: []
+  default: {
+    data: [],
+    resume: []
+  }
 });
 
 export const CategorySelector = selector({

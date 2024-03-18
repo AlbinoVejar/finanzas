@@ -2,28 +2,28 @@ import {
   HStack,
 } from '@chakra-ui/react'
 import React from 'react'
-import { useRecoilState } from 'recoil'
+import { useRecoilState, useRecoilValue } from 'recoil'
 import { TableState } from '../../context/tableState'
 import Categories from '../categories'
-import { Category } from '../../types/category.type'
+import { Category, ResumeCategory } from '../../types/category.type'
 import useAccounts from '../../hooks/useAccounts.hook'
 import useResume from '../../hooks/useResume.hook'
+import { CategorySelector } from '../../context/categoryState'
+import { ResumeExpense } from '../../types/expense.type'
 
 const Dashboard = () => {
-  const [, setDataTable] = useRecoilState(TableState)
   useAccounts().query;
   const { isLoading, isError, data, error } = useResume().query
-  React.useEffect(() => {
-    setDataTable({
-      headers: [
-        { id: 'id', label: 'Fecha', empty: '-' },
-        { id: 'cost', label: 'Gasto', empty: '-' },
-        { id: 'actions', label: 'Acciones', empty: '-' },
-      ],
-      data: [{ id: 'hola', cost: '' }],
-    })
-  }, [])
-
+  const {data: categories, resume} = useRecoilValue<ResumeCategory>(CategorySelector);
+  const getResumeByCategory = (id: number) => {
+    if(resume.length > 0){
+      const result = resume.filter((e: ResumeExpense) => e.Id_category === id);
+      console.log("result", result)
+      console.log("id", id)
+      return result;
+    }
+    return []
+  }
   return (
     <>
       {isLoading ? (
@@ -32,8 +32,8 @@ const Dashboard = () => {
         <span>Error:{error.message}</span>
       ) : (
         <HStack spacing={6} justify="center" margin="1rem 1rem">
-          {data?.map((item: Category) => (
-            <Categories key={item.Id} category={item}/>
+          {categories.length > 0 && categories?.map((item: Category) => (
+            <Categories key={item.Id} category={item} resume={getResumeByCategory(item.Id)}/>
           ))}
         </HStack>
       )}

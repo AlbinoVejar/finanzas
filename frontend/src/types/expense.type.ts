@@ -34,5 +34,5 @@ export type ResumeExpense = {
 export type ResumeData = {
   accounts: Account[];
   categories: Category[];
-  data: Resume[];
+  expenses: ResumeExpense[];
 }

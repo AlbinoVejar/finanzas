@@ -22,13 +22,22 @@ import { ModalState } from '../../context/modalState'
 import { useRecoilState } from 'recoil'
 import ExpenseModal from '../../shared/components/expense.modal'
 import { Category } from '../../types/category.type'
+import { ResumeExpense } from '../../types/expense.type'
+import { TableHeaderType } from '../../types/table.type'
 
 interface propTypes {
   category: Category
+  resume: ResumeExpense[]
 }
 
-const Categories = ({ category }: propTypes) => {
+const Categories = ({ category, resume }: propTypes) => {
   const [, setModal] = useRecoilState(ModalState)
+  const headers: TableHeaderType[] = [
+    { id: 'Description', label: 'Descripción', empty: '-' },
+    { id: 'Amount', label: 'Gasto', empty: '-' },
+    { id: 'Created_at', label: 'Fecha', empty: '-' },
+    { id: 'actions', label: 'Acciones', empty: '-' },
+  ]
   return (
     <>
       <Card>
@@ -70,11 +79,13 @@ const Categories = ({ category }: propTypes) => {
             </Button>
           </Flex>
           <Box>
-            <Quicktable />
+            {resume.length > 0 && (
+              <Quicktable headers={headers} data={resume} />
+            )}
           </Box>
         </CardBody>
       </Card>
-      <ExpenseModal/>
+      <ExpenseModal />
     </>
   )
 }

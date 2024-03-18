@@ -12,8 +12,16 @@ import { TableSelector } from '../../context/tableState'
 import { TableHeaderType, TableType } from '../../types/table.type'
 import { useRecoilValue } from 'recoil'
 
-const Quicktable = () => {
-  const { headers, data } = useRecoilValue<TableType>(TableSelector)
+type quickTableProps<T> = {
+  headers: TableHeaderType[];
+  data: T[];
+}
+
+const Quicktable = ({
+  headers,
+  data
+}: quickTableProps<any>) => {
+  // const { headers, data } = useRecoilValue<TableType>(TableSelector)
   return (
     <TableContainer borderWidth="2px" borderRadius="lg">
       <Table size="sm" variant="striped">

@@ -9,7 +9,7 @@ export const UserState: RecoilState<UserStateType> = atom({
 });
 
 export const UserSelector = selector({
-  key: "tableSelect",
+  key: "UserSelect",
   get: ({get}) => {
     return get(UserState);
   }
