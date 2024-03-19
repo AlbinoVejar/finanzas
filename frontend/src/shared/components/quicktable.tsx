@@ -7,19 +7,18 @@ import {
   Tbody,
   Td,
 } from '@chakra-ui/react'
-import React from 'react'
-import { TableSelector } from '../../context/tableState'
-import { TableHeaderType, TableType } from '../../types/table.type'
-import { useRecoilValue } from 'recoil'
+import { TableHeaderType } from '../../types/table.type'
 
 type quickTableProps<T> = {
   headers: TableHeaderType[];
   data: T[];
+  keyTable: string;
 }
 
 const Quicktable = ({
   headers,
-  data
+  data,
+  keyTable
 }: quickTableProps<any>) => {
   // const { headers, data } = useRecoilValue<TableType>(TableSelector)
   return (
@@ -27,14 +26,14 @@ const Quicktable = ({
       <Table size="sm" variant="striped">
         <Thead bg="gainsboro" textColor="black">
           <Tr>
-            {headers.map((header: TableHeaderType) => (
+            {!!headers && headers.map((header: TableHeaderType) => (
               <Th key={`header_key_${header.id}`}>{header.label}</Th>
             ))}
           </Tr>
         </Thead>
         <Tbody>
-          {data.map((item: any, index: number) => (
-            <Tr key={`table_row_${item.index}`}>
+          {!!data && data.map((item: any, index: number) => (
+            <Tr key={`table_row_${keyTable}_${index}`}>
               {headers.map(({ id, empty }: TableHeaderType) => (
                 <Td key={`row_data_${id}`}>{item[id] ?? empty}</Td>
               ))}

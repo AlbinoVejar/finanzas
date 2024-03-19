@@ -80,7 +80,7 @@ const Categories = ({ category, resume }: propTypes) => {
           </Flex>
           <Box>
             {resume.length > 0 && (
-              <Quicktable headers={headers} data={resume} />
+              <Quicktable headers={headers} data={resume} keyTable={category.Name} />
             )}
           </Box>
         </CardBody>

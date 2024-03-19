@@ -26,7 +26,7 @@ import {
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { ModalState } from '../../context/modalState'
 import { CategorySelector } from '../../context/categoryState'
-import { Category } from '../../types/category.type'
+import { Category, ResumeCategory } from '../../types/category.type'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -36,10 +36,10 @@ import { AccountSelector } from '../../context/accountState'
 import { Account } from '../../types/account.type'
 
 interface IExpenseInputs {
-  account: string;
-  category: string;
-  amount: number;
-  description: string;
+  account: string
+  category: string
+  amount: number
+  description: string
 }
 
 const schemaExpense = z.object({
@@ -50,9 +50,9 @@ const schemaExpense = z.object({
 })
 
 const ExpenseModal = () => {
-  const [open, setOpen] = useRecoilState<boolean>(ModalState);
-  const categories = useRecoilValue<Category[]>(CategorySelector);
-  const accounts = useRecoilValue<Account[]>(AccountSelector);
+  const [open, setOpen] = useRecoilState<boolean>(ModalState)
+  const { data: categories } = useRecoilValue<ResumeCategory>(CategorySelector)
+  const accounts = useRecoilValue<Account[]>(AccountSelector)
   const CreateExpense = useExpenses().mutation
   const {
     control,
@@ -75,7 +75,7 @@ const ExpenseModal = () => {
         Amount: data.amount,
         Id_Category: Number(data.category),
         Description: data.description,
-        Id_Rel_Account: Number(data.account)
+        Id_Rel_Account: Number(data.account),
       }
       const { data: response, status } = await CreateExpense.mutateAsync(
         newCategory
