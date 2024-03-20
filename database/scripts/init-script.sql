@@ -269,8 +269,9 @@ select
   account, 
   credit, 
   id_category, 
-  category 
-from 
+  category,
+  created_at
+from
   (
     select 
       a.id, 
@@ -286,7 +287,8 @@ from
         partition by a.id_rel_category 
         order by 
           a.created_at desc
-      ) as row_number 
+      ) as row_number,
+      a.created_at
     from 
       rel_expense as a 
       inner join expenses as b on a.id_expense = b.id 
@@ -332,6 +334,40 @@ ORDER BY
 LIMIT
   _row_per_page
 OFFSET offset_value;
+END //
+
+DROP PROCEDURE IF EXISTS get_total_account //
+CREATE PROCEDURE get_total_account(
+    IN _id_user integer,
+    IN _id_account integer,
+    IN _init_date date,
+    IN _end_date date
+)
+BEGIN
+SELECT
+  B.id AS Id,
+  CA.name AS Category,
+  B.description AS Description,
+  SUM(B.amount) AS Total,
+  A.id_rel_category AS Id_rel_Category
+FROM rel_expense  AS A
+INNER JOIN expenses AS B
+    ON B.id = A.id_expense
+INNER JOIN rel_user_category AS C
+    ON C.id = A.id_rel_category
+INNER JOIN categories AS CA
+    ON CA.id = C.id_category
+INNER JOIN rel_user_account AS D
+    ON D.id = A.id_rel_account
+INNER JOIN accounts AS DA
+    ON DA.id = D.id_account
+WHERE
+    CAST(A.created_at AS Date) BETWEEN _init_date  AND _end_date
+    AND C.id_user = _id_user
+    AND D.id_user = _id_user
+    AND DA.id = _id_account
+GROUP BY
+    A.id_rel_category;
 END //
 
 DELIMITER ;
