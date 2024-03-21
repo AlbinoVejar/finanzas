@@ -21,6 +21,24 @@ func GetAccounts(context *fiber.Ctx) error {
 	})
 }
 
+func GetTotalsByAccount(context *fiber.Ctx) error {
+	var status int = fiber.StatusOK
+	db := config.Connection()
+	var user models.UserTotal
+	var categories []models.TotalCategory
+	context.BodyParser(&user)
+	errQuery := db.Raw("CALL get_total_account(?,?,?,?)", user.Id_User, user.Id_Account, user.Init_date, user.End_date).Scan(&categories).Error
+	if errQuery != nil {
+		status = fiber.ErrNotAcceptable.Code
+		panic(errQuery)
+	}
+	status = fiber.StatusOK
+	return context.JSON(fiber.Map{
+		"data": categories,
+		"status": status,
+	})
+}
+
 func CreateAccount(context *fiber.Ctx) error {
 	var status int = fiber.StatusOK
 	db := config.Connection()
