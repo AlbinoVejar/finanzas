@@ -10,3 +10,11 @@ export type ResumeCategory = {
   data: Category[];
   resume: ResumeExpense[];
 }
+
+export type TotalCategory = {
+  Id: number;
+  Category: string;
+  Description: string;
+  Total: number;
+  Id_rel_category: number;
+}

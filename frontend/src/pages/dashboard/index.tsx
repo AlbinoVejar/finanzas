@@ -1,17 +1,17 @@
 import { HStack } from '@chakra-ui/react'
-import React from 'react'
-import { useRecoilState, useRecoilValue } from 'recoil'
-import { TableState } from '../../context/tableState'
+import { useRecoilValue } from 'recoil'
 import Categories from '../categories'
-import { Category, ResumeCategory } from '../../types/category.type'
+import { Category, ResumeCategory, TotalCategory } from '../../types/category.type'
 import useAccounts from '../../hooks/useAccounts.hook'
-import useResume from '../../hooks/useResume.hook'
 import { CategorySelector } from '../../context/categoryState'
 import { ResumeExpense } from '../../types/expense.type'
+import useResume from '../../hooks/useResume.hook'
 
 const Dashboard = () => {
   useAccounts().query
-  const { isLoading, isError, data, error } = useResume().query
+  const { query, queryTotals } = useResume();
+  const {isLoading, isError, data, error} = query;
+  const { isSuccess: successT, data: totals } = queryTotals;
   const { data: categories, resume } =
     useRecoilValue<ResumeCategory>(CategorySelector)
   const getResumeByCategory = (id: number) => {
@@ -20,6 +20,12 @@ const Dashboard = () => {
       return result
     }
     return []
+  }
+  const getTotalByCategory = (id: number)=>{
+    if(totals?.length > 0){
+      return totals?.find((e: TotalCategory) => e.Id === id)
+    }
+    return [];
   }
   return (
     <>
@@ -34,6 +40,7 @@ const Dashboard = () => {
               <Categories
                 key={item.Id}
                 category={item}
+                total={getTotalByCategory(item.Id)}
                 resume={getResumeByCategory(item.Id)}
               />
             ))}

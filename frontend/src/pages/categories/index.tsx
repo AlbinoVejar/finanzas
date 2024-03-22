@@ -21,16 +21,17 @@ import Quicktable from '../../shared/components/quicktable'
 import { ModalState } from '../../context/modalState'
 import { useRecoilState } from 'recoil'
 import ExpenseModal from '../../shared/components/expense.modal'
-import { Category } from '../../types/category.type'
+import { Category, TotalCategory } from '../../types/category.type'
 import { ResumeExpense } from '../../types/expense.type'
 import { TableHeaderType } from '../../types/table.type'
 
 interface propTypes {
   category: Category
+  total: TotalCategory
   resume: ResumeExpense[]
 }
 
-const Categories = ({ category, resume }: propTypes) => {
+const Categories = ({ category, total, resume }: propTypes) => {
   const [, setModal] = useRecoilState(ModalState)
   const headers: TableHeaderType[] = [
     { id: 'Description', label: 'Descripción', empty: '-' },
@@ -53,7 +54,7 @@ const Categories = ({ category, resume }: propTypes) => {
             <Box>
               <Stat>
                 <StatLabel>Totales</StatLabel>
-                <StatNumber>$0.00</StatNumber>
+                <StatNumber>${total.Total}</StatNumber>
                 <StatHelpText>Dec 01 - Dec 31</StatHelpText>
               </Stat>
             </Box>

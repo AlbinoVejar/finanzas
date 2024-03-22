@@ -23,4 +23,5 @@ type ResumeExpense struct {
 	Credit      bool
 	Id_category int
 	Category    string
+	Created_at  string
 }

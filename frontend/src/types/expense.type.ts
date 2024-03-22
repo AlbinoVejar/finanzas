@@ -29,10 +29,18 @@ export type ResumeExpense = {
   Credit: boolean
   Id_category: number
   Category: string
+  Created_at: string
 }
 
 export type ResumeData = {
   accounts: Account[];
   categories: Category[];
   expenses: ResumeExpense[];
+}
+
+export type TotalUser = {
+  Id_User: number;
+  Id_Account: number;
+  Init_Date: string;
+  End_Date: string;
 }
