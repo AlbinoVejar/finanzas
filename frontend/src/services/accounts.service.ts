@@ -2,7 +2,8 @@ import axios from "axios"
 import { url_localhost } from "../shared/enviroment";
 import { ResponseAPI } from "../types/response.type";
 import { Account } from "../types/account.type";
-import { TotalUser } from "../types/expense.type";
+import { TotalCategory } from "../types/category.type";
+import { UserDashboard } from "../types/user.type";
 
 const mainUrl: string = "/accounts"; 
 
@@ -24,11 +25,11 @@ export const CreateAccount = async (account: Account): Promise<ResponseAPI<any>>
   }
 }
 
-export const GetTotalsByAccount = async (user: TotalUser): Promise<ResponseAPI<any>> => {
+export const GetTotalsByAccount = async (user: UserDashboard): Promise<ResponseAPI<TotalCategory[]>> => {
   try {
-    const {data} = await axios.post(`${url_localhost}${mainUrl}/totals`, user);
+    const { data } = await axios.post(`${url_localhost}${mainUrl}`, user);
     return data;
-  } catch (err) {
-    return {data: null, status: 404};
+  } catch (error) {
+    return {data: [], status: 404};
   }
 }

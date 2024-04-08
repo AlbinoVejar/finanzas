@@ -14,8 +14,9 @@ import { TotalCategory } from '../types/category.type'
 const useResume = () => {
   const [, setCategories] = useRecoilState(CategoryState)
   const [, setAccounts] = useRecoilState(AccountState)
-  const [, setUserState] = useRecoilState(UserState)
+  const [userState, setUserState] = useRecoilState(UserState)
   const { accountSelected } = useRecoilValue<UserStateType>(UserSelector)
+
   const query = useQuery({
     queryKey: ['getResume'],
     queryFn: async () => await GetResume({ Id: 1 }),
@@ -49,7 +50,10 @@ const useResume = () => {
     if (query.isSuccess && !!query.data) {
       const { accounts, categories, expenses } = query?.data
       setAccounts(accounts)
-      setUserState({accountSelected: accounts[0].Id ?? 0})
+      setUserState({
+        ...userState,
+        accountSelected: accounts[0].Id ?? 0,
+      })
       setCategories({ data: categories, resume: expenses })
     }
   }, [query.data, setAccounts, setCategories])

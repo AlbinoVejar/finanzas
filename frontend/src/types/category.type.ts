@@ -3,7 +3,7 @@ import { ResumeExpense } from "./expense.type";
 export type Category = {
   Id: number;
   Name: string;
-  Created_at: string;
+  Total?: number;
 }
 
 export type ResumeCategory = {
@@ -12,9 +12,12 @@ export type ResumeCategory = {
 }
 
 export type TotalCategory = {
-  Id: number;
+  Id_account: number;
+  Account_Name: string;
+  Id_category: number;
   Category: string;
-  Description: string;
   Total: number;
   Id_rel_category: number;
+  Id_rel_account: number;
+  Created_at: string;
 }

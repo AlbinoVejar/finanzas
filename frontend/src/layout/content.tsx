@@ -1,6 +1,6 @@
 import { Box, GridItem, StackDivider, VStack } from '@chakra-ui/react'
 import React from 'react'
-import Breadcrum from './breadcrum'
+import Breadcrum from './toolbar'
 
 const MainContent = ({children}: any) => {
   return (

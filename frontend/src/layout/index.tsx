@@ -1,10 +1,17 @@
 import { Grid } from '@chakra-ui/react'
-import React from 'react'
+import React, { useEffect } from 'react'
 import MainContent from './content'
 import Navbar from './navbar'
 import { Outlet } from 'react-router-dom'
+import { UserState } from '../context/userState'
+import { useRecoilState } from 'recoil'
+import Toolbar from './toolbar'
 
 const Layout = () => {
+  const [userState, setUserState] = useRecoilState(UserState);
+  useEffect(() => {
+    setUserState({...userState, idUser: 1});
+  }, []);
   return (
     <Grid
       templateAreas={`"header header"
@@ -17,6 +24,7 @@ const Layout = () => {
     >
       <Navbar />
       <MainContent>
+      <Toolbar />
         <Outlet />
       </MainContent>
     </Grid>

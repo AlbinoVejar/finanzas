@@ -27,12 +27,6 @@ const useCategories = () => {
     mutationKey: ["create_category"]
   })
 
-  useEffect(() => {
-    if(query.isSuccess){
-      setCategories(query.data);
-    }  
-  }, [query.data, setCategories]);
-
   return {query, mutation}
 }
 
