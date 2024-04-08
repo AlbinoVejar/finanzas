@@ -12,9 +12,11 @@ type DetailCategory struct {
 }
 
 type TotalCategory struct {
-	Id              int
-	Category           string
-	Description string
-	Total          float32
-	Id_rel_Category int
+	Id_account      int
+	Account_name    string
+	Category        string
+	Total           float32
+	Amount          float32
+	Id_rel_category int
+	Id_rel_account  int
 }

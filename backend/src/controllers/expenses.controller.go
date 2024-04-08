@@ -13,8 +13,8 @@ func UpdateExpense(context *fiber.Ctx) error {
 	context.BodyParser(&expense)
 	err := db.Exec("CALL update_expense(?,?)", expense.Description, expense.Amount).Error
 	if err != nil {
-		status = fiber.ErrNotAcceptable.Code
-		panic(err)
+		return context.SendStatus(fiber.ErrBadRequest.Code)
+
 	}
 	status = fiber.StatusOK
 	return context.SendStatus(status)
@@ -27,8 +27,8 @@ func CreateExpense(context *fiber.Ctx) error {
 	context.BodyParser(&expense)
 	err := db.Exec("CALL create_expense(?,?,?,?)", expense.Id_rel_Category, expense.Description, expense.Amount, expense.Id_rel_Account).Error
 	if err != nil {
-		status = fiber.ErrNotAcceptable.Code
-		panic(err)
+		return context.SendStatus(fiber.ErrBadRequest.Code)
+
 	}
 	status = fiber.StatusOK
 	return context.SendStatus(status)
@@ -54,9 +54,7 @@ func GetResumeCategories(context *fiber.Ctx) error {
 	}
 	err := db.Raw("CALL get_resume_category(?)", user.Id).Scan(&expenses).Error
 	if err != nil {
-		status = fiber.ErrNotAcceptable.Code
-		println(err)
-		panic(err)
+		return context.SendStatus(fiber.ErrBadRequest.Code)
 	}
 	status = fiber.StatusOK
 	return context.JSON(fiber.Map{

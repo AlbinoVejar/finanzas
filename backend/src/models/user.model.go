@@ -10,9 +10,9 @@ type User struct {
 	Deleted    string
 }
 
-type UserTotal struct {
-	Id_User int
-	Id_Account int
-	Init_date string
-	End_date string
+type UserDashboard struct {
+	Id         int
+	Id_account int
+	Init_date  string
+	End_date   string
 }
