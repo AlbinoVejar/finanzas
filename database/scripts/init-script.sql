@@ -219,6 +219,26 @@ VALUES
   (_name) RETURNING id;
 END //
 
+DROP PROCEDURE IF EXISTS get_categories_totals //
+CREATE PROCEDURE get_categories(
+
+) 
+BEGIN 
+SELECT 
+  id, 
+  name
+FROM 
+  categories;
+END //
+
+DROP PROCEDURE IF EXISTS create_category //
+CREATE PROCEDURE create_category(
+  _name varchar(50)
+) BEGIN INSERT INTO categories(name) 
+VALUES 
+  (_name) RETURNING id;
+END //
+
 DROP PROCEDURE IF EXISTS update_expense //
 CREATE PROCEDURE update_expense(
   _id_expense integer, _description text, 
@@ -345,11 +365,12 @@ CREATE PROCEDURE get_total_account(
 )
 BEGIN
 SELECT
-  B.id AS Id,
+  DA.id AS Id_Account,
+  DA.name AS Account_name,
   CA.name AS Category,
-  B.description AS Description,
   SUM(B.amount) AS Total,
-  A.id_rel_category AS Id_rel_Category
+  A.id_rel_category AS Id_rel_Category,
+  A.id_rel_account AS Id_rel_account
 FROM rel_expense  AS A
 INNER JOIN expenses AS B
     ON B.id = A.id_expense
