@@ -12,7 +12,7 @@ func GetAccounts(context *fiber.Ctx) error {
 	var accounts []models.Account
 	errQuery := db.Raw("CALL get_accounts(1)").Scan(&accounts).Error
 	if errQuery != nil {
-		return context.SendStatus(fiber.ErrNotFound.Code)
+		return context.SendStatus(fiber.ErrBadRequest.Code)
 	}
 	status = fiber.StatusOK
 	return context.JSON(fiber.Map{
@@ -46,8 +46,7 @@ func CreateAccount(context *fiber.Ctx) error {
 	context.BodyParser(&account)
 	errQuery := db.Exec("CALL create_account(?,?,?)", account.Name, account.Credit, 1).Error
 	if errQuery != nil {
-		status = fiber.ErrNotAcceptable.Code
-		panic(errQuery)
+		return context.SendStatus(fiber.ErrBadRequest.Code)
 	}
 	status = fiber.StatusOK
 	return context.SendStatus(status)
@@ -60,9 +59,25 @@ func UpdateAccount(context *fiber.Ctx) error {
 	context.BodyParser(&account)
 	errQuery := db.Exec("CALL update_account(?,?)", account.Name, account.Credit).Error
 	if errQuery != nil {
-		status = fiber.ErrNotAcceptable.Code
-		panic(errQuery)
+		return context.SendStatus(fiber.ErrBadRequest.Code)
 	}
 	status = fiber.StatusOK
 	return context.SendStatus(status)
+}
+
+func GetTotalsByAccount(context *fiber.Ctx) error {
+	var status int = fiber.StatusOK
+	db := config.Connection()
+	var expenses []models.TotalCategory
+	var config models.UserDashboard
+	context.BodyParser(&config)
+	err := db.Raw("CALL get_totals_account(?,?,?,?)", config.Id, config.Id_account, config.Init_date, config.End_date).Scan(&expenses).Error
+	if err != nil {
+		return context.SendStatus(fiber.ErrBadRequest.Code)
+	}
+	status = fiber.StatusOK
+	return context.JSON(fiber.Map{
+		"data":   expenses,
+		"status": status,
+	})
 }
