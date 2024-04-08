@@ -14,6 +14,7 @@ type DetailCategory struct {
 type TotalCategory struct {
 	Id_account      int
 	Account_name    string
+	Id_category     int
 	Category        string
 	Total           float32
 	Amount          float32

@@ -42,7 +42,7 @@ func GetResumeCategories(context *fiber.Ctx) error {
 	var categories []models.Category
 	var accounts []models.Account
 	context.BodyParser(&user)
-	errCategories := db.Raw("CALL get_categories()").Scan(&categories).Error
+	errCategories := db.Raw("CALL get_categories(?)", user.Id).Scan(&categories).Error
 	if errCategories != nil {
 		categories = nil
 		println(errCategories)
