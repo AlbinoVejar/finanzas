@@ -184,7 +184,6 @@ VALUES
   ) RETURNING id;
 END //
 
-
 DROP PROCEDURE IF EXISTS update_account //
 CREATE PROCEDURE update_account(
   _id_account integer, 
@@ -200,15 +199,20 @@ WHERE
   id = _id_account;
 END //
 
-
 DROP PROCEDURE IF EXISTS get_categories //
-CREATE PROCEDURE get_categories() 
+CREATE PROCEDURE get_categories(
+  IN _id_user integer
+) 
 BEGIN 
 SELECT 
-  id, 
-  name
+  B.id, 
+  B.name
 FROM 
-  categories;
+    rel_user_category AS A
+INNER JOIN categories AS B 
+    ON B.id = A.id_category
+WHERE
+    A.id_user = _id_user;
 END //
 
 DROP PROCEDURE IF EXISTS create_category //
@@ -217,18 +221,6 @@ CREATE PROCEDURE create_category(
 ) BEGIN INSERT INTO categories(name) 
 VALUES 
   (_name) RETURNING id;
-END //
-
-DROP PROCEDURE IF EXISTS get_categories_totals //
-CREATE PROCEDURE get_categories(
-
-) 
-BEGIN 
-SELECT 
-  id, 
-  name
-FROM 
-  categories;
 END //
 
 DROP PROCEDURE IF EXISTS create_category //
@@ -332,7 +324,7 @@ CREATE PROCEDURE get_details_category(
   IN _row_per_page integer
 ) 
 BEGIN
-DECLARE offset_value INT;
+DECLARE offset_value INT;IN _id_user integer,
 SET offset_value = _row_per_page * (_page_number - 1);
 SELECT
   A.id,
