@@ -324,7 +324,7 @@ CREATE PROCEDURE get_details_category(
   IN _row_per_page integer
 ) 
 BEGIN
-DECLARE offset_value INT;IN _id_user integer,
+DECLARE offset_value INT;
 SET offset_value = _row_per_page * (_page_number - 1);
 SELECT
   A.id,
