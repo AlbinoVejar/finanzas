@@ -357,11 +357,12 @@ CREATE PROCEDURE get_totals_account(
 )
 BEGIN
 SELECT
-  DA.id AS Id_Account,
+  DA.id AS Id_account,
   DA.name AS Account_name,
+  CA.id AS Id_category,
   CA.name AS Category,
   SUM(B.amount) AS Total,
-  A.id_rel_category AS Id_rel_Category,
+  A.id_rel_category AS Id_rel_category,
   A.id_rel_account AS Id_rel_account
 FROM rel_expense  AS A
 INNER JOIN expenses AS B
