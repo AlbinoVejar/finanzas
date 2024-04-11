@@ -54,7 +54,7 @@ const Categories = ({ category, total, resume }: propTypes) => {
             <Box>
               <Stat>
                 <StatLabel>Totales</StatLabel>
-                <StatNumber>${total.Total}</StatNumber>
+                <StatNumber>${total?.Total ?? 0}</StatNumber>
                 <StatHelpText>Dec 01 - Dec 31</StatHelpText>
               </Stat>
             </Box>

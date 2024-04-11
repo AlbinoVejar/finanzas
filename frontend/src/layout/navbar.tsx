@@ -13,6 +13,7 @@ import { GetTotalsByAccount } from '../services/accounts.service'
 import { UserDashboard } from '../types/user.type'
 import { CategoryState } from '../context/categoryState'
 import { Category, TotalCategory } from '../types/category.type'
+import * as daysjs from 'dayjs'
 
 const Navbar = () => {
   const accounts = useRecoilValue<Account[]>(AccountSelector)
@@ -29,8 +30,8 @@ const Navbar = () => {
     const request: UserDashboard = {
       Id: userState.idUser,
       Id_account: userState.accountSelected,
-      Init_date: userState.Init_date,
-      End_date: userState.End_date
+      Init_date: daysjs().startOf("month").format("YYYY-MM-DD"),
+      End_date: daysjs().endOf("month").format("YYYY-MM-DD")
     }
     const resp = await GetTotalsByAccount(request);
     const newCategories: Category[] = categories.data.map((category: Category) => ({

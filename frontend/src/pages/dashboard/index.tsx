@@ -22,10 +22,10 @@ const Dashboard = () => {
     return []
   }
   const getTotalByCategory = (id: number)=>{
-    if(totals?.length > 0){
-      return totals?.find((e: TotalCategory) => e.Id === id)
+    if(totals && totals?.length > 0){
+      return totals?.find((e: TotalCategory) => e.Id_category === id)
     }
-    return [];
+    return null;
   }
   return (
     <>
