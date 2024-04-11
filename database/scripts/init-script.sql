@@ -348,8 +348,8 @@ LIMIT
 OFFSET offset_value;
 END //
 
-DROP PROCEDURE IF EXISTS get_total_account //
-CREATE PROCEDURE get_total_account(
+DROP PROCEDURE IF EXISTS get_totals_account //
+CREATE PROCEDURE get_totals_account(
     IN _id_user integer,
     IN _id_account integer,
     IN _init_date date,
