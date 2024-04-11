@@ -27,7 +27,7 @@ export const CreateAccount = async (account: Account): Promise<ResponseAPI<any>>
 
 export const GetTotalsByAccount = async (user: UserDashboard): Promise<ResponseAPI<TotalCategory[]>> => {
   try {
-    const { data } = await axios.post(`${url_localhost}${mainUrl}`, user);
+    const { data } = await axios.post(`${url_localhost}${mainUrl}/totals`, user);
     return data;
   } catch (error) {
     return {data: [], status: 404};
