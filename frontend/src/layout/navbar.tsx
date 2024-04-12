@@ -8,44 +8,18 @@ import { AccountSelector } from '../context/accountState'
 import { Account } from '../types/account.type'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { UserState } from '../context/userState'
-import React, { useEffect } from 'react'
-import { GetTotalsByAccount } from '../services/accounts.service'
-import { UserDashboard } from '../types/user.type'
-import { CategoryState } from '../context/categoryState'
-import { Category, TotalCategory } from '../types/category.type'
-import * as daysjs from 'dayjs'
+import useResume from '../hooks/useResume.hook'
 
 const Navbar = () => {
   const accounts = useRecoilValue<Account[]>(AccountSelector)
   const [userState, setUserState] = useRecoilState(UserState)
-  const [categories, setCategories] = useRecoilState(CategoryState)
-  const { accountSelected } = userState
+  const { accountSelected } = userState;
+  useResume();
 
   const onChangeAccount = (value: string) => {
     console.log('onSelect', value)
     setUserState({...userState, accountSelected: Number(value)});
   }
-
-  const getTotals = async () => {
-    const request: UserDashboard = {
-      Id: userState.idUser,
-      Id_account: userState.accountSelected,
-      Init_date: daysjs().startOf("month").format("YYYY-MM-DD"),
-      End_date: daysjs().endOf("month").format("YYYY-MM-DD")
-    }
-    const resp = await GetTotalsByAccount(request);
-    const newCategories: Category[] = categories.data.map((category: Category) => ({
-      ...category,
-      Total: resp.data.find((item: TotalCategory) => item.Id_category === category.Id)?.Total
-    }));
-    setCategories({...categories, data: newCategories});
-  }
-
-  useEffect(() => {
-    if(Number(userState.accountSelected !== 0)){
-      getTotals();
-    }
-  }, [userState.accountSelected]);
 
   return (
     <GridItem bg="white" boxShadow="base" roundedBottom={10} area={'header'}>

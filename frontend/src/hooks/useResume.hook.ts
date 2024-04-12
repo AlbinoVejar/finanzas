@@ -15,13 +15,14 @@ const useResume = () => {
   const [, setCategories] = useRecoilState(CategoryState)
   const [, setAccounts] = useRecoilState(AccountState)
   const [userState, setUserState] = useRecoilState(UserState)
-  const { accountSelected } = useRecoilValue<UserStateType>(UserSelector)
+  const { accountSelected, Init_date, End_date, idUser } = useRecoilValue<UserStateType>(UserSelector)
 
   const query = useQuery({
     queryKey: ['getResume'],
-    queryFn: async () => await GetResume({ Id: 1 }),
+    queryFn: async () => await GetResume({ Id: idUser }),
     refetchOnMount: true,
     refetchOnWindowFocus: false,
+    enabled: idUser > 0,
     select(data: ResponseAPI<ResumeData>) {
       const { data: values, status } = data
       if (status !== 200) {
@@ -33,7 +34,7 @@ const useResume = () => {
   })
   const queryTotals = useQuery({
     queryKey: ['getTotalsByAccount'],
-    queryFn: async () => await GetTotalsByAccount({Id_User: 1, Id_Account: accountSelected, Init_Date: '2024-03-01', End_Date: '2024-03-31'}),
+    queryFn: async () => await GetTotalsByAccount({Id: idUser, Id_account: accountSelected, Init_date: Init_date, End_date: End_date}),
     refetchOnMount: true,
     refetchOnWindowFocus: false,
     enabled: accountSelected > 0,
