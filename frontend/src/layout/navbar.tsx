@@ -1,26 +1,7 @@
-import { Box, Flex, GridItem, Icon, IconButton, Select } from '@chakra-ui/react'
-import {
-  RiArrowDownSLine,
-  RiUserSettingsLine,
-  RiWallet3Line,
-} from '@remixicon/react'
-import { AccountSelector } from '../context/accountState'
-import { Account } from '../types/account.type'
-import { useRecoilState, useRecoilValue } from 'recoil'
-import { UserState } from '../context/userState'
-import useResume from '../hooks/useResume.hook'
+import { Box, Flex, GridItem, Icon, IconButton } from '@chakra-ui/react'
+import { RiUserSettingsLine, RiWallet3Line } from '@remixicon/react'
 
 const Navbar = () => {
-  const accounts = useRecoilValue<Account[]>(AccountSelector)
-  const [userState, setUserState] = useRecoilState(UserState)
-  const { accountSelected } = userState;
-  useResume();
-
-  const onChangeAccount = (value: string) => {
-    console.log('onSelect', value)
-    setUserState({...userState, accountSelected: Number(value)});
-  }
-
   return (
     <GridItem bg="white" boxShadow="base" roundedBottom={10} area={'header'}>
       <Flex
@@ -32,22 +13,6 @@ const Navbar = () => {
       >
         <Box>
           <Icon aria-label="Logo Wallet" h={8} w={8} as={RiWallet3Line} />
-        </Box>
-        <Box>
-          <Select
-            placeholder="Selecione una cuenta"
-            variant="outline"
-            boxShadow="base"
-            icon={<RiArrowDownSLine />}
-            value={String(accountSelected)}
-            onChange={(event: any) => onChangeAccount(event.target.value)}
-          >
-            {accounts.map((e: Account) => (
-              <option key={e.Id} value={e.Id}>
-                {e.Name}
-              </option>
-            ))}
-          </Select>
         </Box>
         <Box>
           <IconButton

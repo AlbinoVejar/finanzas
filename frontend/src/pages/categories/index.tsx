@@ -14,25 +14,29 @@ import {
   StatHelpText,
   StatLabel,
   StatNumber,
-  Text,
+  VStack,
 } from '@chakra-ui/react'
 import { RiSettings3Line, RiAddCircleLine } from '@remixicon/react'
-import Quicktable from '../../shared/components/quicktable'
 import { ModalState } from '../../context/modalState'
 import { useRecoilState } from 'recoil'
-import ExpenseModal from '../../shared/components/expense.modal'
+import ExpenseModal from '../../components/expense.modal'
 import { Category, TotalCategory } from '../../types/category.type'
 import { ResumeExpense } from '../../types/expense.type'
 import { TableHeaderType } from '../../types/table.type'
+import { UserState } from '../../context/userState';
+import daysjs from 'dayjs'
+import Quicktable from '../../components/quicktable'
 
 interface propTypes {
   category: Category
-  total: TotalCategory
+  total: TotalCategory | undefined
   resume: ResumeExpense[]
 }
 
 const Categories = ({ category, total, resume }: propTypes) => {
   const [, setModal] = useRecoilState(ModalState)
+  const [userState, setUserState] = useRecoilState(UserState)
+  const { Init_date, End_date } = userState
   const headers: TableHeaderType[] = [
     { id: 'Description', label: 'Descripción', empty: '-' },
     { id: 'Amount', label: 'Gasto', empty: '-' },
@@ -43,21 +47,28 @@ const Categories = ({ category, total, resume }: propTypes) => {
     <>
       <Card>
         <CardHeader>
-          <HStack divider={<StackDivider />} gap={8} align="center">
+          <Heading textAlign="center" size="lg">
+            {category.Name}
+          </Heading>
+          <HStack
+            divider={<StackDivider />}
+            gap={8}
+            align="center"
+            justify="center"
+            marginTop={4}
+          >
             <Box>
               <Avatar />
             </Box>
-            <Box justifySelf="flex-start">
-              <Heading size="md">{category.Name}</Heading>
-              <Text>Creator, Chakra UI</Text>
-            </Box>
-            <Box>
+            <VStack>
               <Stat>
                 <StatLabel>Totales</StatLabel>
                 <StatNumber>${total?.Total ?? 0}</StatNumber>
-                <StatHelpText>Dec 01 - Dec 31</StatHelpText>
+                <StatHelpText>
+                  {daysjs(Init_date).format('DD-MMMM-YYYY')} - {daysjs(End_date).format('DD-MMMM-YYYY')}
+                </StatHelpText>
               </Stat>
-            </Box>
+            </VStack>
             <Box>
               <IconButton
                 isRound
@@ -81,7 +92,11 @@ const Categories = ({ category, total, resume }: propTypes) => {
           </Flex>
           <Box>
             {resume.length > 0 && (
-              <Quicktable headers={headers} data={resume} keyTable={category.Name} />
+              <Quicktable
+                headers={headers}
+                data={resume}
+                keyTable={category.Name}
+              />
             )}
           </Box>
         </CardBody>

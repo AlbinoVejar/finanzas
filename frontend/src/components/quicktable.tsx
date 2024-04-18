@@ -7,7 +7,7 @@ import {
   Tbody,
   Td,
 } from '@chakra-ui/react'
-import { TableHeaderType } from '../../types/table.type'
+import { TableHeaderType } from '../types/table.type'
 
 type quickTableProps<T> = {
   headers: TableHeaderType[];

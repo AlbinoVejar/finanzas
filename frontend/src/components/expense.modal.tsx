@@ -24,16 +24,16 @@ import {
   FormErrorMessage,
 } from '@chakra-ui/react'
 import { useRecoilState, useRecoilValue } from 'recoil'
-import { ModalState } from '../../context/modalState'
-import { CategorySelector } from '../../context/categoryState'
-import { Category, ResumeCategory } from '../../types/category.type'
+import { ModalState } from '../context/modalState'
+import { CategorySelector } from '../context/categoryState'
+import { Category, ResumeCategory } from '../types/category.type'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { NewExpense } from '../../types/expense.type'
-import useExpenses from '../../hooks/useExpenses.hook'
-import { AccountSelector } from '../../context/accountState'
-import { Account } from '../../types/account.type'
+import { NewExpense } from '../types/expense.type'
+import useExpenses from '../hooks/useExpenses.hook'
+import { AccountSelector } from '../context/accountState'
+import { Account } from '../types/account.type'
 
 interface IExpenseInputs {
   account: string

@@ -14,6 +14,7 @@ const Dashboard = () => {
   const { isSuccess: successT, data: totals } = queryTotals;
   const { data: categories, resume } =
     useRecoilValue<ResumeCategory>(CategorySelector)
+    
   const getResumeByCategory = (id: number) => {
     if (resume.length > 0) {
       const result = resume.filter((e: ResumeExpense) => e.Id_category === id)
@@ -21,11 +22,11 @@ const Dashboard = () => {
     }
     return []
   }
-  const getTotalByCategory = (id: number)=>{
+  const getTotalByCategory = (id: number) => {
     if(totals && totals?.length > 0){
       return totals?.find((e: TotalCategory) => e.Id_category === id)
     }
-    return null;
+    return undefined;
   }
   return (
     <>

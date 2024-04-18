@@ -1,12 +1,12 @@
 import { Grid } from '@chakra-ui/react'
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import MainContent from './content'
 import Navbar from './navbar'
 import { Outlet } from 'react-router-dom'
 import { UserState } from '../context/userState'
 import { useRecoilState } from 'recoil'
+import daysjs from 'dayjs'
 import Toolbar from './toolbar'
-import * as daysjs from 'dayjs'
 
 const Layout = () => {
   const [userState, setUserState] = useRecoilState(UserState)
@@ -21,16 +21,17 @@ const Layout = () => {
   return (
     <Grid
       templateAreas={`"header header"
+      "toolbar toolbar"
     "main main"`}
-      gridTemplateRows={'5% 1fr'}
-      gridTemplateColumns={'20% 1fr'}
+      gridTemplateRows={'4% 4% 1fr'}
+      gridTemplateColumns={'1fr'}
       height="100vh"
       gap="1"
       backgroundColor="ghostwhite"
     >
       <Navbar />
+      <Toolbar />
       <MainContent>
-        <Toolbar />
         <Outlet />
       </MainContent>
     </Grid>

@@ -1,7 +1,9 @@
-import ModalExample from './components/expense.modal';
+import ModalExample from '../components/expense.modal';
+import Quicktable from '../components/quicktable';
 
 const SharedComponents = {
-  ModalExample
+  ModalExample,
+  Quicktable
 }
 
 export default SharedComponents
