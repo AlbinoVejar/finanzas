@@ -26,6 +26,7 @@ import { TableHeaderType } from '../../types/table.type'
 import { UserState } from '../../context/userState';
 import daysjs from 'dayjs'
 import Quicktable from '../../components/quicktable'
+import { FormatCurreny, FormatMonthDate } from '../../utils'
 
 interface propTypes {
   category: Category
@@ -63,9 +64,8 @@ const Categories = ({ category, total, resume }: propTypes) => {
             <VStack>
               <Stat>
                 <StatLabel>Totales</StatLabel>
-                <StatNumber>${total?.Total ?? 0}</StatNumber>
+                <StatNumber>{FormatCurreny(total?.Total ?? 0)}</StatNumber>
                 <StatHelpText>
-                  {daysjs(Init_date).format('DD-MMMM-YYYY')} - {daysjs(End_date).format('DD-MMMM-YYYY')}
                 </StatHelpText>
               </Stat>
             </VStack>

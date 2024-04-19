@@ -6,7 +6,6 @@ import { Outlet } from 'react-router-dom'
 import { UserState } from '../context/userState'
 import { useRecoilState } from 'recoil'
 import daysjs from 'dayjs'
-import Toolbar from './toolbar'
 
 const Layout = () => {
   const [userState, setUserState] = useRecoilState(UserState)
@@ -21,16 +20,14 @@ const Layout = () => {
   return (
     <Grid
       templateAreas={`"header header"
-      "toolbar toolbar"
     "main main"`}
-      gridTemplateRows={'4% 4% 1fr'}
+      gridTemplateRows={'4% 1fr'}
       gridTemplateColumns={'1fr'}
       height="100vh"
       gap="1"
       backgroundColor="ghostwhite"
     >
       <Navbar />
-      <Toolbar />
       <MainContent>
         <Outlet />
       </MainContent>

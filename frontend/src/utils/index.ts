@@ -7,3 +7,8 @@ export const ParseDate = (value: Date | string, onlyMonth: boolean = false) => (
     ? dayjs(value).format(FormatMonthDate)
     : dayjs(value).format(FormatDate)
 );
+export const FormatCurreny = (value: number) => {
+  const formarter = Intl.NumberFormat('es-MX', {style: 'currency', currency: "MXN"})
+  const newValue = formarter.format(value);
+  return newValue;
+};

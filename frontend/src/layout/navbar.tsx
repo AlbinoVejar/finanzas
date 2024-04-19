@@ -1,5 +1,6 @@
 import { Box, Flex, GridItem, Icon, IconButton } from '@chakra-ui/react'
 import { RiUserSettingsLine, RiWallet3Line } from '@remixicon/react'
+import Toolbar from './toolbar'
 
 const Navbar = () => {
   return (
@@ -13,6 +14,9 @@ const Navbar = () => {
       >
         <Box>
           <Icon aria-label="Logo Wallet" h={8} w={8} as={RiWallet3Line} />
+        </Box>
+        <Box>
+          <Toolbar />
         </Box>
         <Box>
           <IconButton
