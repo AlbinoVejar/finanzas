@@ -205,7 +205,7 @@ CREATE PROCEDURE get_categories(
 ) 
 BEGIN 
 SELECT 
-  B.id, 
+  A.id, 
   B.name
 FROM 
     rel_user_category AS A
