@@ -34,6 +34,7 @@ const Toolbar = () => {
         </FormLabel>
         <Select
           placeholder="Selecione una cuenta"
+          size="sm"
           variant="outline"
           boxShadow="base"
           icon={<RiArrowDownSLine />}

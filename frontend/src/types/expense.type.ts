@@ -15,8 +15,8 @@ export type Resume = {
 export type NewExpense = {
   Description: string
   Amount: number
-  Id_Category: number
-  Id_Rel_Account: number
+  Id_rel_Category: number
+  Id_rel_Account: number
 }
 
 export type ResumeExpense = {

@@ -11,23 +11,19 @@ import {
   Portal,
   Switch,
 } from '@chakra-ui/react'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import Calendar from 'react-calendar'
 import { useRecoilState } from 'recoil'
 import { UserState } from '../context/userState'
 import dayjs from 'dayjs'
 import { FormatDate, ParseDate } from '../utils'
 
-type ValuePiece = Date | null
-
-type DateValue = ValuePiece | [ValuePiece, ValuePiece]
-
 const SelectDates = () => {
   const [modeSelect, setModeSelect] = useState<boolean>()
-  const [selectedDate, setDate] = useState<string>('')
+  const [, setDate] = useState<string>('')
   const [userState, setUserState] = useRecoilState(UserState)
 
-  const onChangeDataInput = (value: any, event: any) => {
+  const onChangeDataInput = (value: any) => {
     if (modeSelect) {
       const newDateInitFilter = ParseDate(value[0])
       const newDateEndFilter = ParseDate(value[1])
@@ -65,7 +61,7 @@ const SelectDates = () => {
       </FormLabel>
       <Popover>
         <PopoverTrigger>
-          <Input readOnly value={displayDate()} />
+          <Input size="sm" readOnly value={displayDate()} />
         </PopoverTrigger>
         <Portal>
           <PopoverContent>

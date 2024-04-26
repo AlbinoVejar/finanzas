@@ -21,7 +21,7 @@ const Layout = () => {
     <Grid
       templateAreas={`"header header"
     "main main"`}
-      gridTemplateRows={'4% 1fr'}
+      gridTemplateRows={'5% 1fr'}
       gridTemplateColumns={'1fr'}
       height="100vh"
       gap="1"

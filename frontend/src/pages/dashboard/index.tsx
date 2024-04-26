@@ -10,8 +10,8 @@ import useResume from '../../hooks/useResume.hook'
 const Dashboard = () => {
   useAccounts().query
   const { query, queryTotals } = useResume();
-  const {isLoading, isError, data, error} = query;
-  const { isSuccess: successT, data: totals } = queryTotals;
+  const {isLoading, isError, error} = query;
+  const { data: totals } = queryTotals;
   const { data: categories, resume } =
     useRecoilValue<ResumeCategory>(CategorySelector)
     

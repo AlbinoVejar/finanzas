@@ -24,9 +24,10 @@ import { Category, TotalCategory } from '../../types/category.type'
 import { ResumeExpense } from '../../types/expense.type'
 import { TableHeaderType } from '../../types/table.type'
 import { UserState } from '../../context/userState';
-import daysjs from 'dayjs'
 import Quicktable from '../../components/quicktable'
-import { FormatCurreny, FormatMonthDate } from '../../utils'
+import { FormatCurreny, ParseDate } from '../../utils'
+import { useState } from 'react'
+import ConfigCategoryModal from '../../components/config-category.modal'
 
 interface propTypes {
   category: Category
@@ -35,15 +36,30 @@ interface propTypes {
 }
 
 const Categories = ({ category, total, resume }: propTypes) => {
+  const [openConfigModal, setOpenConfigModal] = useState<boolean>(false);
   const [, setModal] = useRecoilState(ModalState)
   const [userState, setUserState] = useRecoilState(UserState)
-  const { Init_date, End_date } = userState
+  const { Init_date, End_date, dateMode } = userState
   const headers: TableHeaderType[] = [
     { id: 'Description', label: 'Descripción', empty: '-' },
     { id: 'Amount', label: 'Gasto', empty: '-' },
     { id: 'Created_at', label: 'Fecha', empty: '-' },
     { id: 'actions', label: 'Acciones', empty: '-' },
   ]
+  const getDate = () => {
+    if(!dateMode){
+      return `${ParseDate(Init_date, true)}`
+    }else{
+      return `${ParseDate(Init_date)} - ${ParseDate(End_date)}`
+    }
+  }
+  const onOpenModal = () => {
+    setModal(true);
+    setUserState({...userState, categorySelected: category.Id});
+  }
+  const onOpenConfigModal = () => {
+    setOpenConfigModal(!openConfigModal);
+  }
   return (
     <>
       <Card>
@@ -65,8 +81,7 @@ const Categories = ({ category, total, resume }: propTypes) => {
               <Stat>
                 <StatLabel>Totales</StatLabel>
                 <StatNumber>{FormatCurreny(total?.Total ?? 0)}</StatNumber>
-                <StatHelpText>
-                </StatHelpText>
+                <StatHelpText>{getDate()}</StatHelpText>
               </Stat>
             </VStack>
             <Box>
@@ -75,6 +90,7 @@ const Categories = ({ category, total, resume }: propTypes) => {
                 variant="outline"
                 aria-label="Config"
                 icon={<RiSettings3Line />}
+                onClick={onOpenConfigModal}
               />
             </Box>
           </HStack>
@@ -83,7 +99,7 @@ const Categories = ({ category, total, resume }: propTypes) => {
           <Flex justify="flex-start" align="center" marginBottom={2}>
             <Button
               leftIcon={<RiAddCircleLine />}
-              onClick={() => setModal(true)}
+              onClick={onOpenModal}
               size="sm"
               colorScheme="blue"
             >
@@ -101,6 +117,7 @@ const Categories = ({ category, total, resume }: propTypes) => {
           </Box>
         </CardBody>
       </Card>
+      <ConfigCategoryModal open={openConfigModal} setOpen={setOpenConfigModal} />
       <ExpenseModal />
     </>
   )

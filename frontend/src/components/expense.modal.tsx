@@ -34,6 +34,8 @@ import { NewExpense } from '../types/expense.type'
 import useExpenses from '../hooks/useExpenses.hook'
 import { AccountSelector } from '../context/accountState'
 import { Account } from '../types/account.type'
+import { UserSelector } from '../context/userState'
+import { UserStateType } from '../types/user.type'
 
 interface IExpenseInputs {
   account: string
@@ -51,37 +53,42 @@ const schemaExpense = z.object({
 
 const ExpenseModal = () => {
   const [open, setOpen] = useRecoilState<boolean>(ModalState)
+  const { accountSelected, categorySelected } =
+    useRecoilValue<UserStateType>(UserSelector)
   const { data: categories } = useRecoilValue<ResumeCategory>(CategorySelector)
   const accounts = useRecoilValue<Account[]>(AccountSelector)
   const CreateExpense = useExpenses().mutation
   const {
     control,
     handleSubmit,
-    formState: { errors, isValid },
+    formState: { errors, isValid, defaultValues },
   } = useForm<IExpenseInputs>({
     defaultValues: {
-      account: '',
-      category: '',
+      account: String(accountSelected),
+      category: String(categorySelected),
       amount: 0,
       description: '',
     },
     resolver: zodResolver(schemaExpense),
   })
+
   const onSubmit: SubmitHandler<IExpenseInputs> = async (
     data: IExpenseInputs
   ) => {
+    console.log(defaultValues);
     if (isValid) {
       const newCategory: NewExpense = {
         Amount: data.amount,
-        Id_Category: Number(data.category),
+        Id_rel_Category: Number(data.category),
         Description: data.description,
-        Id_Rel_Account: Number(data.account),
+        Id_rel_Account: Number(data.account),
       }
       const { data: response, status } = await CreateExpense.mutateAsync(
         newCategory
       )
       if (status !== 404) {
         console.log('data', response)
+        setOpen(false)
       }
     }
   }
@@ -96,7 +103,6 @@ const ExpenseModal = () => {
       return <FormHelperText>{helpText}</FormHelperText>
     }
   }
-
   return (
     <Modal
       isOpen={open}
@@ -121,7 +127,7 @@ const ExpenseModal = () => {
                   render={({ field }) => (
                     <Select placeholder="Seleccione una cuenta" {...field}>
                       {accounts.map(({ Name, Id }: Account) => (
-                        <option key={`option_value_${Id}`} value={Id}>
+                        <option key={`option_value_account_${Id}`} value={Id}>
                           {Name}
                         </option>
                       ))}
@@ -139,9 +145,13 @@ const ExpenseModal = () => {
                   name="category"
                   control={control}
                   render={({ field }) => (
-                    <Select placeholder="Seleccione una categoría" {...field}>
+                    <Select
+                      placeholder="Seleccione una categoría"
+                      {...field}
+                      value={categorySelected}
+                    >
                       {categories.map(({ Name, Id }: Category) => (
-                        <option key={`option_value_${Id}`} value={Id}>
+                        <option key={`option_value_category_${Id}`} value={Id}>
                           {Name}
                         </option>
                       ))}
