@@ -11,11 +11,13 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Spacer,
   VStack,
 } from '@chakra-ui/react'
 import React from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { renderErrorsText } from '../utils/tools'
+import { RiDeleteBin7Line } from '@remixicon/react'
 
 type propsTypes = {
   open: boolean
@@ -65,8 +67,9 @@ const ConfigCategoryModal = ({ open, setOpen }: propsTypes) => {
           </VStack>
         </ModalBody>
         <ModalFooter>
-          <Flex></Flex>
-          <Flex gap={2}>
+          <Flex gap={2} width="100%">
+            <Button leftIcon={<RiDeleteBin7Line />} variant="outline" colorScheme='red'>Eliminar</Button>
+            <Spacer />
             <Button
               variant="outline"
               colorScheme="gray"
