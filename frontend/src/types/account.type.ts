@@ -5,4 +5,6 @@ export type Account = {
   Created_at: string;
   modified: string;
   deleted: string;
+  creditLimit: number;
+  
 }

@@ -16,14 +16,14 @@ import {
   StatNumber,
   VStack,
 } from '@chakra-ui/react'
-import { RiSettings3Line, RiAddCircleLine } from '@remixicon/react'
+import { RiSettings3Line, RiAddCircleLine, RiEyeLine } from '@remixicon/react'
 import { ModalState } from '../../context/modalState'
 import { useRecoilState } from 'recoil'
 import ExpenseModal from '../../components/expense.modal'
 import { Category, TotalCategory } from '../../types/category.type'
-import { ResumeExpense } from '../../types/expense.type'
+import { ExpenseTable } from '../../types/expense.type'
 import { TableHeaderType } from '../../types/table.type'
-import { UserState } from '../../context/userState';
+import { UserState } from '../../context/userState'
 import Quicktable from '../../components/quicktable'
 import { FormatCurreny, ParseDate } from '../../utils'
 import { useState } from 'react'
@@ -32,11 +32,11 @@ import ConfigCategoryModal from '../../components/config-category.modal'
 interface propTypes {
   category: Category
   total: TotalCategory | undefined
-  resume: ResumeExpense[]
+  resume: ExpenseTable[]
 }
 
 const Categories = ({ category, total, resume }: propTypes) => {
-  const [openConfigModal, setOpenConfigModal] = useState<boolean>(false);
+  const [openConfigModal, setOpenConfigModal] = useState<boolean>(false)
   const [, setModal] = useRecoilState(ModalState)
   const [userState, setUserState] = useRecoilState(UserState)
   const { Init_date, End_date, dateMode } = userState
@@ -44,21 +44,21 @@ const Categories = ({ category, total, resume }: propTypes) => {
     { id: 'Description', label: 'Descripción', empty: '-' },
     { id: 'Amount', label: 'Gasto', empty: '-' },
     { id: 'Created_at', label: 'Fecha', empty: '-' },
-    { id: 'actions', label: 'Acciones', empty: '-' },
+    { id: 'Actions', label: 'Acciones', empty: '-' },
   ]
   const getDate = () => {
-    if(!dateMode){
+    if (!dateMode) {
       return `${ParseDate(Init_date, true)}`
-    }else{
+    } else {
       return `${ParseDate(Init_date)} - ${ParseDate(End_date)}`
     }
   }
   const onOpenModal = () => {
-    setModal(true);
-    setUserState({...userState, categorySelected: category.Id});
+    setModal(true)
+    setUserState({ ...userState, categorySelected: category.Id })
   }
   const onOpenConfigModal = () => {
-    setOpenConfigModal(!openConfigModal);
+    setOpenConfigModal(!openConfigModal)
   }
   return (
     <>
@@ -84,7 +84,14 @@ const Categories = ({ category, total, resume }: propTypes) => {
                 <StatHelpText>{getDate()}</StatHelpText>
               </Stat>
             </VStack>
-            <Box>
+            <Flex gap={2}>
+              <IconButton
+                isRound
+                variant="outline"
+                aria-label="Ver Detalles"
+                icon={<RiEyeLine />}
+                onClick={onOpenConfigModal}
+              />
               <IconButton
                 isRound
                 variant="outline"
@@ -92,7 +99,7 @@ const Categories = ({ category, total, resume }: propTypes) => {
                 icon={<RiSettings3Line />}
                 onClick={onOpenConfigModal}
               />
-            </Box>
+            </Flex>
           </HStack>
         </CardHeader>
         <CardBody>
@@ -117,7 +124,10 @@ const Categories = ({ category, total, resume }: propTypes) => {
           </Box>
         </CardBody>
       </Card>
-      <ConfigCategoryModal open={openConfigModal} setOpen={setOpenConfigModal} />
+      <ConfigCategoryModal
+        open={openConfigModal}
+        setOpen={setOpenConfigModal}
+      />
       <ExpenseModal />
     </>
   )

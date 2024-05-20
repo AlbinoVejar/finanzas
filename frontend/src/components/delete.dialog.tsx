@@ -20,7 +20,7 @@ type propsTypes = {
 }
 
 const DeleteDialog = ({ setOpen, htmlRef, message, title, onConfirm }: propsTypes) => {
-  const { isOpen, onClose } = setOpen
+  const { isOpen = false, onClose = () => {} } = setOpen
 
   const onSubmit = () => {
     if(onClose){

@@ -1,5 +1,6 @@
 import { Account } from "./account.type"
 import { Category } from "./category.type"
+import { TableActionType } from "./table.type"
 
 export type Expense = {
   Id?: number
@@ -43,4 +44,18 @@ export type TotalUser = {
   Id_Account: number;
   Init_Date: string;
   End_Date: string;
+}
+
+export type ExpenseTable = {
+  Id: number;
+  Id_expense: number;
+  Amount: number;
+  Description: string;
+  Id_account: number;
+  Account: string;
+  Credit: boolean;
+  Id_category: number;
+  Category: string;
+  Created_at: string;
+  Actions?: TableActionType[];
 }

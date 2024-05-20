@@ -8,3 +8,10 @@ export type TableHeaderType = {
   label: string;
   empty: string;
 }
+
+export type TableActionType = {
+  id: string;
+  label: string;
+  icon: JSX.Element;
+  handler: any;
+}

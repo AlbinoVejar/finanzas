@@ -15,7 +15,7 @@ const useResume = () => {
   const [, setCategories] = useRecoilState(CategoryState)
   const [, setAccounts] = useRecoilState(AccountState)
   const [userState, setUserState] = useRecoilState(UserState)
-  const { accountSelected, Init_date, End_date, idUser } = useRecoilValue<UserStateType>(UserSelector)
+  const { accountSelected, Init_date, End_date, idUser, dateMode } = useRecoilValue<UserStateType>(UserSelector)
 
   const query = useQuery({
     queryKey: ['getResume'],
@@ -34,10 +34,10 @@ const useResume = () => {
   })
   const queryTotals = useQuery({
     queryKey: ['getTotalsByAccount'],
-    queryFn: async () => await GetTotalsByAccount({Id: idUser, Id_account: accountSelected, Init_date: Init_date, End_date: End_date}),
+    queryFn: async () => await GetTotalsByAccount({Id: idUser, Id_account: accountSelected, Init_date, End_date}),
     refetchOnMount: true,
     refetchOnWindowFocus: false,
-    enabled: accountSelected > 0,
+    enabled: accountSelected > 0 || (dateMode ? Init_date !== '' : (Init_date !== '' && End_date !== '')),
     select(data: ResponseAPI<TotalCategory[]>) {
       const { data: values, status } = data
       if (status !== 200) {
