@@ -1,15 +1,16 @@
 DROP TABLE IF EXISTS accounts;
 CREATE TABLE IF NOT EXISTS accounts (
   id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT, 
-  name varchar(50) NOT NULL, 
-  credit bool NOT NULL DEFAULT false
+  name VARCHAR(50) NOT NULL, 
+  credit BOOL NOT NULL DEFAULT false,
+  limit_amount DOUBLE NOT NULL
 );
 DROP TABLE IF EXISTS users;
 CREATE TABLE IF NOT EXISTS users (
   id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT, 
-  name varchar(60) NOT NULL, 
-  email varchar(80) NOT NULL, 
-  password text NOT NULL, 
+  name VARCHAR(60) NOT NULL, 
+  email VARCHAR(80) NOT NULL, 
+  password TEXT NOT NULL, 
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(), 
   modified TIMESTAMP, 
   deleted TIMESTAMP
@@ -28,13 +29,13 @@ CREATE TABLE IF NOT EXISTS rel_user_account (
 DROP TABLE IF EXISTS category;
 CREATE TABLE IF NOT EXISTS categories (
   id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT, 
-  name varchar(50) NOT NULL
+  name VARCHAR(50) NOT NULL
 );
 DROP TABLE IF EXISTS expenses;
 CREATE TABLE IF NOT EXISTS expenses (
   id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT, 
-  description varchar(120) NOT NULL, 
-  amount float NOT NULL DEFAULT 0
+  description VARCHAR(120) NOT NULL, 
+  amount FLOAT NOT NULL DEFAULT 0
 );
 DROP TABLE IF EXISTS rel_user_category;
 CREATE TABLE IF NOT EXISTS rel_user_category (
@@ -65,7 +66,7 @@ DELIMITER //
 
 DROP PROCEDURE IF EXISTS login_user //
 CREATE PROCEDURE login_user (
-  _email varchar(80)
+  _email VARCHAR(80)
 ) BEGIN 
   SELECT 
     * 
@@ -90,9 +91,9 @@ END //
 
 DROP PROCEDURE IF EXISTS create_user //
 CREATE PROCEDURE create_user(
-  _name varchar(60), 
-  _email varchar(80), 
-  _password text
+  _name VARCHAR(60), 
+  _email VARCHAR(80), 
+  _password TEXT
 ) BEGIN 
 SET 
   @user_id = 0;
@@ -142,9 +143,9 @@ END //
 DROP PROCEDURE IF EXISTS update_user //
 CREATE PROCEDURE update_user(
   _id_user integer, 
-  _name varchar(60), 
-  _email varchar(80), 
-  _password text
+  _name VARCHAR(60), 
+  _email VARCHAR(80), 
+  _password TEXT
 ) BEGIN 
 UPDATE 
   users 
@@ -170,7 +171,7 @@ END //
 
 DROP PROCEDURE IF EXISTS create_account //
 CREATE PROCEDURE create_account(
-  _name varchar(50), 
+  _name VARCHAR(50), 
   _is_credit bool, 
   _id_user integer
 ) BEGIN INSERT INTO accounts(name, credit) 
@@ -187,7 +188,7 @@ END //
 DROP PROCEDURE IF EXISTS update_account //
 CREATE PROCEDURE update_account(
   _id_account integer, 
-  _name varchar(60), 
+  _name VARCHAR(60), 
   _is_credit bool
 ) BEGIN 
 UPDATE 
@@ -217,7 +218,7 @@ END //
 
 DROP PROCEDURE IF EXISTS create_category //
 CREATE PROCEDURE create_category(
-  _name varchar(50)
+  _name VARCHAR(50)
 ) BEGIN INSERT INTO categories(name) 
 VALUES 
   (_name) RETURNING id;
@@ -225,7 +226,7 @@ END //
 
 DROP PROCEDURE IF EXISTS create_category //
 CREATE PROCEDURE create_category(
-  _name varchar(50)
+  _name VARCHAR(50)
 ) BEGIN INSERT INTO categories(name) 
 VALUES 
   (_name) RETURNING id;
@@ -233,8 +234,8 @@ END //
 
 DROP PROCEDURE IF EXISTS update_expense //
 CREATE PROCEDURE update_expense(
-  _id_expense integer, _description text, 
-  _amount float
+  _id_expense integer, _description TEXT, 
+  _amount FLOAT
 ) BEGIN 
 UPDATE 
   expenses 
@@ -248,8 +249,8 @@ END //
 DROP PROCEDURE IF EXISTS create_expense //
 CREATE PROCEDURE create_expense(
   _id_rel_category integer, 
-  _description text, 
-  _amount float, 
+  _description TEXT, 
+  _amount FLOAT, 
   _id_rel_account integer
 ) BEGIN 
 SET 
@@ -348,8 +349,8 @@ LIMIT
 OFFSET offset_value;
 END //
 
-DROP PROCEDURE IF EXISTS get_totals_account //
-CREATE PROCEDURE get_totals_account(
+DROP PROCEDURE IF EXISTS get_totals_by_account //
+CREATE PROCEDURE get_totals_by_account(
     IN _id_user integer,
     IN _id_account integer,
     IN _init_date date,
@@ -382,6 +383,33 @@ WHERE
     AND DA.id = _id_account
 GROUP BY
     A.id_rel_category;
+END //
+
+DROP PROCEDURE IF EXISTS get_totals_accounts //
+CREATE PROCEDURE get_totals_accounts(
+    IN _id_user integer,
+    IN _init_date date,
+    IN _end_date date
+)
+BEGIN
+SELECT
+  C.id AS Id_account,
+  CA.name AS Name,
+  SUM(B.amount) AS Total,
+  A.id_rel_account AS Id_rel_account,
+  A.created_at as Created_at
+FROM rel_expense  AS A
+INNER JOIN expenses AS B
+    ON B.id = A.id_expense
+INNER JOIN rel_user_account AS C
+    ON C.id = A.id_rel_account
+INNER JOIN accounts AS CA
+    ON CA.id = C.id_account
+WHERE
+    CAST(A.created_at AS Date) BETWEEN _init_date  AND _end_date
+    AND C.id_user = _id_user
+GROUP BY
+    A.id_rel_account
 END //
 
 DELIMITER ;
