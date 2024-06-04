@@ -61,7 +61,7 @@ const ConfigUserModal = ({ open, setOpen }: propsTypes) => {
             </Box>
           </VStack>
         </ModalBody>
-        <ModalFooter alignContent="space-between">
+        <ModalFooter justifyContent="space-between">
           <Box>
             <Button colorScheme="red">Cerrar Sesión</Button>
           </Box>

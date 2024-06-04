@@ -409,7 +409,7 @@ WHERE
     CAST(A.created_at AS Date) BETWEEN _init_date  AND _end_date
     AND C.id_user = _id_user
 GROUP BY
-    A.id_rel_account
+    A.id_rel_account;
 END //
 
 DELIMITER ;

@@ -13,4 +13,5 @@ func RoutesCategories(app *fiber.App) {
 	route.Get("/", controllers.GetCategories)
 	route.Post("/", controllers.CreateCategory)
 	route.Post("/details", controllers.GetDetailsCategory)
+	route.Post("/totals", controllers.GetTotalsByCategory)
 }
