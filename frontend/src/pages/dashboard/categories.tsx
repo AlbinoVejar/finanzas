@@ -1,31 +1,27 @@
-import {
-  HStack,
-} from '@chakra-ui/react'
+import React from 'react'
 import { useRecoilValue } from 'recoil'
-import {
-  ResumeCategory,
-  TotalCategory,
-} from '../../types/category.type'
-import useAccounts from '../../hooks/useAccounts.hook'
+import { Category, ResumeCategory, TotalCategory } from '../../types/category.type'
 import { CategorySelector } from '../../context/categoryState'
-import { ExpenseTable, ResumeExpense } from '../../types/expense.type'
 import useResume from '../../hooks/useResume.hook'
+import { HStack } from '@chakra-ui/react'
+import Categories from '../categories'
+import { ExpenseTable, ResumeExpense } from '../../types/expense.type'
 import { RiDeleteBin5Line, RiEditLine } from '@remixicon/react'
-import { AccountSelector } from '../../context/accountState'
-import { Account } from '../../types/account.type'
-import AccountsDashboard from './accounts'
 
-
-const Dashboard = () => {
-  useAccounts().query
-  const { query, queryTotals } = useResume()
+const CategoriesDashboard = () => {
+  const { query, queryTotals } = useResume();
   const { isLoading, isError, error } = query
   const { data: totals } = queryTotals
   const { data: categories, resume } =
     useRecoilValue<ResumeCategory>(CategorySelector)
-  const accounts = useRecoilValue<Account[]>(AccountSelector)
+  const onQuickEditExpense = (id: number) => {
+    console.log('edit', 'Hola', id)
+  }
+  const onQuickDeleteExpense = (id: number) => {
+    console.log('delete', 'Hola', id)
+  }
   const getResumeByCategory = (id: number): ExpenseTable[] => {
-    if (resume.length > 0) {
+    if (resume! && resume.length > 0) {
       const result = resume.filter((e: ResumeExpense) => e.Id_category === id)
       return result.map((e: ExpenseTable) => ({
         ...e,
@@ -53,12 +49,6 @@ const Dashboard = () => {
     }
     return undefined
   }
-  const onQuickEditExpense = (id: number) => {
-    console.log('edit', 'Hola', id)
-  }
-  const onQuickDeleteExpense = (id: number) => {
-    console.log('delete', 'Hola', id)
-  }
   return (
     <>
       {isLoading ? (
@@ -67,17 +57,20 @@ const Dashboard = () => {
         <span>Error:{error.message}</span>
       ) : (
         <HStack spacing={6} justify="center" align="stretch" margin="1rem 1rem">
-          {
-            !!accounts &&
-            accounts.length > 0 &&
-            accounts.map((item: Account) => (
-              <AccountsDashboard key={`account_${item.Id}`} account={item} />
-            ))
-          }
+          {!!categories &&
+            categories.length > 0 &&
+            categories?.map((item: Category) => (
+              <Categories
+                key={item.Id}
+                category={item}
+                total={getTotalByCategory(item.Id)}
+                resume={getResumeByCategory(item.Id)}
+              />
+            ))}
         </HStack>
       )}
     </>
   )
 }
 
-export default Dashboard
+export default CategoriesDashboard

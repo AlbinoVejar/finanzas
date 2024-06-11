@@ -21,6 +21,21 @@ func GetAccounts(context *fiber.Ctx) error {
 	})
 }
 
+func GetAccount(context *fiber.Ctx) error {
+	var status int = fiber.StatusOK
+	db := config.Connection()
+	var accounts []models.Account
+	errQuery := db.Raw("CALL get_account(1)").Scan(&accounts).Error
+	if errQuery != nil {
+		return context.SendStatus(fiber.ErrBadRequest.Code)
+	}
+	status = fiber.StatusOK
+	return context.JSON(fiber.Map{
+		"data":   accounts,
+		"status": status,
+	})
+}
+
 func CreateAccount(context *fiber.Ctx) error {
 	var status int = fiber.StatusOK
 	db := config.Connection()

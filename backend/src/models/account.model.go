@@ -4,6 +4,7 @@ type Account struct {
 	Id     int
 	Name   string
 	Credit bool
+	Limit_amount float32
 }
 
 type AccountTotalRequest struct {

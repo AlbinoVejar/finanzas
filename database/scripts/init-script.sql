@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS accounts (
   id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT, 
   name VARCHAR(50) NOT NULL, 
   credit BOOL NOT NULL DEFAULT false,
-  limit_amount DOUBLE NOT NULL
+  limit_amount FLOAT NOT NULL DEFAULT 1000
 );
 DROP TABLE IF EXISTS users;
 CREATE TABLE IF NOT EXISTS users (
@@ -129,9 +129,9 @@ VALUES
     LAST_INSERT_ID(), 
     @user_id
   );
-INSERT INTO accounts(`name`) 
+INSERT INTO accounts(`name`, limit_amount)
 VALUES 
-  ('Debito');
+  ('Debito', 1000.00);
 INSERT INTO rel_user_account(id_user, id_account) 
 VALUES 
   (
@@ -161,7 +161,9 @@ DROP PROCEDURE IF EXISTS get_accounts //
 CREATE PROCEDURE get_accounts(_id_user integer) BEGIN 
 SELECT 
   A.id, 
-  B.name
+  B.name,
+  B.credit,
+  B.limit_amount
 FROM 
   rel_user_account AS A 
   INNER JOIN accounts AS B ON A.id_account = B.id 

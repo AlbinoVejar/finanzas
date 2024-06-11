@@ -36,6 +36,7 @@ import { AccountSelector } from '../context/accountState'
 import { Account } from '../types/account.type'
 import { UserSelector } from '../context/userState'
 import { UserStateType } from '../types/user.type'
+import { useEffect } from 'react'
 
 interface IExpenseInputs {
   account: string
@@ -71,6 +72,12 @@ const ExpenseModal = () => {
     },
     resolver: zodResolver(schemaExpense),
   })
+
+  useEffect(() => {
+    console.log(defaultValues)
+    console.log("errors", errors)
+    console.log("categories", categories)
+  }, [defaultValues])
 
   const onSubmit: SubmitHandler<IExpenseInputs> = async (
     data: IExpenseInputs

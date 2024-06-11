@@ -1,21 +1,10 @@
 version: "3"
 services:
-  backend:
-    build: ./backend
-    working_dir: /back
-    ports:
-      - 6009:6009
-    environment:
-      PORT: 6009
-    networks:
-      - finanzasNetwork
-    depends_on:
-      - database
   database:
     build: ./database
-    hostname: finanzasDB
+    restart: always
     ports:
-      - 3306:3306
+      - "3306:3306"
     environment:
       MYSQL_ROOT_PASSWORD: test123
       MYSQL_DATABASE: db_finanzas
@@ -23,6 +12,25 @@ services:
       - database_info:/var/lib/mysql
     networks:
       - finanzasNetwork
+  backend:
+    build: 
+      context: ./backend
+      dockerfile: ./backend/Dockerfile
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      DB_PORT: 3306
+      DB_HOST: database
+      DB_USER: root
+      DB_PASSWORD: test123
+      DB_NAME: db_finanzas
+    networks:
+      - finanzasNetwork
+    depends_on:
+      - database
+    volumes:
+      - ./backend:/backend
 volumes:
   database_info:
 

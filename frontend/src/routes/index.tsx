@@ -1,4 +1,3 @@
-import React from 'react'
 import { Routes, Route } from 'react-router-dom'
 import Layout from '../layout'
 import Dashboard from '../pages/dashboard'
@@ -8,8 +7,9 @@ const MainRouter = () => {
   return (
     <Routes>
       <Route path="/" element={<Layout />} >
-        <Route path='categorias' element={<Dashboard />} />
-        {/* <Route index element={<Accounts />} /> */}
+        {/* <Route path='categorias' element={<CategoriesDashboard />} /> */}
+        <Route index element={<Dashboard />} />
+        <Route path='cuenta/:id' element={<Accounts />} />
       </Route>
     </Routes>
   )
