@@ -13,9 +13,7 @@ services:
     networks:
       - finanzasNetwork
   backend:
-    build: 
-      context: ./backend
-      dockerfile: ./backend/Dockerfile
+    build: ./backend
     restart: always
     ports:
       - "3000:3000"
