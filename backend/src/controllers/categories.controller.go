@@ -50,20 +50,3 @@ func GetDetailsCategory(context *fiber.Ctx) error {
 		"status": status,
 	})
 }
-
-func GetTotalsByCategory(context *fiber.Ctx) error {
-	var status int = fiber.StatusOK
-	db := config.Connection()
-	var expenses []models.TotalCategory
-	var config models.UserDashboard
-	context.BodyParser(&config)
-	err := db.Raw("CALL get_totals_account(?,?,?,?)", config.Id, config.Id_account, config.Init_date, config.End_date).Scan(&expenses).Error
-	if err != nil {
-		return context.SendStatus(fiber.ErrBadRequest.Code)
-	}
-	status = fiber.StatusOK
-	return context.JSON(fiber.Map{
-		"data":   expenses,
-		"status": status,
-	})
-}

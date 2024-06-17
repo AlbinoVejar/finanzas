@@ -397,7 +397,8 @@ BEGIN
 SELECT
   C.id AS Id_account,
   CA.name AS Name,
-  SUM(B.amount) AS Total,
+  CA.limit_amount AS Limit_Credit,
+  SUM(B.amount) AS Total_Expense,
   A.id_rel_account AS Id_rel_account,
   A.created_at as Created_at
 FROM rel_expense  AS A

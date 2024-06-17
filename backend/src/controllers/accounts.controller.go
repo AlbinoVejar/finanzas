@@ -62,7 +62,7 @@ func UpdateAccount(context *fiber.Ctx) error {
 	return context.SendStatus(status)
 }
 
-func GetTotalsByAccount(context *fiber.Ctx) error {
+func GetTotalsAccounts(context *fiber.Ctx) error {
 	var status int = fiber.StatusOK
 	db := config.Connection()
 	var totals []models.AccountTotalResponse
@@ -75,6 +75,24 @@ func GetTotalsByAccount(context *fiber.Ctx) error {
 	status = fiber.StatusOK
 	return context.JSON(fiber.Map{
 		"data":   totals,
+		"status": status,
+	})
+}
+
+func GetTotalsByAccount(context *fiber.Ctx) error {
+	var status int = fiber.StatusOK
+	id_account := context.QueryInt("id")
+	db := config.Connection()
+	var expenses []models.TotalCategory
+	var config models.UserDashboard
+	context.BodyParser(&config)
+	err := db.Raw("CALL get_totals_account(?,?,?,?)", config.Id_User, id_account, config.Init_date, config.End_date).Scan(&expenses).Error
+	if err != nil {
+		return context.SendStatus(fiber.ErrBadRequest.Code)
+	}
+	status = fiber.StatusOK
+	return context.JSON(fiber.Map{
+		"data":   expenses,
 		"status": status,
 	})
 }

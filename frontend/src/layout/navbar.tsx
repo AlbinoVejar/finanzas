@@ -34,7 +34,7 @@ const Navbar = () => {
             <Icon aria-label="Logo Wallet" h={8} w={8} as={RiWallet3Line} />
           </Box>
           <Box>
-            <Toolbar />
+            {/* <Toolbar /> */}
           </Box>
           <Box>
             <Menu isLazy placement="auto">

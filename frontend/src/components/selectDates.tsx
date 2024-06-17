@@ -56,12 +56,9 @@ const SelectDates = () => {
 
   return (
     <>
-      <FormLabel marginBottom={0} marginRight={0}>
-        Fecha
-      </FormLabel>
       <Popover>
         <PopoverTrigger>
-          <Input size="sm" readOnly value={displayDate()} />
+          <Input readOnly value={displayDate()} />
         </PopoverTrigger>
         <Portal>
           <PopoverContent>

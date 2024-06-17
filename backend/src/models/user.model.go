@@ -11,8 +11,7 @@ type User struct {
 }
 
 type UserDashboard struct {
-	Id         int
-	Id_account int
-	Init_date  string
-	End_date   string
+	Id_User   int
+	Init_date string
+	End_date  string
 }
