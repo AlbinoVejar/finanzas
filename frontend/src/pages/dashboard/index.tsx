@@ -17,7 +17,7 @@ import AccountsDashboard from './accounts'
 
 
 const Dashboard = () => {
-  useAccounts().query
+  // useAccounts().query
   const { query, queryTotals } = useResume()
   const { isLoading, isError, error } = query
   const { data: totals } = queryTotals

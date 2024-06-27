@@ -1444,17 +1444,29 @@
   resolved "https://registry.yarnpkg.com/@rollup/rollup-win32-x64-msvc/-/rollup-win32-x64-msvc-4.9.0.tgz#4ea610e0c40a07a8afa2977cbf80507f41c2271c"
   integrity sha512-aPP5Q5AqNGuT0tnuEkK/g4mnt3ZhheiXrDIiSVIHN9mcN21OyXDVbEMqmXPE7e2OplNLDkcvV+ZoGJa2ZImFgw==
 
-"@tanstack/query-core@5.17.19":
-  version "5.17.19"
-  resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-5.17.19.tgz#212515ccc7a6b913afee6b71ce3e7df2c4d85f7d"
-  integrity sha512-Lzw8FUtnLCc9Jwz0sw9xOjZB+/mCCmJev38v2wHMUl/ioXNIhnNWeMxu0NKUjIhAd62IRB3eAtvxAGDJ55UkyA==
+"@tanstack/query-core@5.45.0":
+  version "5.45.0"
+  resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-5.45.0.tgz#47a662d311c2588867341238960ec21dc7f0714e"
+  integrity sha512-RVfIZQmFUTdjhSAAblvueimfngYyfN6HlwaJUPK71PKd7yi43Vs1S/rdimmZedPWX/WGppcq/U1HOj7O7FwYxw==
 
-"@tanstack/react-query@^5.17.19":
-  version "5.17.19"
-  resolved "https://registry.yarnpkg.com/@tanstack/react-query/-/react-query-5.17.19.tgz#d6fc243faa469bb84952dd810faea47dabe389fc"
-  integrity sha512-qaQENB6/03Gj3dFZGvdmUoqeUGlGm7P1p0RmaR04Bf1Ib1T9lLGimcC9T3oCFbrx0b2ZF21ngjFZNjj9uPJMcg==
+"@tanstack/react-query@^5.45.1":
+  version "5.45.1"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-query/-/react-query-5.45.1.tgz#a0ac6bb89b4a2c2b0251f6647a0a370d86f05347"
+  integrity sha512-mYYfJujKg2kxmkRRjA6nn4YKG3ITsKuH22f1kteJ5IuVQqgKUgbaSQfYwVP0gBS05mhwxO03HVpD0t7BMN7WOA==
   dependencies:
-    "@tanstack/query-core" "5.17.19"
+    "@tanstack/query-core" "5.45.0"
+
+"@tanstack/react-table@^8.17.3":
+  version "8.17.3"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-table/-/react-table-8.17.3.tgz#4e10b4cf5355a40d6d72a83d3f4b3ecd32f56bf4"
+  integrity sha512-5gwg5SvPD3lNAXPuJJz1fOCEZYk9/GeBFH3w/hCgnfyszOIzwkwgp5I7Q4MJtn0WECp84b5STQUDdmvGi8m3nA==
+  dependencies:
+    "@tanstack/table-core" "8.17.3"
+
+"@tanstack/table-core@8.17.3":
+  version "8.17.3"
+  resolved "https://registry.yarnpkg.com/@tanstack/table-core/-/table-core-8.17.3.tgz#d7a9830abb29cd369b52b2a7159dc0360af646fd"
+  integrity sha512-mPBodDGVL+fl6d90wUREepHa/7lhsghg2A3vFpakEhrhtbIlgNAZiMr7ccTgak5qbHqF14Fwy+W1yFWQt+WmYQ==
 
 "@types/babel__core@^7.20.5":
   version "7.20.5"
