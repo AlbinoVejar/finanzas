@@ -1,9 +1,9 @@
 package models
 
 type Account struct {
-	Id     int
-	Name   string
-	Credit bool
+	Id           int
+	Name         string
+	Credit       bool
 	Limit_amount float32
 }
 
@@ -14,9 +14,10 @@ type AccountTotalRequest struct {
 }
 
 type AccountTotalResponse struct {
-	Id_Account     int
+	Id             int
 	Name           string
 	Total          float32
+	Limit_Credit   float32
 	Id_rel_Account int
 	Created_at     string
 }

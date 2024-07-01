@@ -8,8 +8,7 @@ import (
 func RoutesAccounts(app *fiber.App) {
 	route := app.Group("/accounts")
 
-	route.Get("/", controllers.GetAccounts)
-	route.Get("/:id", controllers.GetTotalsByAccount)
+	route.Get("/", controllers.GetTotalsAccounts)
 	route.Post("/", controllers.CreateAccount)
 	route.Put("/", controllers.UpdateAccount)
 	// route.Get("/", middlewares.Protected(), controllers.GetAccounts)

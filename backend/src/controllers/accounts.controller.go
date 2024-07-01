@@ -65,10 +65,11 @@ func UpdateAccount(context *fiber.Ctx) error {
 func GetTotalsAccounts(context *fiber.Ctx) error {
 	var status int = fiber.StatusOK
 	db := config.Connection()
+	filter_dates := context.Queries()
 	var totals []models.AccountTotalResponse
 	var config models.AccountTotalRequest
 	context.BodyParser(&config)
-	err := db.Raw("CALL get_totals_accounts(?,?,?)", config.IdUser, config.Init_date, config.End_date).Scan(&totals).Error
+	err := db.Raw("CALL get_totals_accounts(?,?,?)", 1, filter_dates["init"], filter_dates["end"]).Scan(&totals).Error
 	if err != nil {
 		return context.SendStatus(fiber.ErrBadRequest.Code)
 	}
@@ -86,7 +87,7 @@ func GetTotalsByAccount(context *fiber.Ctx) error {
 	var expenses []models.TotalCategory
 	var config models.UserDashboard
 	context.BodyParser(&config)
-	err := db.Raw("CALL get_totals_account(?,?,?,?)", config.Id_User, id_account, config.Init_date, config.End_date).Scan(&expenses).Error
+	err := db.Raw("CALL get_totals_by_accounts(?,?,?,?)", config.Id_User, id_account, config.Init_date, config.End_date).Scan(&expenses).Error
 	if err != nil {
 		return context.SendStatus(fiber.ErrBadRequest.Code)
 	}

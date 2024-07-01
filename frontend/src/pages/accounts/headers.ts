@@ -6,3 +6,12 @@ export const TableHeaders: string[] = [
   "Fecha",
   "Acciones"
 ]
+
+export const TableHeadersID: string[] = [
+  "#",
+  "Category",
+  "Description",
+  "Amount",
+  "Created_at",
+  "Acciones"
+]

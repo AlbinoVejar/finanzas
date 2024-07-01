@@ -13,5 +13,5 @@ func RoutesExpenses(app *fiber.App) {
 	// route.Put("/", middlewares.Protected(), controllers.CreateExpense)
 	route.Post("/", controllers.CreateExpense)
 	// route.Get("/", middlewares.Protected(), controllers.CreateExpense)
-	route.Post("/resume", controllers.GetResumeCategories)
+	route.Post("/ByAccount/:id", controllers.GetExpensesByAccount)
 }

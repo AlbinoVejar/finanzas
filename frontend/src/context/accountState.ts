@@ -1,9 +1,16 @@
 import { RecoilState, atom, selector } from "recoil";
-import { Account } from "../types/account.type";
+import { Account, AccountStateType } from "../types/account.type";
+import dayjs from "dayjs";
 
-export const AccountState: RecoilState<Account[]> = atom<Account[]>({
+export const AccountState: RecoilState<AccountStateType> = atom<AccountStateType>({
   key: 'accountState',
-  default: []
+  default: {
+    id: 1,
+    filters: {
+      init_date: dayjs().startOf('month').format('YYYY-MM-DD'),
+      end_date: dayjs().endOf('month').format('YYYY-MM-DD')
+    }
+  }
 });
 
 export const AccountSelector = selector({

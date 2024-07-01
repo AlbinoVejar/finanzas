@@ -33,8 +33,8 @@ const AccountsDashboard = ({ account }: propsTypes) => {
         >
           <VStack>
             <Stat>
-              <StatLabel>Total Usado: {FormatCurreny(0)}</StatLabel>
-              <StatLabel>Limite: {FormatCurreny(account.Limit_amount)}</StatLabel>
+              <StatLabel>Total Usado: {FormatCurreny(account.Total)}</StatLabel>
+              <StatLabel>Limite: {FormatCurreny(account.Limit_Credit)}</StatLabel>
               {/* <StatNumber>{FormatCurreny(total?.Total ?? 0)}</StatNumber> */}
               {/* <StatHelpText>{getDate()}</StatHelpText> */}
             </Stat>

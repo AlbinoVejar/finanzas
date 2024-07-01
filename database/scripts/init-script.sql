@@ -395,11 +395,11 @@ CREATE PROCEDURE get_totals_accounts(
 )
 BEGIN
 SELECT
-  C.id AS Id_account,
+  CA.id AS Id,
   CA.name AS Name,
   CA.limit_amount AS Limit_Credit,
-  SUM(B.amount) AS Total_Expense,
-  A.id_rel_account AS Id_rel_account,
+  SUM(B.amount) AS Total, 
+  A.id_rel_account AS Id_rel_Account,
   A.created_at as Created_at
 FROM rel_expense  AS A
 INNER JOIN expenses AS B
@@ -413,6 +413,35 @@ WHERE
     AND C.id_user = _id_user
 GROUP BY
     A.id_rel_account;
+END //
+
+DROP PROCEDURE IF EXISTS get_expenses_by_accounts //
+CREATE PROCEDURE get_expenses_by_accounts(
+    IN _id_user integer,
+    IN _id_account integer,
+    IN _init_date date,
+    IN _end_date date
+)
+BEGIN
+SELECT
+  A.id_expense AS Id,
+  A.id AS Id_rel_Expense,
+  CA.name AS Category,
+  B.amount AS Amount,   
+  B.description AS Description,
+  A.id_rel_category AS Id_rel_Category,
+  A.created_at as Created_at
+FROM rel_expense  AS A
+INNER JOIN expenses AS B
+    ON B.id = A.id_expense
+INNER JOIN rel_user_category AS C
+    ON C.ID = A.id_rel_category
+INNER JOIN categories AS CA
+    ON CA.id = C.id_category
+WHERE
+    CAST(A.created_at AS Date) BETWEEN _init_date  AND _end_date
+    AND C.id_user = _id_user
+    AND A.id_rel_account = _id_account;
 END //
 
 DELIMITER ;

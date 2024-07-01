@@ -1,15 +1,15 @@
 import { RecoilState, atom, selector } from "recoil";
 import { UserStateType } from "../types/user.type";
+import dayjs from "dayjs";
 
 export const UserState: RecoilState<UserStateType> = atom<UserStateType>({
   key: "UserState",
   default: {
-    accountSelected: 0,
-    categorySelected: 0,
-    idUser: 0,
-    Init_date: '',
-    End_date: '',
-    dateMode: false
+    idUser: 1,
+    filters: {
+      init_date: dayjs().startOf('month').format('YYYY-MM-DD'),
+      end_date: dayjs().endOf('month').format('YYYY-MM-DD')
+    }
   },
 });
 

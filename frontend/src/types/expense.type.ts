@@ -59,3 +59,12 @@ export type ExpenseTable = {
   Created_at: string;
   Actions?: TableActionType[];
 }
+
+export type ExpenseByAccount = {
+  Id: number;
+  Id_rel_Expense: number;
+  Category: string;
+  Amount: number;
+  Description: string;
+  Id_rel_Category: number;
+}

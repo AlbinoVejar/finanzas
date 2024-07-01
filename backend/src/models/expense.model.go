@@ -25,3 +25,13 @@ type ResumeExpense struct {
 	Category    string
 	Created_at  string
 }
+
+type ExpenseByAccount struct {
+	Id              int
+	Id_rel_Expense  int
+	Category        string
+	Amount          float32
+	Description     string
+	Id_rel_Category int
+	Created_at      string
+}

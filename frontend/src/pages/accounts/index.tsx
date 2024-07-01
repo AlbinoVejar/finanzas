@@ -19,30 +19,23 @@ type propsTypes = {
 }
 
 const Accounts = () => {
-  const { id } = useParams()
-  const query = useGetTotalsQuery(Number(id))
-  const expenses = useGetAllExpensesAccountQuery(Number(id));
 
   return (
-    <>
-      {query.isSuccess && (
-        <Card>
-          <CardBody>
-            <Grid height="92vh" templateColumns="20% 80%" gap={4}>
-              <GridItem borderWidth="1px" borderRadius="lg">
-                <VStack gap={2} divider={<StackDivider />}>
-                  <DetailsAccount />
-                  <ActionsAccount />
-                </VStack>
-              </GridItem>
-              <GridItem borderWidth="1px" borderRadius="lg">
-                <TableAllExpenses />
-              </GridItem>
-            </Grid>
-          </CardBody>
-        </Card>
-      )}
-    </>
+    <Card>
+      <CardBody>
+        <Grid height="92vh" templateColumns="20% 80%" gap={4}>
+          <GridItem borderWidth="1px" borderRadius="lg">
+            <VStack gap={2} divider={<StackDivider />}>
+              <DetailsAccount />
+              <ActionsAccount />
+            </VStack>
+          </GridItem>
+          <GridItem borderWidth="1px" borderRadius="lg">
+            <TableAllExpenses />
+          </GridItem>
+        </Grid>
+      </CardBody>
+    </Card>
   )
 }
 

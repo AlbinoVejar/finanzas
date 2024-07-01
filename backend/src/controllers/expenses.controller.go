@@ -34,35 +34,20 @@ func CreateExpense(context *fiber.Ctx) error {
 	return context.SendStatus(status)
 }
 
-func GetResumeCategories(context *fiber.Ctx) error {
+func GetExpensesByAccount(context *fiber.Ctx) error {
 	var status int = fiber.StatusOK
+	id_account, _ := context.ParamsInt("id")
 	db := config.Connection()
-	var expenses []models.ResumeExpense
-	var user models.User
-	var categories []models.Category
-	var accounts []models.Account
-	context.BodyParser(&user)
-	errCategories := db.Raw("CALL get_categories(?)", user.Id).Scan(&categories).Error
-	if errCategories != nil {
-		categories = nil
-		println(errCategories)
-	}
-	errAccounts := db.Raw("CALL get_accounts(?)", user.Id).Scan(&accounts).Error
-	if errAccounts != nil {
-		accounts = nil
-		println(errAccounts)
-	}
-	err := db.Raw("CALL get_resume_category(?)", user.Id).Scan(&expenses).Error
+	var expenses []models.ExpenseByAccount
+	var config models.UserDashboard
+	context.BodyParser(&config)
+	err := db.Raw("CALL get_expenses_by_accounts(?,?,?,?)", config.Id_User, id_account, config.Init_date, config.End_date).Scan(&expenses).Error
 	if err != nil {
 		return context.SendStatus(fiber.ErrBadRequest.Code)
 	}
 	status = fiber.StatusOK
 	return context.JSON(fiber.Map{
-		"data": fiber.Map{
-			"accounts":   accounts,
-			"categories": categories,
-			"expenses":   expenses,
-		},
+		"data":   expenses,
 		"status": status,
 	})
 }

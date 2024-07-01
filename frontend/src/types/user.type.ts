@@ -1,10 +1,9 @@
 export type UserStateType = {
-  accountSelected: number;
-  categorySelected: number;
   idUser: number;
-  dateMode: boolean;
-  Init_date: string;
-  End_date: string;
+  filters: {
+    init_date: string;
+    end_date: string;
+  }
 }
 
 export type UserDashboard = {
