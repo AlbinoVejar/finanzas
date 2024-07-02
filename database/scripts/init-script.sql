@@ -35,7 +35,8 @@ DROP TABLE IF EXISTS expenses;
 CREATE TABLE IF NOT EXISTS expenses (
   id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT, 
   description VARCHAR(120) NOT NULL, 
-  amount FLOAT NOT NULL DEFAULT 0
+  amount FLOAT NOT NULL DEFAULT 0,
+  date_expense DATE
 );
 DROP TABLE IF EXISTS rel_user_category;
 CREATE TABLE IF NOT EXISTS rel_user_category (
@@ -54,12 +55,14 @@ CREATE TABLE IF NOT EXISTS rel_expense (
   id_expense INTEGER NOT NULL, 
   id_rel_category INTEGER NOT NULL, 
   id_rel_account INTEGER NULL, 
+  id_user INTEGER NULL, 
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(), 
   modified TIMESTAMP, 
   deleted TIMESTAMP, 
   FOREIGN KEY (id_rel_category) REFERENCES rel_user_category (id), 
   FOREIGN KEY (id_expense) REFERENCES expenses (id), 
-  FOREIGN KEY (id_rel_account) REFERENCES rel_user_account (id)
+  FOREIGN KEY (id_rel_account) REFERENCES rel_user_account (id),
+  FOREIGN KEY (id_user) REFERENCES users (id)
 );
 
 DELIMITER // 
@@ -74,6 +77,8 @@ CREATE PROCEDURE login_user (
     users 
   WHERE 
     email LIKE _email;
+    AND 
+    deleted = '0000-00-00 00:00:00'
   END //
 
 
@@ -166,19 +171,55 @@ SELECT
   B.limit_amount
 FROM 
   rel_user_account AS A 
-  INNER JOIN accounts AS B ON A.id_account = B.id 
+  INNER JOIN accounts AS B ON A.id_account = B.id
 WHERE 
   A.id_user = _id_user;
+  AND 
+  A.deleted = '0000-00-00 00:00:00'
 END //
+
+DROP PROCEDURE IF EXISTS get_accounts_by_user //
+CREATE PROCEDURE get_accounts_by_user(
+    IN _id_user integer,
+    IN _init_date date,
+    IN _end_date date
+)
+BEGIN
+SELECT
+  A.id_expense AS Id,
+  A.id AS Id_rel_Expense,
+  CA.name AS Account,
+  CA.limit_amount AS Limit_amount,
+  SUM(B.amount) AS Total,
+  CA.id AS Id_Account,
+  A.id_rel_account AS Id_rel_Account,
+  B.date_expense as Created_at
+FROM rel_expense  AS A
+INNER JOIN expenses AS B
+    ON B.id = A.id_expense
+INNER JOIN rel_user_account AS C
+    ON C.id = A.id_rel_account
+    AND C.id_user = A.id_user
+INNER JOIN accounts AS CA
+    ON CA.id = C.id_account
+INNER JOIN users AS U
+    ON U.id = A.id_user
+WHERE
+    A.deleted = '0000-00-00 00:00:00'
+    AND CAST(B.date_expense AS Date) BETWEEN _init_date  AND _end_date
+    AND A.id_user = _id_user
+GROUP BY
+    A.id_rel_account;
 
 DROP PROCEDURE IF EXISTS create_account //
 CREATE PROCEDURE create_account(
   _name VARCHAR(50), 
   _is_credit bool, 
-  _id_user integer
-) BEGIN INSERT INTO accounts(name, credit) 
+  _id_user integer,
+  _limit_amount float
+) BEGIN INSERT INTO accounts(name, credit, limit_amount) 
 VALUES 
-  (_name, _is_credit) RETURNING id;
+  (_name, _is_credit, limit_amount) RETURNING id;
 INSERT INTO rel_user_account(id_user, id_account) 
 VALUES 
   (
@@ -191,15 +232,32 @@ DROP PROCEDURE IF EXISTS update_account //
 CREATE PROCEDURE update_account(
   _id_account integer, 
   _name VARCHAR(60), 
-  _is_credit bool
+  _is_credit bool,
+  _limit_amount float
 ) BEGIN 
 UPDATE 
   accounts 
 SET 
   name = _name, 
-  credit = _is_credit 
+  credit = _is_credit,
+  limit_amount = _limit_amount
 WHERE 
   id = _id_account;
+UPDATE
+  rel_user_account
+SET
+  modified = CURRENT_TIMESTAMP()
+WHERE
+  id_account = _id_account;
+END //
+
+DROP PROCEDURE IF EXISTS delete_account //
+CREATE PROCEDURE delete_account(
+  _id_account integer
+) BEGIN 
+UPDATE rel_user_account AS A
+SET A.deleted = CURRENT_TIMESTAMP()
+WHERE A.id_account = _id_account
 END //
 
 DROP PROCEDURE IF EXISTS get_categories //
@@ -216,143 +274,12 @@ INNER JOIN categories AS B
     ON B.id = A.id_category
 WHERE
     A.id_user = _id_user;
+    AND 
+    A.deleted = '0000-00-00 00:00:00'
 END //
 
-DROP PROCEDURE IF EXISTS create_category //
-CREATE PROCEDURE create_category(
-  _name VARCHAR(50)
-) BEGIN INSERT INTO categories(name) 
-VALUES 
-  (_name) RETURNING id;
-END //
-
-DROP PROCEDURE IF EXISTS create_category //
-CREATE PROCEDURE create_category(
-  _name VARCHAR(50)
-) BEGIN INSERT INTO categories(name) 
-VALUES 
-  (_name) RETURNING id;
-END //
-
-DROP PROCEDURE IF EXISTS update_expense //
-CREATE PROCEDURE update_expense(
-  _id_expense integer, _description TEXT, 
-  _amount FLOAT
-) BEGIN 
-UPDATE 
-  expenses 
-SET 
-  description = _description, 
-  amount = _amount 
-WHERE 
-  id_expense = _id_expense;
-END //
-
-DROP PROCEDURE IF EXISTS create_expense //
-CREATE PROCEDURE create_expense(
-  _id_rel_category integer, 
-  _description TEXT, 
-  _amount FLOAT, 
-  _id_rel_account integer
-) BEGIN 
-SET 
-  @id_expense = 0;
-INSERT INTO expenses(amount, description) 
-VALUES 
-  (_amount, _description) RETURNING id;
-SELECT 
-  LAST_INSERT_ID() INTO @id_expense;
-INSERT INTO rel_expense(
-  id_expense, id_rel_category, id_rel_account
-) 
-VALUES 
-  (
-    @id_expense, _id_rel_category, _id_rel_account
-  ) RETURNING id;
-END // 
-
-DROP PROCEDURE IF EXISTS get_resume_category //
-CREATE PROCEDURE get_resume_category(
-  _id_user integer
-) BEGIN
-select 
-  id, 
-  id_expense, 
-  amount, 
-  description, 
-  id_account, 
-  account, 
-  credit, 
-  id_category, 
-  category,
-  created_at
-from
-  (
-    select 
-      a.id, 
-      b.id as id_expense, 
-      b.amount as amount, 
-      b.description as description, 
-      ca.id as id_account, 
-      ca.name as account, 
-      ca.credit as credit, 
-      da.id as id_category, 
-      da.name as category, 
-      row_number() over (
-        partition by a.id_rel_category 
-        order by 
-          a.created_at desc
-      ) as row_number,
-      a.created_at
-    from 
-      rel_expense as a 
-      inner join expenses as b on a.id_expense = b.id 
-      inner join rel_user_account as c on a.id_rel_account = c.id 
-      inner join accounts as ca on c.id_account = ca.id 
-      inner join rel_user_category as d on a.id_rel_category = d.id 
-      inner join categories as da on d.id_category = da.id 
-    where 
-      a.deleted is not null
-      and c.id_user = _id_user
-      and d.id_user = _id_user
-  ) as data 
-where 
-  row_number <= 3;
-END //
-
-DROP PROCEDURE IF EXISTS get_details_category //
-CREATE PROCEDURE get_details_category(
-  IN _id_rel_category integer,
-  IN _page_number integer,
-  IN _row_per_page integer
-) 
-BEGIN
-DECLARE offset_value INT;
-SET offset_value = _row_per_page * (_page_number - 1);
-SELECT
-  A.id,
-  B.id AS Id_expense,
-  B.amount AS Amount,
-  B.descriptiON AS Description,
-  CA.id AS Id_category,
-  CA.name AS Category
-FROM
-  rel_expense AS A
-  inner join expenses AS B ON A.id_expense = B.id
-  inner join rel_user_category AS C ON A.id_rel_category = C.id
-  inner join categories AS CA ON C.id_category = CA.id
-WHERE
-  A.deleted IS NOT NULL
-  AND C.id = _id_rel_category
-ORDER BY
-  A.created_at DESC
-LIMIT
-  _row_per_page
-OFFSET offset_value;
-END //
-
-DROP PROCEDURE IF EXISTS get_totals_by_account //
-CREATE PROCEDURE get_totals_by_account(
+DROP PROCEDURE IF EXISTS get_categories_by_account //
+CREATE PROCEDURE get_categories_by_account(
     IN _id_user integer,
     IN _id_account integer,
     IN _init_date date,
@@ -360,63 +287,128 @@ CREATE PROCEDURE get_totals_by_account(
 )
 BEGIN
 SELECT
-  DA.id AS Id_account,
-  DA.name AS Account_name,
-  CA.id AS Id_category,
+  A.id_expense AS Id,
+  A.id AS Id_rel_Expense,
   CA.name AS Category,
   SUM(B.amount) AS Total,
-  A.id_rel_category AS Id_rel_category,
-  A.id_rel_account AS Id_rel_account
+  B.description AS Description,
+  CA.id AS Id_Category,
+  A.id_rel_category AS Id_rel_Category,
+  B.date_expense as Created_at
 FROM rel_expense  AS A
 INNER JOIN expenses AS B
     ON B.id = A.id_expense
 INNER JOIN rel_user_category AS C
-    ON C.id = A.id_rel_category
+    ON C.ID = A.id_rel_category
 INNER JOIN categories AS CA
     ON CA.id = C.id_category
-INNER JOIN rel_user_account AS D
-    ON D.id = A.id_rel_account
-INNER JOIN accounts AS DA
-    ON DA.id = D.id_account
+INNER JOIN users AS U
+    ON U.id = A.id_user
 WHERE
-    CAST(A.created_at AS Date) BETWEEN _init_date  AND _end_date
-    AND C.id_user = _id_user
-    AND D.id_user = _id_user
-    AND DA.id = _id_account
+    A.deleted = '0000-00-00 00:00:00'
+    AND CAST(B.date_expense AS Date) BETWEEN _init_date  AND _end_date
+    A.id_user = _id_user
+    A.id_rel_account = _id_account
 GROUP BY
     A.id_rel_category;
 END //
 
-DROP PROCEDURE IF EXISTS get_totals_accounts //
-CREATE PROCEDURE get_totals_accounts(
-    IN _id_user integer,
-    IN _init_date date,
-    IN _end_date date
-)
-BEGIN
-SELECT
-  CA.id AS Id,
-  CA.name AS Name,
-  CA.limit_amount AS Limit_Credit,
-  SUM(B.amount) AS Total, 
-  A.id_rel_account AS Id_rel_Account,
-  A.created_at as Created_at
-FROM rel_expense  AS A
-INNER JOIN expenses AS B
-    ON B.id = A.id_expense
-INNER JOIN rel_user_account AS C
-    ON C.id = A.id_rel_account
-INNER JOIN accounts AS CA
-    ON CA.id = C.id_account
-WHERE
-    CAST(A.created_at AS Date) BETWEEN _init_date  AND _end_date
-    AND C.id_user = _id_user
-GROUP BY
-    A.id_rel_account;
+DROP PROCEDURE IF EXISTS create_category //
+CREATE PROCEDURE create_category(
+  _name VARCHAR(50)
+) BEGIN INSERT INTO categories(name) 
+VALUES 
+  (_name) RETURNING id;
 END //
 
-DROP PROCEDURE IF EXISTS get_expenses_by_accounts //
-CREATE PROCEDURE get_expenses_by_accounts(
+DROP PROCEDURE IF EXISTS update_category //
+CREATE PROCEDURE update_category(
+  _id_category integer, 
+  _name VARCHAR(50)
+) BEGIN 
+UPDATE 
+  categories
+SET 
+  name = _name
+WHERE 
+  id = _id_category;
+UPDATE
+  rel_user_category
+SET
+  modified = CURRENT_TIMESTAMP()
+WHERE
+  id_category = _id_category;
+END //
+
+DROP PROCEDURE IF EXISTS delete_category //
+CREATE PROCEDURE delete_category(
+  _id_category integer
+) BEGIN 
+UPDATE rel_user_category AS A
+SET A.deleted = CURRENT_TIMESTAMP()
+WHERE A.id_category = _id_category
+END //
+
+DROP PROCEDURE IF EXISTS create_expense //
+CREATE PROCEDURE create_expense(
+  _id_user integer,
+  _id_rel_account integer,
+  _id_rel_category integer, 
+  _description TEXT, 
+  _amount FLOAT
+  _date_expense TIMESTAMP
+) BEGIN 
+SET 
+  @id_expense = 0;
+INSERT INTO expenses(amount, description, date_expense) 
+VALUES 
+  (_amount, _description, _date_expense) RETURNING id;
+SELECT 
+  LAST_INSERT_ID() INTO @id_expense;
+INSERT INTO rel_expense(
+  id_expense, id_rel_category, id_rel_account, id_user
+) 
+VALUES 
+  (
+    @id_expense, _id_rel_category, _id_rel_account, _id_user
+  ) RETURNING id;
+END // 
+
+DROP PROCEDURE IF EXISTS update_expense //
+CREATE PROCEDURE update_expense(
+  _id_expense integer, 
+  _description TEXT, 
+  _amount FLOAT,
+  _date TIMESTAMP
+) BEGIN 
+SET
+  @id_rel_account = 0, @id_rel_category;
+SELECT 
+  id_rel_account INTO @id_rel_account,
+  id_rel_category INTO @id_rel_category
+FROM rel_expense
+WHERE
+  id_expense = _id_expense;
+UPDATE 
+  expenses 
+SET 
+  description = _description, 
+  amount = _amount,
+  date_expense = _date
+WHERE 
+  id = _id_expense;
+UPDATE
+  rel_expense
+SET
+  modified = CURRENT_TIMESTAMP(),
+  id_rel_account = @id_rel_account,
+  id_rel_category = @id_rel_category
+WHERE
+  id_expense = _id_expense;
+END //
+
+DROP PROCEDURE IF EXISTS get_expenses_by_account //
+CREATE PROCEDURE get_expenses_by_account(
     IN _id_user integer,
     IN _id_account integer,
     IN _init_date date,
@@ -438,9 +430,12 @@ INNER JOIN rel_user_category AS C
     ON C.ID = A.id_rel_category
 INNER JOIN categories AS CA
     ON CA.id = C.id_category
+INNER JOIN users AS U
+    ON U.id = A.id_user
 WHERE
-    CAST(A.created_at AS Date) BETWEEN _init_date  AND _end_date
-    AND C.id_user = _id_user
+    A.deleted = '0000-00-00 00:00:00'
+    AND CAST(A.created_at AS Date) BETWEEN _init_date  AND _end_date
+    AND U.id = _id_user
     AND A.id_rel_account = _id_account;
 END //
 
