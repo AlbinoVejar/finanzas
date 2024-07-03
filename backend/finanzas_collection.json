@@ -3,7 +3,7 @@
   "requests": [
     {
       "name": "get_account",
-      "url": "http://localhost:3000/account/1",
+      "url": "http://localhost:3000/accounts",
       "method": "GET",
       "params": [],
       "headers": [
@@ -171,6 +171,70 @@
       ],
       "body": {
         "json": "{ \n  \"Email\": \"albino@test.com\",\n  \"Name\": \"Albino Vejar\",\n  \"Password\": \"advl123\"\n}"
+      },
+      "auth": "no_auth",
+      "scripts": {
+        "pre_request_script": null,
+        "post_request_script": null
+      },
+      "settings": {
+        "use_config_proxy": true,
+        "allow_redirects": true,
+        "store_received_cookies": true,
+        "pretty_print_response_content": true
+      }
+    },
+    {
+      "name": "login",
+      "url": "http://localhost:3000/users/login",
+      "method": "GET",
+      "params": [],
+      "headers": [
+        {
+          "data": [
+            "cache-control",
+            "no-cache"
+          ],
+          "enabled": true
+        },
+        {
+          "data": [
+            "user-agent",
+            "ATAC/v0.15.1"
+          ],
+          "enabled": true
+        },
+        {
+          "data": [
+            "accept",
+            "*/*"
+          ],
+          "enabled": true
+        },
+        {
+          "data": [
+            "accept-encoding",
+            "gzip, deflate, br"
+          ],
+          "enabled": true
+        },
+        {
+          "data": [
+            "connection",
+            "keep-alive"
+          ],
+          "enabled": true
+        },
+        {
+          "data": [
+            "content-type",
+            "application/json"
+          ],
+          "enabled": true
+        }
+      ],
+      "body": {
+        "json": "{\n  \"Email\": \"albino@test.com\"\n  \"Password\": \"advl123\"\n}"
       },
       "auth": "no_auth",
       "scripts": {

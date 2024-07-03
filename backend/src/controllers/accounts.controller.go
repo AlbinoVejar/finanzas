@@ -8,32 +8,35 @@ import (
 
 func GetAccounts(context *fiber.Ctx) error {
 	var status int = fiber.StatusOK
-	db := config.Connection()
-	var accounts []models.Account
-	errQuery := db.Raw("CALL get_accounts(1)").Scan(&accounts).Error
-	if errQuery != nil {
-		return context.SendStatus(fiber.ErrBadRequest.Code)
+	// id_User, _ := InitController(context)
+	var id_User = 0
+	if id_User > 0 {
+		db := config.Connection()
+		var accounts []models.Account
+		errQuery := db.Raw("CALL get_accounts(?)", id_User).Scan(&accounts).Error
+		if errQuery != nil {
+			return context.SendStatus(fiber.ErrBadRequest.Code)
+		}
+		status = fiber.StatusOK
+		return context.JSON(fiber.Map{
+			"data":   accounts,
+			"status": status,
+		})
+	} else {
+		// status = fiber.StatusUnauthorized
+		// return context.SendStatus(status)
+		db := config.Connection()
+		var accounts []models.Account
+		errQuery := db.Raw("CALL get_accounts(?)", 1).Scan(&accounts).Error
+		if errQuery != nil {
+			return context.SendStatus(fiber.ErrBadRequest.Code)
+		}
+		status = fiber.StatusOK
+		return context.JSON(fiber.Map{
+			"data":   accounts,
+			"status": status,
+		})
 	}
-	status = fiber.StatusOK
-	return context.JSON(fiber.Map{
-		"data":   accounts,
-		"status": status,
-	})
-}
-
-func GetAccount(context *fiber.Ctx) error {
-	var status int = fiber.StatusOK
-	db := config.Connection()
-	var accounts []models.Account
-	errQuery := db.Raw("CALL get_account(1)").Scan(&accounts).Error
-	if errQuery != nil {
-		return context.SendStatus(fiber.ErrBadRequest.Code)
-	}
-	status = fiber.StatusOK
-	return context.JSON(fiber.Map{
-		"data":   accounts,
-		"status": status,
-	})
 }
 
 func CreateAccount(context *fiber.Ctx) error {

@@ -18,10 +18,13 @@ func Login(context *fiber.Ctx) error {
 	var userDB models.User
 	context.BodyParser(&user)
 	errQuery := db.Raw("CALL login_user(?)", user.Email).Scan(&userDB).Error
+	println("heree")
+	println(errQuery)
 	if errQuery != nil {
 		return context.SendStatus(fiber.StatusNotFound)
 	} else {
 		result := utils.DecodedPass(user.Password, userDB.Password)
+		println("heree")
 		if result {
 			claims := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 				"IdUser": strconv.Itoa(int(userDB.Id)),
