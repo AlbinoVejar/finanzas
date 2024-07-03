@@ -76,11 +76,10 @@ CREATE PROCEDURE login_user (
   FROM 
     users 
   WHERE 
-    email LIKE _email;
+    email LIKE _email
     AND 
-    deleted = '0000-00-00 00:00:00'
-  END //
-
+    deleted = '0000-00-00 00:00:00';
+END //
 
 DROP PROCEDURE IF EXISTS get_user //
 CREATE PROCEDURE get_user (_id_user integer) 
@@ -163,7 +162,8 @@ WHERE
 END //
 
 DROP PROCEDURE IF EXISTS get_accounts //
-CREATE PROCEDURE get_accounts(_id_user integer) BEGIN 
+CREATE PROCEDURE get_accounts(_id_user integer) 
+BEGIN 
 SELECT 
   A.id, 
   B.name,
@@ -173,9 +173,9 @@ FROM
   rel_user_account AS A 
   INNER JOIN accounts AS B ON A.id_account = B.id
 WHERE 
-  A.id_user = _id_user;
+  A.id_user = _id_user
   AND 
-  A.deleted = '0000-00-00 00:00:00'
+  A.deleted = '0000-00-00 00:00:00';
 END //
 
 DROP PROCEDURE IF EXISTS get_accounts_by_user //
@@ -210,6 +210,7 @@ WHERE
     AND A.id_user = _id_user
 GROUP BY
     A.id_rel_account;
+END //
 
 DROP PROCEDURE IF EXISTS create_account //
 CREATE PROCEDURE create_account(
@@ -257,7 +258,7 @@ CREATE PROCEDURE delete_account(
 ) BEGIN 
 UPDATE rel_user_account AS A
 SET A.deleted = CURRENT_TIMESTAMP()
-WHERE A.id_account = _id_account
+WHERE A.id_account = _id_account;
 END //
 
 DROP PROCEDURE IF EXISTS get_categories //
@@ -273,9 +274,9 @@ FROM
 INNER JOIN categories AS B 
     ON B.id = A.id_category
 WHERE
-    A.id_user = _id_user;
+    A.id_user = _id_user
     AND 
-    A.deleted = '0000-00-00 00:00:00'
+    A.deleted = '0000-00-00 00:00:00';
 END //
 
 DROP PROCEDURE IF EXISTS get_categories_by_account //
@@ -307,8 +308,8 @@ INNER JOIN users AS U
 WHERE
     A.deleted = '0000-00-00 00:00:00'
     AND CAST(B.date_expense AS Date) BETWEEN _init_date  AND _end_date
-    A.id_user = _id_user
-    A.id_rel_account = _id_account
+    AND A.id_user = _id_user
+    AND A.id_rel_account = _id_account
 GROUP BY
     A.id_rel_category;
 END //
@@ -346,7 +347,7 @@ CREATE PROCEDURE delete_category(
 ) BEGIN 
 UPDATE rel_user_category AS A
 SET A.deleted = CURRENT_TIMESTAMP()
-WHERE A.id_category = _id_category
+WHERE A.id_category = _id_category;
 END //
 
 DROP PROCEDURE IF EXISTS create_expense //
@@ -355,7 +356,7 @@ CREATE PROCEDURE create_expense(
   _id_rel_account integer,
   _id_rel_category integer, 
   _description TEXT, 
-  _amount FLOAT
+  _amount FLOAT,
   _date_expense TIMESTAMP
 ) BEGIN 
 SET 
@@ -382,10 +383,9 @@ CREATE PROCEDURE update_expense(
   _date TIMESTAMP
 ) BEGIN 
 SET
-  @id_rel_account = 0, @id_rel_category;
+  @id_rel_account = 0, @id_rel_category = 0;
 SELECT 
-  id_rel_account INTO @id_rel_account,
-  id_rel_category INTO @id_rel_category
+  id_rel_account, id_rel_category INTO @id_rel_account, @id_rel_category
 FROM rel_expense
 WHERE
   id_expense = _id_expense;
