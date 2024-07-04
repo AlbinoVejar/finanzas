@@ -3,7 +3,7 @@
   "requests": [
     {
       "name": "get_account",
-      "url": "http://localhost:3000/accounts",
+      "url": "http://localhost:3000/accounts/protected",
       "method": "GET",
       "params": [],
       "headers": [
@@ -44,7 +44,9 @@
         }
       ],
       "body": "no_body",
-      "auth": "no_auth",
+      "auth": {
+        "bearer_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZFVzZXIiOiIxIiwiZXhwIjoxNzIwMTU4NDcwfQ.AGuy15nCj3dK9_PFCxoileMx-rqEfd8vavNFFFVkb4g"
+      },
       "scripts": {
         "pre_request_script": null,
         "post_request_script": null
@@ -234,7 +236,7 @@
         }
       ],
       "body": {
-        "json": "{\n  \"Email\": \"albino@test.com\"\n  \"Password\": \"advl123\"\n}"
+        "json": "{\n  \"Email\": \"albino@test.com\",\n  \"Password\": \"advl123\"\n}"
       },
       "auth": "no_auth",
       "scripts": {

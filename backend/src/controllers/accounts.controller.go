@@ -7,53 +7,45 @@ import (
 )
 
 func GetAccounts(context *fiber.Ctx) error {
-	var status int = fiber.StatusOK
-	// id_User, _ := InitController(context)
-	var id_User = 0
-	if id_User > 0 {
-		db := config.Connection()
-		var accounts []models.Account
-		errQuery := db.Raw("CALL get_accounts(?)", id_User).Scan(&accounts).Error
-		if errQuery != nil {
-			return context.SendStatus(fiber.ErrBadRequest.Code)
-		}
-		status = fiber.StatusOK
-		return context.JSON(fiber.Map{
-			"data":   accounts,
-			"status": status,
-		})
-	} else {
-		// status = fiber.StatusUnauthorized
-		// return context.SendStatus(status)
-		db := config.Connection()
-		var accounts []models.Account
-		errQuery := db.Raw("CALL get_accounts(?)", 1).Scan(&accounts).Error
-		if errQuery != nil {
-			return context.SendStatus(fiber.ErrBadRequest.Code)
-		}
-		status = fiber.StatusOK
-		return context.JSON(fiber.Map{
-			"data":   accounts,
-			"status": status,
-		})
+	id_User, status := InitController(context)
+	if id_User == 0 {
+		return context.SendStatus(status)
 	}
+	db := config.Connection()
+	var accounts []models.Account
+	errQuery := db.Raw("CALL get_accounts(?)", id_User).Scan(&accounts).Error
+	if errQuery != nil {
+		return context.SendStatus(fiber.ErrBadRequest.Code)
+	}
+	status = fiber.StatusOK
+	return context.JSON(fiber.Map{
+		"data":   accounts,
+		"status": status,
+	})
 }
 
 func CreateAccount(context *fiber.Ctx) error {
-	var status int = fiber.StatusOK
+	id_User, status := InitController(context)
+	if id_User == 0 {
+		return context.SendStatus(status)
+	}
 	db := config.Connection()
 	var account models.Account
 	context.BodyParser(&account)
-	errQuery := db.Exec("CALL create_account(?,?,?)", account.Name, account.Credit, 1).Error
+	errQuery := db.Exec("CALL create_account(?,?,?)", account.Name, account.Credit, id_User).Error
 	if errQuery != nil {
 		return context.SendStatus(fiber.ErrBadRequest.Code)
 	}
 	status = fiber.StatusOK
 	return context.SendStatus(status)
+
 }
 
 func UpdateAccount(context *fiber.Ctx) error {
-	var status int = fiber.StatusOK
+	id_User, status := InitController(context)
+	if id_User == 0 {
+		return context.SendStatus(status)
+	}
 	db := config.Connection()
 	var account models.Account
 	context.BodyParser(&account)

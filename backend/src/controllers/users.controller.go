@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"strconv"
 	"time"
 
@@ -13,7 +12,6 @@ import (
 )
 
 func Login(context *fiber.Ctx) error {
-  fmt.Print("hollaaaa")
 	var status int = fiber.StatusAccepted
 	db := config.Connection()
 	var user models.User
@@ -24,7 +22,6 @@ func Login(context *fiber.Ctx) error {
 		return context.SendStatus(fiber.StatusNotFound)
 	} else {
 		result := utils.DecodedPass(user.Password, userDB.Password)
-		println("heree")
 		if result {
 			claims := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 				"IdUser": strconv.Itoa(int(userDB.Id)),
@@ -37,7 +34,6 @@ func Login(context *fiber.Ctx) error {
 					"data":   token,
 				})
 			}
-
 			status = fiber.StatusOK
 		} else {
 			status = fiber.StatusUnauthorized

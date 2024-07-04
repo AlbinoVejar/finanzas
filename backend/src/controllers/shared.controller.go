@@ -6,7 +6,7 @@ import (
 )
 
 func InitController(c *fiber.Ctx) (int, int) {
-	var status = 0
+	var status = fiber.StatusOK
 	idUser, err := middlewares.GetIdUser(c)
 	if err != nil {
 		status = fiber.StatusUnauthorized
