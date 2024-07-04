@@ -4,11 +4,13 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/joho/godotenv"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
 
 func Connection() *gorm.DB {
+  godotenv.Load(".env")
 	db_connection := fmt.Sprintf(db_connection_localhost,
 		os.Getenv("DB_USER"),
 		os.Getenv("DB_PASSWORD"),

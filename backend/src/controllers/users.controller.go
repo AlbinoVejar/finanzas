@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"strconv"
 	"time"
 
@@ -12,14 +13,13 @@ import (
 )
 
 func Login(context *fiber.Ctx) error {
+  fmt.Print("hollaaaa")
 	var status int = fiber.StatusAccepted
 	db := config.Connection()
 	var user models.User
 	var userDB models.User
 	context.BodyParser(&user)
 	errQuery := db.Raw("CALL login_user(?)", user.Email).Scan(&userDB).Error
-	println("heree")
-	println(errQuery)
 	if errQuery != nil {
 		return context.SendStatus(fiber.StatusNotFound)
 	} else {
