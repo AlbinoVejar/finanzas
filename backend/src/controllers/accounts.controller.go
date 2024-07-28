@@ -32,7 +32,7 @@ func CreateAccount(context *fiber.Ctx) error {
 	db := config.Connection()
 	var account models.Account
 	context.BodyParser(&account)
-	errQuery := db.Exec("CALL create_account(?,?,?)", account.Name, account.Credit, id_User).Error
+	errQuery := db.Exec("CALL create_account(?,?,?,?)", account.Name, account.Credit, id_User, account.Limit_amount).Error
 	if errQuery != nil {
 		return context.SendStatus(fiber.ErrBadRequest.Code)
 	}
@@ -49,7 +49,7 @@ func UpdateAccount(context *fiber.Ctx) error {
 	db := config.Connection()
 	var account models.Account
 	context.BodyParser(&account)
-	errQuery := db.Exec("CALL update_account(?,?)", account.Name, account.Credit).Error
+	errQuery := db.Exec("CALL update_account(?,?,?,?)", account.Id, account.Name, account.Credit, account.Limit_amount).Error
 	if errQuery != nil {
 		return context.SendStatus(fiber.ErrBadRequest.Code)
 	}
