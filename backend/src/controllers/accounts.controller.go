@@ -75,3 +75,19 @@ func GetTotalsAccounts(context *fiber.Ctx) error {
 		"status": status,
 	})
 }
+
+func DeleteAccount(context *fiber.Ctx) error {
+	id_User, status := InitController(context)
+	if id_User == 0 {
+		return context.SendStatus(status)
+	}
+	db := config.Connection()
+	var account models.Account
+	context.BodyParser(&account)
+	errQuery := db.Exec("CALL delete_account(?)", account.Id).Error
+	if errQuery != nil {
+		return context.SendStatus(fiber.ErrBadRequest.Code)
+	}
+	status = fiber.StatusOK
+	return context.SendStatus(status)
+}
