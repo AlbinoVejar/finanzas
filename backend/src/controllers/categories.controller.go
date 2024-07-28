@@ -72,19 +72,23 @@ func DeleteCategory(context *fiber.Ctx) error {
 	return context.SendStatus(status)
 }
 
-func GetDetailsCategory(context *fiber.Ctx) error {
-	var status int = fiber.StatusOK
+func GetTotalsCategory(context *fiber.Ctx) error {
+	id_User, status := InitController(context)
+	if id_User == 0 {
+		return context.SendStatus(status)
+	}
 	db := config.Connection()
-	var expenses []models.ResumeExpense
-	var config models.DetailCategory
+	var totals []models.TotalCategory
+	var config models.TotalCategoryRequest
 	context.BodyParser(&config)
-	err := db.Raw("CALL get_details_category(?,?,?)", config.Id, config.Page_number, config.Row_per_page).Scan(&expenses).Error
+	filter_dates := context.Queries()
+	err := db.Raw("CALL get_categories_by_account(?,?,?,?)", id_User, config.Id_account, filter_dates["init"], filter_dates["end"]).Scan(&totals).Error
 	if err != nil {
 		return context.SendStatus(fiber.ErrBadRequest.Code)
 	}
 	status = fiber.StatusOK
 	return context.JSON(fiber.Map{
-		"data":   expenses,
+		"data":   totals,
 		"status": status,
 	})
 }

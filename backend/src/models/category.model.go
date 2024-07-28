@@ -11,13 +11,16 @@ type DetailCategory struct {
 	Page_number  int
 }
 
+type TotalCategoryRequest struct {
+	Id_account int
+}
+
 type TotalCategory struct {
-	Id_account      int
-	Account_name    string
-	Id_category     int
+	Id              int
+	Id_rel_Expense  int
 	Category        string
 	Total           float32
-	Amount          float32
-	Id_rel_category int
-	Id_rel_account  int
+	Id_Category     int
+	Id_rel_Category int
+	Created_at      string
 }

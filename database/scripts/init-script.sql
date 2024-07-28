@@ -292,7 +292,6 @@ SELECT
   A.id AS Id_rel_Expense,
   CA.name AS Category,
   SUM(B.amount) AS Total,
-  B.description AS Description,
   CA.id AS Id_Category,
   A.id_rel_category AS Id_rel_Category,
   B.date_expense as Created_at
