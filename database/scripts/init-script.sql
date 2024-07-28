@@ -165,7 +165,7 @@ DROP PROCEDURE IF EXISTS get_accounts //
 CREATE PROCEDURE get_accounts(_id_user integer) 
 BEGIN 
 SELECT 
-  A.id, 
+  B.id, 
   B.name,
   B.credit,
   B.limit_amount
