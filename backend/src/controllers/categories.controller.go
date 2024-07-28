@@ -7,10 +7,13 @@ import (
 )
 
 func GetCategories(context *fiber.Ctx) error {
-	var status int = fiber.StatusOK
+	id_User, status := InitController(context)
+	if id_User == 0 {
+		return context.SendStatus(status)
+	}
 	db := config.Connection()
 	var categories []models.Category
-	err := db.Raw("CALL get_categories()").Scan(&categories).Error
+	err := db.Raw("CALL get_categories(?)", id_User).Scan(&categories).Error
 	if err != nil {
 		return context.SendStatus(fiber.ErrBadRequest.Code)
 	}
@@ -22,11 +25,14 @@ func GetCategories(context *fiber.Ctx) error {
 }
 
 func CreateCategory(context *fiber.Ctx) error {
-	var status int = fiber.StatusOK
+	id_User, status := InitController(context)
+	if id_User == 0 {
+		return context.SendStatus(status)
+	}
 	db := config.Connection()
 	var category models.Category
 	context.BodyParser(&category)
-	err := db.Exec("CALL create_category(?)", category.Name).Error
+	err := db.Exec("CALL create_category(?,?)", id_User, category.Name).Error
 	if err != nil {
 		return context.SendStatus(fiber.ErrBadRequest.Code)
 	}

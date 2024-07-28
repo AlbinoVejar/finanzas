@@ -267,7 +267,7 @@ CREATE PROCEDURE get_categories(
 ) 
 BEGIN 
 SELECT 
-  A.id, 
+  B.id, 
   B.name
 FROM 
     rel_user_category AS A
@@ -316,10 +316,17 @@ END //
 
 DROP PROCEDURE IF EXISTS create_category //
 CREATE PROCEDURE create_category(
+  _id_user integer,
   _name VARCHAR(50)
 ) BEGIN INSERT INTO categories(name) 
 VALUES 
   (_name) RETURNING id;
+INSERT INTO rel_user_category(id_user, id_category) 
+VALUES 
+  (
+    _id_user, 
+    LAST_INSERT_ID()
+  ) RETURNING id;
 END //
 
 DROP PROCEDURE IF EXISTS update_category //
