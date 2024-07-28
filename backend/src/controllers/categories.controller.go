@@ -40,6 +40,22 @@ func CreateCategory(context *fiber.Ctx) error {
 	return context.SendStatus(status)
 }
 
+func UpdateCategory(context *fiber.Ctx) error {
+	id_User, status := InitController(context)
+	if id_User == 0 {
+		return context.SendStatus(status)
+	}
+	db := config.Connection()
+	var category models.Category
+	context.BodyParser(&category)
+	err := db.Exec("CALL update_category(?,?)", category.Id, category.Name).Error
+	if err != nil {
+		return context.SendStatus(fiber.ErrBadRequest.Code)
+	}
+	status = fiber.StatusOK
+	return context.SendStatus(status)
+}
+
 func GetDetailsCategory(context *fiber.Ctx) error {
 	var status int = fiber.StatusOK
 	db := config.Connection()
