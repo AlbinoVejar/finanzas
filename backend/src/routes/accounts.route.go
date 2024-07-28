@@ -9,9 +9,6 @@ import (
 func RoutesAccounts(app *fiber.App) {
 	route := app.Group("/accounts")
 
-	// route.Get("/", middlewares.Protected(), controllers.GetAccounts)
-	// route.Post("/", middlewares.Protected(), controllers.CreateAccount)
-	// route.Put("/", middlewares.Protected(), controllers.UpdateAccount)
 	route.Get("/", middlewares.Protected(), controllers.GetAccounts)
 	route.Post("/", middlewares.Protected(), controllers.CreateAccount)
 	route.Put("/", middlewares.Protected(), controllers.UpdateAccount)
