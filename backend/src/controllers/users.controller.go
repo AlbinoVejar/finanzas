@@ -44,7 +44,17 @@ func Login(context *fiber.Ctx) error {
 }
 
 func GetUser(context *fiber.Ctx) error {
-	var status int = 404
+	id_User, status := InitController(context)
+	if id_User == 0 {
+		return context.SendStatus(status)
+	}
+	var user models.User
+	db := config.Connection()
+	errQuery := db.Raw("CALL get_user(?)", id_User).Scan(&user).Error
+	if errQuery != nil {
+		return context.SendStatus(fiber.ErrBadRequest.Code)
+	}
+	status = fiber.StatusOK
 	return context.SendStatus(status)
 }
 
@@ -66,7 +76,10 @@ func CreateUser(context *fiber.Ctx) error {
 }
 
 func UpdateUser(context *fiber.Ctx) error {
-	var status int = fiber.StatusOK
+	id_User, status := InitController(context)
+	if id_User == 0 {
+		return context.SendStatus(status)
+	}
 	db := config.Connection()
 	var newUser models.User
 	context.BodyParser(&newUser)
@@ -74,7 +87,7 @@ func UpdateUser(context *fiber.Ctx) error {
 	if err != nil {
 		panic(err)
 	}
-	errQuery := db.Exec("CALL update_user(?,?,?)", newUser.Name, newUser.Email, passEncoded).Error
+	errQuery := db.Exec("CALL update_user(?,?,?,?)", id_User, newUser.Name, newUser.Email, passEncoded).Error
 	if errQuery != nil {
 		return context.SendStatus(fiber.ErrBadRequest.Code)
 	}

@@ -12,4 +12,5 @@ func RoutesUser(app *fiber.App) {
 	route.Get("/:id", middlewares.Protected(), controllers.GetUser)
 	route.Post("/", controllers.CreateUser)
 	route.Post("/login", controllers.Login)
+	route.Put("/", middlewares.Protected(), controllers.UpdateUser)
 }

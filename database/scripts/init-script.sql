@@ -178,8 +178,8 @@ WHERE
   A.deleted = '0000-00-00 00:00:00';
 END //
 
-DROP PROCEDURE IF EXISTS get_accounts_by_user //
-CREATE PROCEDURE get_accounts_by_user(
+DROP PROCEDURE IF EXISTS get_total_expense_by_account //
+CREATE PROCEDURE get_total_expense_by_account(
     IN _id_user integer,
     IN _init_date date,
     IN _end_date date
@@ -220,7 +220,7 @@ CREATE PROCEDURE create_account(
   _limit_amount float
 ) BEGIN INSERT INTO accounts(name, credit, limit_amount) 
 VALUES 
-  (_name, _is_credit, limit_amount) RETURNING id;
+  (_name, _is_credit, _limit_amount) RETURNING id;
 INSERT INTO rel_user_account(id_user, id_account) 
 VALUES 
   (

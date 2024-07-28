@@ -9,10 +9,10 @@ import (
 func RoutesAccounts(app *fiber.App) {
 	route := app.Group("/accounts")
 
-	route.Get("/", controllers.GetAccounts)
-	route.Post("/", controllers.CreateAccount)
-	route.Put("/", controllers.UpdateAccount)
-	route.Get("/protected/", middlewares.Protected(), controllers.GetAccounts)
-	route.Post("/protected/", middlewares.Protected(), controllers.CreateAccount)
-	route.Put("/protected/", middlewares.Protected(), controllers.UpdateAccount)
+	// route.Get("/", middlewares.Protected(), controllers.GetAccounts)
+	// route.Post("/", middlewares.Protected(), controllers.CreateAccount)
+	// route.Put("/", middlewares.Protected(), controllers.UpdateAccount)
+	route.Get("/", middlewares.Protected(), controllers.GetAccounts)
+	route.Post("/", middlewares.Protected(), controllers.CreateAccount)
+	route.Put("/", middlewares.Protected(), controllers.UpdateAccount)
 }
