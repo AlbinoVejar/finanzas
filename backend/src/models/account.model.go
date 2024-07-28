@@ -8,7 +8,6 @@ type Account struct {
 }
 
 type AccountTotalRequest struct {
-	IdUser    int
 	Init_date string
 	End_date  string
 }
