@@ -1,9 +1,10 @@
 package models
 
 type Expense struct {
-	Id          int
-	Description string
-	Amount      float32
+	Id           int
+	Description  string
+	Amount       float32
+	Date_expense string
 }
 
 type NewExpense struct {
@@ -11,19 +12,11 @@ type NewExpense struct {
 	Amount          float32
 	Id_rel_Category int
 	Id_rel_Account  int
+	Date_expense    string
 }
 
-type ResumeExpense struct {
-	Id          int
-	Id_expense  int
-	Amount      float32
-	Description string
-	Id_account  int
-	Account     string
-	Credit      bool
-	Id_category int
-	Category    string
-	Created_at  string
+type TotalExpenseRequest struct {
+	Id_account int
 }
 
 type ExpenseByAccount struct {

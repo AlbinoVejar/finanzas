@@ -442,7 +442,8 @@ WHERE
     A.deleted = '0000-00-00 00:00:00'
     AND CAST(A.created_at AS Date) BETWEEN _init_date  AND _end_date
     AND U.id = _id_user
-    AND A.id_rel_account = _id_account;
+    AND A.id_rel_account = _id_account
+ORDER BY A.created_at DESC, A.id DESC;
 END //
 
 DELIMITER ;
