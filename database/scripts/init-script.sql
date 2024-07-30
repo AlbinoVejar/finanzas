@@ -428,7 +428,7 @@ SELECT
   B.amount AS Amount,   
   B.description AS Description,
   A.id_rel_category AS Id_rel_Category,
-  A.created_at as Created_at
+  B.date_expense as Date_expense
 FROM rel_expense  AS A
 INNER JOIN expenses AS B
     ON B.id = A.id_expense
@@ -440,10 +440,10 @@ INNER JOIN users AS U
     ON U.id = A.id_user
 WHERE
     A.deleted = '0000-00-00 00:00:00'
-    AND CAST(A.created_at AS Date) BETWEEN _init_date  AND _end_date
+    AND CAST(B.Date_expense AS Date) BETWEEN _init_date  AND _end_date
     AND U.id = _id_user
     AND A.id_rel_account = _id_account
-ORDER BY A.created_at DESC, A.id DESC;
+ORDER BY B.Date_expense DESC, A.id DESC;
 END //
 
 DELIMITER ;
