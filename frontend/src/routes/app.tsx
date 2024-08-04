@@ -1,18 +1,22 @@
 import { Routes, Route } from 'react-router-dom'
-import Layout from '../layout'
+import {AppLayout, LandingLayout} from '../layout'
 import Dashboard from '../pages/dashboard'
 import Accounts from '../pages/accounts'
+import Login from '../static/login'
 
-const MainRouter = () => {
+const AppRouter = () => {
   return (
     <Routes>
-      <Route path="/" element={<Layout />} >
+      <Route path="/app" element={<AppLayout />} >
         {/* <Route path='categorias' element={<CategoriesDashboard />} /> */}
         <Route index element={<Dashboard />} />
         <Route path='cuenta/:id' element={<Accounts />} />
+      </Route>
+      <Route path="/" element={<LandingLayout />} >
+        <Route index element={<Login/>} />
       </Route>
     </Routes>
   )
 }
 
-export default MainRouter
+export default AppRouter

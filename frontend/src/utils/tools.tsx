@@ -7,6 +7,6 @@ export const renderErrorsText = (
   if (Boolean(errorMessage)) {
     return <FormErrorMessage>{errorMessage}</FormErrorMessage>
   } else {
-    return <FormHelperText>{helpText}</FormHelperText>
+    return helpText !== '' ? <FormHelperText>{helpText}</FormHelperText> : <></>
   }
 }

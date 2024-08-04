@@ -3,11 +3,11 @@ import { useEffect } from 'react'
 import MainContent from './content'
 import Navbar from './navbar'
 import { Outlet } from 'react-router-dom'
-import { UserState } from '../context/userState'
+import { UserState } from '../../context/userState'
 import { useRecoilState } from 'recoil'
 import daysjs from 'dayjs'
 
-const Layout = () => {
+const AppLayout = () => {
   const [userState, setUserState] = useRecoilState(UserState)
   useEffect(() => {
     setUserState({
@@ -35,4 +35,4 @@ const Layout = () => {
   )
 }
 
-export default Layout
+export default AppLayout

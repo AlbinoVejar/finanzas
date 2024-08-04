@@ -12,7 +12,7 @@ import {
 } from '@chakra-ui/react'
 import { RiUserSettingsLine, RiWallet3Line } from '@remixicon/react'
 import Toolbar from './toolbar'
-import ConfigUserModal from '../components/config-user.modal'
+import ConfigUserModal from '../../components/config-user.modal'
 import { useState } from 'react'
 
 const Navbar = () => {
