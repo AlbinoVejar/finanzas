@@ -1,5 +1,5 @@
 export type UserStateType = {
-  idUser: number;
+  token: string;
   filters: {
     init_date: string;
     end_date: string;

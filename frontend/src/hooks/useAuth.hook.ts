@@ -8,8 +8,7 @@ const useAuthQuery = () => {
     mutationKey: ['loginQuery'],
     mutationFn: async (formData: LoginType) => await Login(formData),
     onError(error) {
-      console.log('gollaa')
-      return error;
+      throw error;
     },
   })
   return {LoginMutation}

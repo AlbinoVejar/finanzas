@@ -2,21 +2,29 @@ import { Grid } from '@chakra-ui/react'
 import { useEffect } from 'react'
 import MainContent from './content'
 import Navbar from './navbar'
-import { Outlet } from 'react-router-dom'
+import { Outlet, useNavigate } from 'react-router-dom'
 import { UserState } from '../../context/userState'
 import { useRecoilState } from 'recoil'
 import daysjs from 'dayjs'
 
 const AppLayout = () => {
   const [userState, setUserState] = useRecoilState(UserState)
+  const navigate = useNavigate()
   useEffect(() => {
     setUserState({
       ...userState,
-      idUser: 1,
-      Init_date: daysjs().startOf('month').format('YYYY-MM-DD'),
-      End_date: daysjs().endOf('month').format('YYYY-MM-DD'),
+      filters: {
+        init_date: daysjs().startOf('month').format('YYYY-MM-DD'),
+        end_date: daysjs().endOf('month').format('YYYY-MM-DD')
+      }
     })
+    console.log('AFTER TOKEN', userState);
   }, [])
+
+  useEffect(() => {
+    navigate('/')
+  }, [userState.token]);
+
   return (
     <Grid
       templateAreas={`"header header"

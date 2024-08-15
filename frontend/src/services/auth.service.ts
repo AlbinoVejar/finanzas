@@ -9,7 +9,7 @@ export const Login = async (form: LoginType): Promise<ResponseAPI<string>> => {
   try {
     const { data } = await axios.post<ResponseAPI<string>>(`${url_localhost}${mainUrl}/login`, form)
     return data
-  } catch (error) {
-    return { data: "", status: 404 }
+  } catch (error: any) {
+    throw error;
   }
 }
