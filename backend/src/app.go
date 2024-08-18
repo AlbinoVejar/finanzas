@@ -24,9 +24,9 @@ func InitServer() {
 
 	app.Use(cors.New(cors.Config{
 		AllowOrigins:     "*",
-		AllowMethods:     "GET,POST,HEAD,PUT,DELETE",
-		AllowHeaders:     "Origin, Content-Type, Accept",
-		AllowCredentials: false,
+		AllowMethods:     "GET,POST,HEAD,PUT,DELETE, OPTIONS",
+		AllowHeaders:     "Origin, Content-Type, Accept, Authorization",
+		AllowCredentials: true,
 	}))
 
 	app.Use(logger.New())

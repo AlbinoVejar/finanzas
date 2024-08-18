@@ -3,18 +3,20 @@ import { UserStateType } from "../types/user.type";
 import dayjs from "dayjs";
 
 const localStorageEffect = (key: string): AtomEffect<UserStateType> => ({setSelf, onSet}) => {
-  const savedValue: string | null = localStorage.getItem(key);
-  if (savedValue !== null) {
+  const savedValue: string = String(localStorage.getItem(key) ?? '');
+  if (Boolean(savedValue)) {
     setSelf((prevState: any) => ({
       ...prevState,
-      token: savedValue
+      token: String(savedValue)
     }))
   }
   onSet((newValue: UserStateType, _, isReset) => {
     if (isReset) {
       localStorage.removeItem(key)
     } else {
-      localStorage.setItem(key, newValue.token);
+      if(String(newValue.token) !== ''){
+        localStorage.setItem(key, String(newValue.token));
+      }
     }
   });
 } 
@@ -22,7 +24,7 @@ const localStorageEffect = (key: string): AtomEffect<UserStateType> => ({setSelf
 export const UserState: RecoilState<UserStateType> = atom<UserStateType>({
   key: "UserState",
   default: {
-    token: "",
+    token: new String().toString(),
     filters: {
       init_date: dayjs().startOf('month').format('YYYY-MM-DD'),
       end_date: dayjs().endOf('month').format('YYYY-MM-DD')

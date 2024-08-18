@@ -3,7 +3,7 @@ export type Account = {
   Name: string;
   Credit: boolean;
   Total: number;
-  Limit_Credit: number;
+  Limit_amount: number;
   
 }
 

@@ -13,7 +13,7 @@ const AppRouter = () => {
         <Route path='cuenta/:id' element={<Accounts />} />
       </Route>
       <Route path="/" element={<LandingLayout />} >
-        <Route index element={<Login/>} />
+        <Route index path='login' element={<Login/>} />
       </Route>
     </Routes>
   )

@@ -1,19 +1,14 @@
-import axios from 'axios'
-import { url_localhost } from '../shared/enviroment'
 import { ResponseAPI } from '../types/response.type'
 import { Account } from '../types/account.type'
-import { TotalCategory } from '../types/category.type'
-import { UserDashboard } from '../types/user.type'
 import { useQuery } from '@tanstack/react-query'
-import { AccountState } from '../context/accountState'
-import { useRecoilState } from 'recoil'
 import { ExpenseByAccount } from '../types/expense.type'
+import axiosConfig from '../utils/axiosConfig'
 
 const mainUrl: string = '/accounts'
 
 const GetAccounts = async (filter: any): Promise<ResponseAPI<Account[]>> => {
   try {
-    const { data } = await axios.get(`${url_localhost}${mainUrl}?init=${filter.init_date}&end=${filter.end_date}`)
+    const { data } = await axiosConfig.get(`${mainUrl}/totals?init=${filter.init_date}&end=${filter.end_date}`)
     return data
   } catch (error) {
     return { data: [], status: 404 }
@@ -22,7 +17,7 @@ const GetAccounts = async (filter: any): Promise<ResponseAPI<Account[]>> => {
 
 const CreateAccount = async (account: Account): Promise<ResponseAPI<any>> => {
   try {
-    const { data } = await axios.post(`${url_localhost}${mainUrl}`, account)
+    const { data } = await axiosConfig.post(`${mainUrl}`, account)
     return data
   } catch (error) {
     return { data: null, status: 404 }
@@ -34,7 +29,7 @@ const GetExpensesByAccount = async (
   filter: any
 ): Promise<ResponseAPI<ExpenseByAccount[]>> => {
   try {
-    const { data } = await axios.post(`${url_localhost}/expenses/ByAccount/${id}`, filter)
+    const { data } = await axiosConfig.post(`/expenses/ByAccount/${id}`, filter)
     return data
   } catch (error) {
     return { data: [], status: 404 }

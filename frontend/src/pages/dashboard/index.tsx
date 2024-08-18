@@ -22,6 +22,7 @@ import { UserSelector } from '../../context/userState'
 
 const Dashboard = () => {
   const {filters} = useRecoilValue<UserStateType>(UserSelector)
+  
   const { isLoading, isError, error, data: accounts } = useGetAccounts(filters)
   // useAccounts().query
   // const { query, queryTotals } = useResume()

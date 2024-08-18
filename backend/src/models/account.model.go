@@ -14,9 +14,9 @@ type AccountTotalRequest struct {
 
 type AccountTotalResponse struct {
 	Id             int
-	Name           string
+	Account        string
 	Total          float32
-	Limit_Credit   float32
+	Limit_amount   float32
 	Id_rel_Account int
 	Created_at     string
 }

@@ -22,9 +22,10 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import useAuthQuery from '../hooks/useAuth.hook'
 import { LoginType } from '../types/auth.type'
-import useLocalStorage from '../hooks/useLocalStorage'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
+import { useRecoilState } from 'recoil'
+import { UserState } from '../context/userState'
 
 const schemaLogin = z.object({
   Email: z.string().email(),
@@ -33,10 +34,7 @@ const schemaLogin = z.object({
 
 const Login = () => {
   const [submitted, setSubmitted] = useState<boolean>(false);
-  const [_, setValue] = useLocalStorage({
-    keyName: 'userToken',
-    defaultValue: '',
-  })
+  const [userState, setValue] = useRecoilState(UserState);
   const { LoginMutation } = useAuthQuery()
   const navigate = useNavigate()
   const {
@@ -57,7 +55,7 @@ const Login = () => {
       if (isValid) {
         const { data: response, status } = await LoginMutation.mutateAsync(data)
         if (response && status) {
-          setValue(response)
+          setValue({...userState, token: response})
           navigate('/app')
         }
       }

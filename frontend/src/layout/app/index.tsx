@@ -3,27 +3,18 @@ import { useEffect } from 'react'
 import MainContent from './content'
 import Navbar from './navbar'
 import { Outlet, useNavigate } from 'react-router-dom'
-import { UserState } from '../../context/userState'
-import { useRecoilState } from 'recoil'
-import daysjs from 'dayjs'
+import { UserSelector } from '../../context/userState'
+import { useRecoilValue } from 'recoil'
 
 const AppLayout = () => {
-  const [userState, setUserState] = useRecoilState(UserState)
+  const {token} = useRecoilValue(UserSelector)
   const navigate = useNavigate()
-  useEffect(() => {
-    setUserState({
-      ...userState,
-      filters: {
-        init_date: daysjs().startOf('month').format('YYYY-MM-DD'),
-        end_date: daysjs().endOf('month').format('YYYY-MM-DD')
-      }
-    })
-    console.log('AFTER TOKEN', userState);
-  }, [])
 
   useEffect(() => {
-    navigate('/')
-  }, [userState.token]);
+    if(!Boolean(token)){
+      navigate('/login')
+    }
+  }, [token]);
 
   return (
     <Grid

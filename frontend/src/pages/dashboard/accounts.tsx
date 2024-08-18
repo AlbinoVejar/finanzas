@@ -14,7 +14,7 @@ const AccountsDashboard = ({ account }: propsTypes) => {
   const navigate = useNavigate();
   const [userState, setUserState] = useRecoilState(UserState)
   function onOpenDetails(value: number | undefined): void {
-    setUserState({...userState, accountSelected: value ?? 0})
+    setUserState({...userState})
     navigate(`cuenta/${value}`)
   }
   
@@ -22,7 +22,7 @@ const AccountsDashboard = ({ account }: propsTypes) => {
     <Card>
       <CardHeader>
         <Heading textAlign="center" size="lg">
-          {account.Name}
+          {account.Account}
         </Heading>
         <HStack
           divider={<StackDivider />}
@@ -34,7 +34,7 @@ const AccountsDashboard = ({ account }: propsTypes) => {
           <VStack>
             <Stat>
               <StatLabel>Total Usado: {FormatCurreny(account.Total)}</StatLabel>
-              <StatLabel>Limite: {FormatCurreny(account.Limit_Credit)}</StatLabel>
+              <StatLabel>Limite: {FormatCurreny(account.Limit_amount)}</StatLabel>
               {/* <StatNumber>{FormatCurreny(total?.Total ?? 0)}</StatNumber> */}
               {/* <StatHelpText>{getDate()}</StatHelpText> */}
             </Stat>
