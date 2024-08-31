@@ -59,9 +59,9 @@ func GetExpensesByAccount(context *fiber.Ctx) error {
 	db := config.Connection()
 	filter_dates := context.Queries()
 	var expenses []models.ExpenseByAccount
-	var config models.TotalExpenseRequest
-	context.BodyParser(&config)
-	err := db.Raw("CALL get_expenses_by_account(?,?,?,?)", id_User, config.Id_account, filter_dates["init"], filter_dates["end"]).Scan(&expenses).Error
+	var params models.TotalExpenseRequest
+	context.BodyParser(&params)
+	err := db.Raw("CALL get_expenses_by_account(?,?,?,?)", id_User, params.Id_account, filter_dates["init"], filter_dates["end"]).Scan(&expenses).Error
 	if err != nil {
 		return context.SendStatus(fiber.ErrBadRequest.Code)
 	}
