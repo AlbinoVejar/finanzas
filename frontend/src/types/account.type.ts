@@ -14,3 +14,12 @@ export type AccountStateType = {
     end_date: string;
   }
 }
+
+export type TotalWasteAccount = {
+  Id_Account: number;
+  Id_rel_Account: number;
+  Account: string;
+  Total: number;
+  Limit_amount: number;
+  Created_at: string;
+}

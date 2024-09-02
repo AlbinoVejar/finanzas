@@ -13,10 +13,10 @@ type AccountTotalRequest struct {
 }
 
 type AccountTotalResponse struct {
-	Id             int
-	Account        string
-	Total          float32
-	Limit_amount   float32
+	Id_Account     int
 	Id_rel_Account int
+	Account        string
+	Limit_amount   float32
+	Total          float32
 	Created_at     string
 }

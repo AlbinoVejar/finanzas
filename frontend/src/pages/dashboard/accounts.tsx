@@ -4,10 +4,10 @@ import { useNavigate } from 'react-router-dom'
 import { UserState } from '../../context/userState'
 import { RiEyeLine, RiSettings3Line } from '@remixicon/react'
 import { FormatCurreny } from '../../utils'
-import { Account } from '../../types/account.type'
+import { Account, TotalWasteAccount } from '../../types/account.type'
 
 type propsTypes = {
-  account: Account
+  account: TotalWasteAccount
 }
 
 const AccountsDashboard = ({ account }: propsTypes) => {
@@ -45,7 +45,7 @@ const AccountsDashboard = ({ account }: propsTypes) => {
               variant="outline"
               aria-label="Ver Detalles"
               icon={<RiEyeLine />}
-              onClick={() => onOpenDetails(account.Id)}
+              onClick={() => onOpenDetails(account.Id_Account)}
             />
             <IconButton
               isRound

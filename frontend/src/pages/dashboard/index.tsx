@@ -12,7 +12,7 @@ import { ExpenseTable, ResumeExpense } from '../../types/expense.type'
 import useResume from '../../hooks/useResume.hook'
 import { RiDeleteBin5Line, RiEditLine } from '@remixicon/react'
 import { AccountSelector } from '../../context/accountState'
-import { Account } from '../../types/account.type'
+import { Account, TotalWasteAccount } from '../../types/account.type'
 import AccountsDashboard from './accounts'
 import { useGetAccounts } from '../../services/accounts.service'
 import dayjs from 'dayjs'
@@ -77,8 +77,8 @@ const Dashboard = () => {
           {
             !!accounts &&
             accounts.length > 0 &&
-            accounts.map((item: Account) => (
-              <AccountsDashboard key={`account_${item.Id}`} account={item} />
+            accounts.map((item: TotalWasteAccount) => (
+              <AccountsDashboard key={`account_${item.Id_rel_Account}`} account={item} />
             ))
           }
         </HStack>

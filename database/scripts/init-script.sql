@@ -178,38 +178,41 @@ WHERE
   A.deleted = '0000-00-00 00:00:00';
 END //
 
-DROP PROCEDURE IF EXISTS get_total_expense_by_account //
-CREATE PROCEDURE get_total_expense_by_account(
+DROP PROCEDURE IF EXISTS get_total_waste_by_account //
+CREATE PROCEDURE get_total_waste_by_account(
     IN _id_user integer,
+    IN _id_account integer,
     IN _init_date date,
     IN _end_date date
 )
-BEGIN
+BEGIN 
+IF _id_account = 0 THEN
+    SET _id_account = null;
+END IF;
 SELECT
-  A.id_expense AS Id,
-  A.id AS Id_rel_Expense,
+  CA.id AS Id_Account,
+  C.id AS Id_rel_Account,
   CA.name AS Account,
   CA.limit_amount AS Limit_amount,
-  SUM(B.amount) AS Total,
-  CA.id AS Id_Account,
-  A.id_rel_account AS Id_rel_Account,
-  B.date_expense as Created_at
-FROM rel_expense  AS A
-INNER JOIN expenses AS B
-    ON B.id = A.id_expense
-INNER JOIN rel_user_account AS C
-    ON C.id = A.id_rel_account
-    AND C.id_user = A.id_user
-INNER JOIN accounts AS CA
-    ON CA.id = C.id_account
+  IFNULL(SUM(B.amount), 0) AS Total,
+  C.created_at AS Create_at
+FROM accounts AS CA
 INNER JOIN users AS U
-    ON U.id = A.id_user
+    ON U.id = _id_user
+INNER JOIN rel_user_account AS C
+    ON CA.id = C.id_account
+    AND U.id = C.id_user
+LEFT JOIN rel_expense  AS A
+    ON A.id_rel_account = C.id
+    AND A.id_user = U.id
+    AND A.deleted = '0000-00-00 00:00:00'
+LEFT JOIN expenses AS B
+    ON B.id = A.id_expense
+    AND CAST(B.date_expense AS Date) BETWEEN _init_date AND _end_date
 WHERE
-    A.deleted = '0000-00-00 00:00:00'
-    AND CAST(B.date_expense AS Date) BETWEEN _init_date  AND _end_date
-    AND A.id_user = _id_user
+  C.id = _id_account OR _id_account IS NULL
 GROUP BY
-    A.id_rel_account;
+    CA.id;
 END //
 
 DROP PROCEDURE IF EXISTS create_account //
@@ -230,7 +233,7 @@ VALUES
 END //
 
 DROP PROCEDURE IF EXISTS update_account //
-CREATE PROCEDURE update_account(
+CREATE PROCEDURE update_account(k
   _id_account integer, 
   _name VARCHAR(60), 
   _is_credit bool,

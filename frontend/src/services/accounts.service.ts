@@ -1,14 +1,14 @@
 import { ResponseAPI } from '../types/response.type'
-import { Account } from '../types/account.type'
+import { Account, TotalWasteAccount } from '../types/account.type'
 import { useQuery } from '@tanstack/react-query'
 import { ExpenseByAccount } from '../types/expense.type'
 import axiosConfig from '../utils/axiosConfig'
 
 const mainUrl: string = '/accounts'
 
-const GetAccounts = async (filter: any): Promise<ResponseAPI<Account[]>> => {
+const GetAccounts = async (filter: any): Promise<ResponseAPI<TotalWasteAccount[]>> => {
   try {
-    const { data } = await axiosConfig.get(`${mainUrl}/totals?init=${filter.init_date}&end=${filter.end_date}`)
+    const { data } = await axiosConfig.get(`${mainUrl}/totals?id_account=${filter.id_account ?? 0}?init=${filter.init_date}&end=${filter.end_date}`)
     return data
   } catch (error) {
     return { data: [], status: 404 }

@@ -6,20 +6,26 @@ import {
   StackDivider,
   VStack,
 } from '@chakra-ui/react'
-import { Account } from '../../types/account.type'
-import { useNavigate, useParams } from 'react-router-dom'
+import { Account, AccountStateType } from '../../types/account.type'
 import DetailsAccount from './details'
 import ActionsAccount from './actions'
 import TableAllExpenses from './tableExpenses'
-import { useGetTotalsQuery } from '../../services/accounts.service'
-import { useGetAllExpensesAccountQuery } from '../../services/expenses.service'
+import useExpenses from '../../hooks/useExpenses.hook'
+import { AccountSelector } from '../../context/accountState'
+import { useRecoilValue } from 'recoil'
+import { useParams } from 'react-router-dom'
+import { UserSelector } from '../../context/userState'
+import { UserStateType } from '../../types/user.type'
+import { useGetAccounts } from '../../services/accounts.service'
 
 type propsTypes = {
   account: Account
 }
 
-const Accounts = () => {
-
+const Accounts = async() => {
+  let {id:idURL} = useParams();
+  const {filters} = useRecoilValue<UserStateType>(UserSelector)
+  useGetAccounts({...filters, id: idURL})
   return (
     <Card>
       <CardBody>

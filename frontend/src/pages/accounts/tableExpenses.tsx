@@ -10,8 +10,8 @@ import { useRecoilValue } from 'recoil'
 import TableAction from './tableAction'
 
 const TableAllExpenses = () => {
-  const {id, filters} = useRecoilValue<AccountStateType>(AccountSelector)
-  const query = useGetTotalsQuery(Number(id), {Id_User: 1, Init_date: filters.init_date, End_date: filters.end_date})
+  // const {id, filters} = useRecoilValue<AccountStateType>(AccountSelector)
+  // const query = useGetTotalsQuery(Number(id), {Id_User: 1, Init_date: filters.init_date, End_date: filters.end_date})
   return (
     <>
       <VStack spacing={4} align='flex-start'>
@@ -43,7 +43,7 @@ const TableAllExpenses = () => {
               </Tr>
             </Thead>
             <Tbody>
-              {
+              {/* {
                 !!query.data &&
                 query.data.length > 0 && (
                   query.data.map((row: any, index: number) => (
@@ -63,7 +63,7 @@ const TableAllExpenses = () => {
                     </Tr>
                   ))
                 )
-              }
+              } */}
             </Tbody>
           </Table>
         </TableContainer>

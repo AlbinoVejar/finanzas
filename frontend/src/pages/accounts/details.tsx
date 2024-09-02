@@ -1,10 +1,7 @@
-import { Box, Center, Divider, Heading, Progress, Spacer, StackDivider, Text, VStack } from '@chakra-ui/react'
-import React from 'react'
+import { Box, Heading, Progress, StackDivider, Text, VStack } from '@chakra-ui/react'
 import { FormatCurreny } from '../../utils'
-import useExpenses from '../../hooks/useExpenses.hook'
 
 const DetailsAccount = () => {
-  const {GetExpenseByAccountMutation} = useExpenses()
   return (
     <Box>
       <VStack spacing={2} align='normal' divider={<StackDivider />}>

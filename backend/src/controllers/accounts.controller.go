@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"strconv"
+
 	"github.com/gofiber/fiber/v2"
 	"gitlab.com/AlbinoVejar/finanzas/backend/src/config"
 	"gitlab.com/AlbinoVejar/finanzas/backend/src/models"
@@ -63,11 +65,21 @@ func GetTotalsAccounts(context *fiber.Ctx) error {
 		return context.SendStatus(status)
 	}
 	db := config.Connection()
-	filter_dates := context.Queries()
+	filters := context.Queries()
 	var totals []models.AccountTotalResponse
-	err := db.Raw("CALL get_total_expense_by_account(?,?,?)", id_User, filter_dates["init"], filter_dates["end"]).Scan(&totals).Error
+	id_account, errParseAccount := strconv.Atoi(filters["id_account"])
+	if errParseAccount != nil {
+		return context.SendStatus(fiber.ErrBadRequest.Code)
+	}
+	err := db.Raw("CALL get_total_waste_by_account(?,?,?,?)", id_User, id_account, filters["init"], filters["end"]).Scan(&totals).Error
 	if err != nil {
 		return context.SendStatus(fiber.ErrBadRequest.Code)
+	}
+	if len(totals) == 1 {
+		return context.JSON(fiber.Map{
+			"data":   totals[0],
+			"status": status,
+		})
 	}
 	status = fiber.StatusOK
 	return context.JSON(fiber.Map{

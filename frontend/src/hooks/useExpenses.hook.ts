@@ -8,8 +8,8 @@ const useExpenses = () => {
     mutationFn: async (value: NewExpense) => await CreateExpense(value),
   })
   const GetExpenseByAccountMutation = useMutation({
-    mutationKey: ['loginQuery'],
-    mutationFn: async (formData: any) => await GetExpenseByAccount(formData.data,formData.id),
+    mutationKey: ['totalWasteByAccount'],
+    mutationFn: async (formData: any) => await GetExpenseByAccount(formData.filters,formData.id),
     onError(error) {
       throw error;
     },
