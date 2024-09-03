@@ -12,9 +12,9 @@ import ActionsAccount from './actions'
 import TableAllExpenses from './tableExpenses'
 import useExpenses from '../../hooks/useExpenses.hook'
 import { AccountSelector } from '../../context/accountState'
-import { useRecoilValue } from 'recoil'
+import { useRecoilValue, useRecoilState } from 'recoil'
 import { useParams } from 'react-router-dom'
-import { UserSelector } from '../../context/userState'
+import { UserSelector, UserState } from '../../context/userState'
 import { UserStateType } from '../../types/user.type'
 import { useGetAccounts } from '../../services/accounts.service'
 
@@ -22,10 +22,11 @@ type propsTypes = {
   account: Account
 }
 
-const Accounts = async() => {
+const Accounts = () => {
   let {id:idURL} = useParams();
-  const {filters} = useRecoilValue<UserStateType>(UserSelector)
-  useGetAccounts({...filters, id: idURL})
+  const [{filters}, setUserState] = useRecoilState<UserStateType>(UserState);
+  const { data } = useGetAccounts({...filters, id_account: idURL})
+  // setUserState({})
   return (
     <Card>
       <CardBody>

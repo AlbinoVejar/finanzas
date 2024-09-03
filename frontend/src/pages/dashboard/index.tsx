@@ -2,27 +2,15 @@ import {
   HStack,
 } from '@chakra-ui/react'
 import { useRecoilValue } from 'recoil'
-import {
-  ResumeCategory,
-  TotalCategory,
-} from '../../types/category.type'
-import useAccounts from '../../hooks/useAccounts.hook'
-import { CategorySelector } from '../../context/categoryState'
-import { ExpenseTable, ResumeExpense } from '../../types/expense.type'
-import useResume from '../../hooks/useResume.hook'
-import { RiDeleteBin5Line, RiEditLine } from '@remixicon/react'
-import { AccountSelector } from '../../context/accountState'
 import { Account, TotalWasteAccount } from '../../types/account.type'
 import AccountsDashboard from './accounts'
 import { useGetAccounts } from '../../services/accounts.service'
-import dayjs from 'dayjs'
 import { UserStateType } from '../../types/user.type'
 import { UserSelector } from '../../context/userState'
 
 
 const Dashboard = () => {
   const {filters} = useRecoilValue<UserStateType>(UserSelector)
-  
   const { isLoading, isError, error, data: accounts } = useGetAccounts(filters)
   // useAccounts().query
   // const { query, queryTotals } = useResume()
@@ -78,7 +66,7 @@ const Dashboard = () => {
             !!accounts &&
             accounts.length > 0 &&
             accounts.map((item: TotalWasteAccount) => (
-              <AccountsDashboard key={`account_${item.Id_rel_Account}`} account={item} />
+              <AccountsDashboard key={`account_${item.Id_Account}`} account={item} />
             ))
           }
         </HStack>

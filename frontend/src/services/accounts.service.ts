@@ -8,7 +8,7 @@ const mainUrl: string = '/accounts'
 
 const GetAccounts = async (filter: any): Promise<ResponseAPI<TotalWasteAccount[]>> => {
   try {
-    const { data } = await axiosConfig.get(`${mainUrl}/totals?id_account=${filter.id_account ?? 0}?init=${filter.init_date}&end=${filter.end_date}`)
+    const { data } = await axiosConfig.get(`${mainUrl}/totals?id_account=${filter.id_account ?? 0}&init=${filter.init_date}&end=${filter.end_date}`)
     return data
   } catch (error) {
     return { data: [], status: 404 }
