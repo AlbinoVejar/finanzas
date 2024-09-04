@@ -75,7 +75,7 @@ func GetTotalsAccounts(context *fiber.Ctx) error {
 	if err != nil {
 		return context.SendStatus(fiber.ErrBadRequest.Code)
 	}
-	if len(totals) == 1 {
+	if id_account > 0 {
 		return context.JSON(fiber.Map{
 			"data":   totals[0],
 			"status": status,

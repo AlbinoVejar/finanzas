@@ -17,6 +17,7 @@ import { useParams } from 'react-router-dom'
 import { UserSelector, UserState } from '../../context/userState'
 import { UserStateType } from '../../types/user.type'
 import { useGetAccounts } from '../../services/accounts.service'
+import { useEffect } from 'react'
 
 type propsTypes = {
   account: Account
@@ -24,9 +25,14 @@ type propsTypes = {
 
 const Accounts = () => {
   let {id:idURL} = useParams();
-  const [{filters}, setUserState] = useRecoilState<UserStateType>(UserState);
+  const [userState, setUserState] = useRecoilState<UserStateType>(UserState);
+  const {filters} = userState;
   const { data } = useGetAccounts({...filters, id_account: idURL})
-  // setUserState({})
+  useEffect(() => {
+    if(data){
+      setUserState({...userState, details: data})
+    }
+  }, [data]);
   return (
     <Card>
       <CardBody>

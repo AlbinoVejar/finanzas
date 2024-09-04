@@ -1,9 +1,12 @@
+import { TotalWasteAccount } from "./account.type";
+
 export type UserStateType = {
   token: string;
   filters: {
     init_date: string;
     end_date: string;
-  }
+  },
+  details: TotalWasteAccount
 }
 
 export type UserDashboard = {
