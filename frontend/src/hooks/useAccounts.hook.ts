@@ -1,5 +1,23 @@
+import { useQuery } from '@tanstack/react-query'
+import { GetAccounts, GetOneAccounts } from '../services/accounts.service'
 
 const useAccounts = () => {
+  const getAccounts = (filters: any) =>
+    useQuery({
+      queryKey: ['get_accounts', filters],
+      queryFn: async () => await GetAccounts(filters),
+      select(data) {
+        return data.data
+      },
+    })
+  const getAccount = (filters: any) =>
+    useQuery({
+      queryKey: ['get_accounts', filters],
+      queryFn: async () => await GetOneAccounts(filters),
+      select(data) {
+        return data.data
+      },
+    })
   // const [, setAccounts] = useRecoilState(AccountState);
   // const query = useQuery({
   //   queryKey:["accounts"],
@@ -24,10 +42,10 @@ const useAccounts = () => {
   // useEffect(() => {
   //   if(query.isSuccess){
   //     setAccounts(query.data);
-  //   }  
+  //   }
   // }, [query.data, setAccounts]);
 
-  // return {query, mutation}
+  return { getAccounts, getAccount }
 }
 
-export default useAccounts 
+export default useAccounts

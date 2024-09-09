@@ -4,14 +4,15 @@ import {
 import { useRecoilValue } from 'recoil'
 import { Account, TotalWasteAccount } from '../../types/account.type'
 import AccountsDashboard from './accounts'
-import { useGetAccounts } from '../../services/accounts.service'
 import { UserStateType } from '../../types/user.type'
 import { UserSelector } from '../../context/userState'
+import useAccounts from '../../hooks/useAccounts.hook'
 
 
 const Dashboard = () => {
   const {filters} = useRecoilValue<UserStateType>(UserSelector)
-  const { isLoading, isError, error, data: accounts } = useGetAccounts(filters)
+  const {getAccounts} = useAccounts();
+  const { isLoading, isError, error, data: accounts } = getAccounts(filters)
   // useAccounts().query
   // const { query, queryTotals } = useResume()
   // const { isLoading, isError, error } = query

@@ -28,6 +28,14 @@ export const UserState: RecoilState<UserStateType> = atom<UserStateType>({
     filters: {
       init_date: dayjs().startOf('month').format('YYYY-MM-DD'),
       end_date: dayjs().endOf('month').format('YYYY-MM-DD')
+    },
+    details: {
+      Id_Account: 0,
+      Id_rel_Account: 0,
+      Account: 'Example1',
+      Total: 11111,
+      Limit_amount: 99999,
+      Created_at: dayjs().format('YYYY-MM-DD')
     }
   },
   effects: [

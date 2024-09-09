@@ -6,12 +6,20 @@ import axiosConfig from '../utils/axiosConfig'
 
 const mainUrl: string = '/accounts'
 
-const GetAccounts = async (filter: any): Promise<ResponseAPI<TotalWasteAccount[]>> => {
+export const GetAccounts = async (filter: any): Promise<ResponseAPI<TotalWasteAccount[]>> => {
   try {
     const { data } = await axiosConfig.get(`${mainUrl}/totals?id_account=${filter.id_account ?? 0}&init=${filter.init_date}&end=${filter.end_date}`)
     return data
   } catch (error) {
     return { data: [], status: 404 }
+  }
+}
+export const GetOneAccounts = async (filter: any): Promise<ResponseAPI<TotalWasteAccount | null>> => {
+  try {
+    const { data } = await axiosConfig.get(`${mainUrl}/totals?id_account=${filter.id_account ?? 0}&init=${filter.init_date}&end=${filter.end_date}`)
+    return data
+  } catch (error) {
+    return { data:  null, status: 404 }
   }
 }
 
@@ -46,12 +54,3 @@ export const useGetTotalsQuery = (id: number, filters: any) => {
     },
   })
 }
-
-export const useGetAccounts = (filter: any) =>
-  useQuery({
-    queryKey: ['get_accounts'],
-    queryFn: async () => await GetAccounts(filter),
-    select(data) {
-      return data.data
-    },
-  })

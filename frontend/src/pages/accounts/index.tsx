@@ -6,18 +6,16 @@ import {
   StackDivider,
   VStack,
 } from '@chakra-ui/react'
-import { Account, AccountStateType } from '../../types/account.type'
+import { Account } from '../../types/account.type'
 import DetailsAccount from './details'
 import ActionsAccount from './actions'
 import TableAllExpenses from './tableExpenses'
-import useExpenses from '../../hooks/useExpenses.hook'
-import { AccountSelector } from '../../context/accountState'
-import { useRecoilValue, useRecoilState } from 'recoil'
+import { useRecoilState } from 'recoil'
 import { useParams } from 'react-router-dom'
-import { UserSelector, UserState } from '../../context/userState'
+import { UserState } from '../../context/userState'
 import { UserStateType } from '../../types/user.type'
-import { useGetAccounts } from '../../services/accounts.service'
 import { useEffect } from 'react'
+import useAccounts from '../../hooks/useAccounts.hook'
 
 type propsTypes = {
   account: Account
@@ -27,7 +25,8 @@ const Accounts = () => {
   let {id:idURL} = useParams();
   const [userState, setUserState] = useRecoilState<UserStateType>(UserState);
   const {filters} = userState;
-  const { data } = useGetAccounts({...filters, id_account: idURL})
+  const {getAccount} = useAccounts();
+  const { data } = getAccount({...filters, id_account: idURL})
   useEffect(() => {
     if(data){
       setUserState({...userState, details: data})
