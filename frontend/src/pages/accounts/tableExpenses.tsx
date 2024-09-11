@@ -1,17 +1,16 @@
-import { Box, Button, FormControl, FormLabel, HStack, IconButton, Select, Spacer, Table, TableContainer, Tbody, Td, Th, Thead, Tr, VStack } from '@chakra-ui/react'
-import React from 'react'
-import { TableHeaders, TableHeadersID } from './headers'
+import { Button, FormControl, FormLabel, HStack, IconButton, Select, Table, TableContainer, Tbody, Th, Thead, Tr, VStack } from '@chakra-ui/react'
+import { TableHeaders } from './headers'
 import SelectDates from '../../components/selectDates'
 import { RiLayoutGridFill, RiTable2 } from '@remixicon/react'
-import { useGetTotalsQuery } from '../../services/accounts.service'
-import { AccountStateType } from '../../types/account.type'
-import { AccountSelector } from '../../context/accountState'
+import useAccounts from '../../hooks/useAccounts.hook'
 import { useRecoilValue } from 'recoil'
-import TableAction from './tableAction'
+import { UserStateType } from '../../types/user.type'
+import { UserSelector } from '../../context/userState'
 
 const TableAllExpenses = () => {
-  // const {id, filters} = useRecoilValue<AccountStateType>(AccountSelector)
-  // const query = useGetTotalsQuery(Number(id), {Id_User: 1, Init_date: filters.init_date, End_date: filters.end_date})
+  const {details, filters} = useRecoilValue<UserStateType>(UserSelector);
+  const {getTotalsQuery} = useAccounts();
+  const {data} = getTotalsQuery(Number(details.Id_rel_Account), filters)
   return (
     <>
       <VStack spacing={4} align='flex-start'>

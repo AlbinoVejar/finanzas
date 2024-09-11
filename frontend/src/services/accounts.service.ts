@@ -31,26 +31,3 @@ const CreateAccount = async (account: Account): Promise<ResponseAPI<any>> => {
     return { data: null, status: 404 }
   }
 }
-
-const GetExpensesByAccount = async (
-  id: number,
-  filter: any
-): Promise<ResponseAPI<ExpenseByAccount[]>> => {
-  try {
-    const { data } = await axiosConfig.post(`/expenses/ByAccount/${id}`, filter)
-    return data
-  } catch (error) {
-    return { data: [], status: 404 }
-  }
-}
-
-export const useGetTotalsQuery = (id: number, filters: any) => {
-  return useQuery({
-    queryKey: ['get_expenses_account', id],
-    queryFn: () => GetExpensesByAccount(id, filters),
-    enabled: id > 0,
-    select(data) {
-      return data.data;
-    },
-  })
-}
