@@ -24,9 +24,9 @@ export const GetResume = async (expense: Resume): Promise<ResponseAPI<any>> => {
   }
 }
 
-export const GetExpenseByAccount = async (filter: any, id: Number): Promise<ResponseAPI<any>> => {
+export const GetExpenseByAccount = async (filter: any): Promise<ResponseAPI<any>> => {
   try {
-    const { data } = await axiosConfig.post(`${mainUrl}/totals?init=${filter.init_date}&end=${filter.end_date}`, {Id_account: id});
+    const { data } = await axiosConfig.get(`${mainUrl}/totals?init=${filter.init_date}&end=${filter.end_date}&id_account=${filter.id}`);
     return data;
   } catch (error) {
     return {data: null, status: 404}

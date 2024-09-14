@@ -7,14 +7,12 @@ const useExpenses = () => {
     mutationKey: ['create_expense'],
     mutationFn: async (value: NewExpense) => await CreateExpense(value),
   })
-  const GetExpenseByAccountMutation = useMutation({
-    mutationKey: ['totalWasteByAccount'],
-    mutationFn: async (formData: any) => await GetExpenseByAccount(formData.filters,formData.id),
-    onError(error) {
-      throw error;
-    },
-  })
-  return { mutation, GetExpenseByAccountMutation }
+  const getAllExpenses = (id: number, filters: any) =>
+    useMutation({
+      mutationKey: ['get_expenses_account', id],
+      mutationFn: async () => await GetExpenseByAccount({...filters, id}),
+    })
+  return { mutation, getAllExpenses }
 }
 
 export default useExpenses

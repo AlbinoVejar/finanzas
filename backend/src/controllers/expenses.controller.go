@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"strconv"
+
 	"github.com/gofiber/fiber/v2"
 	"gitlab.com/AlbinoVejar/finanzas/backend/src/config"
 	"gitlab.com/AlbinoVejar/finanzas/backend/src/models"
@@ -57,11 +59,12 @@ func GetExpensesByAccount(context *fiber.Ctx) error {
 		return context.SendStatus(status)
 	}
 	db := config.Connection()
-	filter_dates := context.Queries()
+	filters := context.Queries()
 	var expenses []models.ExpenseByAccount
 	var params models.TotalExpenseRequest
 	context.BodyParser(&params)
-	err := db.Raw("CALL get_expenses_by_account(?,?,?,?)", id_User, params.Id_account, filter_dates["init"], filter_dates["end"]).Scan(&expenses).Error
+	id_rel_account, _ := strconv.Atoi(filters["id_account"])
+	err := db.Raw("CALL get_expenses_by_account(?,?,?,?)", id_User, id_rel_account, filters["init"], filters["end"]).Scan(&expenses).Error
 	if err != nil {
 		return context.SendStatus(fiber.ErrBadRequest.Code)
 	}

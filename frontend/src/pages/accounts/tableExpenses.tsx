@@ -2,15 +2,19 @@ import { Button, FormControl, FormLabel, HStack, IconButton, Select, Table, Tabl
 import { TableHeaders } from './headers'
 import SelectDates from '../../components/selectDates'
 import { RiLayoutGridFill, RiTable2 } from '@remixicon/react'
-import useAccounts from '../../hooks/useAccounts.hook'
 import { useRecoilValue } from 'recoil'
 import { UserStateType } from '../../types/user.type'
 import { UserSelector } from '../../context/userState'
+import useExpenses from '../../hooks/useExpenses.hook'
+import { useEffect } from 'react'
 
 const TableAllExpenses = () => {
   const {details, filters} = useRecoilValue<UserStateType>(UserSelector);
-  const {getTotalsQuery} = useAccounts();
-  const {data} = getTotalsQuery(Number(details.Id_rel_Account), filters)
+  const {getAllExpenses} = useExpenses();
+  const data = getAllExpenses(details.Id_rel_Account, filters)
+  useEffect(() => {
+    console.log('data', data)
+  }, [data]);
   return (
     <>
       <VStack spacing={4} align='flex-start'>
