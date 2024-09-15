@@ -2,13 +2,8 @@ import { GetCategories } from '../services/categories.service';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { ResponseAPI } from '../types/response.type';
 import { Category } from '../types/category.type';
-import { useRecoilState } from 'recoil';
-import { CategoryState } from '../context/categoryState';
-import { useEffect } from 'react';
-
 
 const useCategories = () => {
-  const [, setCategories] = useRecoilState(CategoryState);
   const query = useQuery({
     queryKey:["categories"],
     queryFn: async () => await GetCategories(),

@@ -1,5 +1,5 @@
-import { Button, FormControl, FormLabel, HStack, IconButton, Select, Table, TableContainer, Tbody, Th, Thead, Tr, VStack } from '@chakra-ui/react'
-import { TableHeaders } from './headers'
+import { Button, FormControl, FormLabel, HStack, IconButton, Select, Table, TableContainer, Tbody, Td, Th, Thead, Tr, VStack } from '@chakra-ui/react'
+import { TableHeaders, TableHeadersID } from './headers'
 import SelectDates from '../../components/selectDates'
 import { RiLayoutGridFill, RiTable2 } from '@remixicon/react'
 import { useRecoilValue } from 'recoil'
@@ -7,11 +7,12 @@ import { UserStateType } from '../../types/user.type'
 import { UserSelector } from '../../context/userState'
 import useExpenses from '../../hooks/useExpenses.hook'
 import { useEffect } from 'react'
+import TableAction from './tableAction'
 
 const TableAllExpenses = () => {
   const {details, filters} = useRecoilValue<UserStateType>(UserSelector);
   const {getAllExpenses} = useExpenses();
-  const data = getAllExpenses(details.Id_rel_Account, filters)
+  const {data} = getAllExpenses(details.Id_rel_Account, filters)
   useEffect(() => {
     console.log('data', data)
   }, [data]);
@@ -46,10 +47,10 @@ const TableAllExpenses = () => {
               </Tr>
             </Thead>
             <Tbody>
-              {/* {
-                !!query.data &&
-                query.data.length > 0 && (
-                  query.data.map((row: any, index: number) => (
+              {
+                !!data &&
+                data.length > 0 && (
+                  data.map((row: any, index: number) => (
                     <Tr key={`tr_row_${index}`}>
                       {
                         TableHeadersID.map((value: string) => {
@@ -66,7 +67,7 @@ const TableAllExpenses = () => {
                     </Tr>
                   ))
                 )
-              } */}
+              }
             </Tbody>
           </Table>
         </TableContainer>

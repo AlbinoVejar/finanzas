@@ -3,6 +3,9 @@ import { RiAddFill, RiArrowGoBackFill, RiToolsFill } from '@remixicon/react'
 import React from 'react'
 
 const ActionsAccount = () => {
+  const onOpenExpenseModal = () => {
+    
+  }
   return (
     <>
       <VStack spacing={4} justify='center' align='strech'>

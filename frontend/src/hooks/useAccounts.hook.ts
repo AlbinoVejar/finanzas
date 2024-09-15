@@ -1,10 +1,19 @@
 import { useQuery } from '@tanstack/react-query'
 import {
   GetAccounts,
+  GetItemsAccounts,
   GetOneAccounts,
 } from '../services/accounts.service'
 
 const useAccounts = () => {
+  const getAllItemsAccounts = () =>
+    useQuery({
+      queryKey: ['get_items_accounts'],
+      queryFn: async () => await GetItemsAccounts(),      
+      select(data) {
+        return data.data
+      },
+    })
   const getAccounts = (filters: any) =>
     useQuery({
       queryKey: ['get_accounts', filters],
@@ -16,7 +25,7 @@ const useAccounts = () => {
     })
   const getAccount = (filters: any) =>
     useQuery({
-      queryKey: ['get_accounts', filters],
+      queryKey: ['get_account', filters],
       queryFn: async () => await GetOneAccounts(filters),
       enabled: Boolean(filters),
       select(data) {
@@ -24,7 +33,7 @@ const useAccounts = () => {
       },
     })
 
-  return { getAccounts, getAccount }
+  return { getAllItemsAccounts, getAccounts, getAccount }
 }
 
 export default useAccounts

@@ -8,8 +8,9 @@ import { TotalWasteAccount } from '../../types/account.type'
 const DetailsAccount = () => {
   const {details} = useRecoilValue<UserStateType>(UserSelector);
   const {Account, Limit_amount, Total}: TotalWasteAccount = details;
-  const ValueLimit = Number(Total/Limit_amount);
-  const LimitCondition = ValueLimit >= 1 ? 100 : ValueLimit;
+  const ValueLimit = Number((Total*100)/Limit_amount);
+  const LimitCondition = ValueLimit >= 100 ? 100 : ValueLimit;
+  console.log("Limit Condition",LimitCondition)
   return (
     <Box>
       <VStack spacing={2} align='normal' divider={<StackDivider />}>

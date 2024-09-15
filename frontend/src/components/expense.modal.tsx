@@ -37,6 +37,7 @@ import { Account } from '../types/account.type'
 import { UserSelector } from '../context/userState'
 import { UserStateType } from '../types/user.type'
 import { useEffect } from 'react'
+import useAccounts from '../hooks/useAccounts.hook'
 
 interface IExpenseInputs {
   account: string
@@ -54,10 +55,9 @@ const schemaExpense = z.object({
 
 const ExpenseModal = () => {
   const [open, setOpen] = useRecoilState<boolean>(ModalState)
-  const { accountSelected, categorySelected } =
+  const { details } =
     useRecoilValue<UserStateType>(UserSelector)
-  const { data: categories } = useRecoilValue<ResumeCategory>(CategorySelector)
-  const accounts = useRecoilValue<Account[]>(AccountSelector)
+  const {data: itemsAccounts} = useAccounts().getAllItemsAccounts()
   const CreateExpense = useExpenses().mutation
   const {
     control,
@@ -65,8 +65,8 @@ const ExpenseModal = () => {
     formState: { errors, isValid, defaultValues },
   } = useForm<IExpenseInputs>({
     defaultValues: {
-      account: String(accountSelected),
-      category: String(categorySelected),
+      account: String(details.Id_Account),
+      category: "",
       amount: 0,
       description: '',
     },
@@ -75,8 +75,6 @@ const ExpenseModal = () => {
 
   useEffect(() => {
     console.log(defaultValues)
-    console.log("errors", errors)
-    console.log("categories", categories)
   }, [defaultValues])
 
   const onSubmit: SubmitHandler<IExpenseInputs> = async (
@@ -133,7 +131,7 @@ const ExpenseModal = () => {
                   control={control}
                   render={({ field }) => (
                     <Select placeholder="Seleccione una cuenta" {...field}>
-                      {accounts.map(({ Name, Id }: Account) => (
+                      {itemsAccounts?.map(({ Name, Id }: Account) => (
                         <option key={`option_value_account_${Id}`} value={Id}>
                           {Name}
                         </option>
