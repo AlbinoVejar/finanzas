@@ -6,16 +6,12 @@ import { useRecoilValue } from 'recoil'
 import { UserStateType } from '../../types/user.type'
 import { UserSelector } from '../../context/userState'
 import useExpenses from '../../hooks/useExpenses.hook'
-import { useEffect } from 'react'
 import TableAction from './tableAction'
 
 const TableAllExpenses = () => {
   const {details, filters} = useRecoilValue<UserStateType>(UserSelector);
   const {getAllExpenses} = useExpenses();
   const {data} = getAllExpenses(details.Id_rel_Account, filters)
-  useEffect(() => {
-    console.log('data', data)
-  }, [data]);
   return (
     <>
       <VStack spacing={4} align='flex-start'>

@@ -12,6 +12,6 @@ export const TableHeadersID: string[] = [
   "Category",
   "Description",
   "Amount",
-  "Created_at",
+  "Date_expense",
   "Acciones"
 ]

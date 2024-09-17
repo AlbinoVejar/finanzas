@@ -26,5 +26,5 @@ type ExpenseByAccount struct {
 	Amount          float32
 	Description     string
 	Id_rel_Category int
-	Created_at      string
+	Date_expense    string
 }
