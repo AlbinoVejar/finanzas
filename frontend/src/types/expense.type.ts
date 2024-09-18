@@ -18,6 +18,7 @@ export type NewExpense = {
   Amount: number
   Id_rel_Category: number
   Id_rel_Account: number
+  Date_expense: string;
 }
 
 export type ResumeExpense = {

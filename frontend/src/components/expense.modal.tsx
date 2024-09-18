@@ -38,6 +38,11 @@ import { UserSelector } from '../context/userState'
 import { UserStateType } from '../types/user.type'
 import { useEffect } from 'react'
 import useAccounts from '../hooks/useAccounts.hook'
+import { ModalTypeState } from '../types/modal.type'
+import useCategories from '../hooks/useCategories.hook'
+import ToastComponent from './toast.component'
+import dayjs from 'dayjs'
+import useToastComponent from './toast.component'
 
 interface IExpenseInputs {
   account: string
@@ -54,19 +59,22 @@ const schemaExpense = z.object({
 })
 
 const ExpenseModal = () => {
-  const [open, setOpen] = useRecoilState<boolean>(ModalState)
-  const { details } =
-    useRecoilValue<UserStateType>(UserSelector)
-  const {data: itemsAccounts} = useAccounts().getAllItemsAccounts()
-  const CreateExpense = useExpenses().mutation
+  const [open, setOpen] = useRecoilState<ModalTypeState>(ModalState)
+  const { expense } = open
+  const { details } = useRecoilValue<UserStateType>(UserSelector)
+  const { data: itemsAccounts } = useAccounts().getAllItemsAccounts()
+  const { data: itemsCategories } = useCategories().GetItemsCategories()
+  const CreateExpense = useExpenses().createExpense()
+  const useToast = useToastComponent();
   const {
     control,
     handleSubmit,
     formState: { errors, isValid, defaultValues },
+    reset,
   } = useForm<IExpenseInputs>({
     defaultValues: {
-      account: String(details.Id_Account),
-      category: "",
+      account: '',
+      category: '',
       amount: 0,
       description: '',
     },
@@ -74,27 +82,29 @@ const ExpenseModal = () => {
   })
 
   useEffect(() => {
-    console.log(defaultValues)
-  }, [defaultValues])
+    if (details) {
+      reset({ ...defaultValues, account: String(details.Id_rel_Account) })
+    }
+  }, [details])
 
   const onSubmit: SubmitHandler<IExpenseInputs> = async (
     data: IExpenseInputs
   ) => {
-    console.log(defaultValues);
-    if (isValid) {
-      const newCategory: NewExpense = {
-        Amount: data.amount,
-        Id_rel_Category: Number(data.category),
-        Description: data.description,
-        Id_rel_Account: Number(data.account),
+    try {
+      if (isValid) {
+        const newCategory: NewExpense = {
+          Amount: data.amount,
+          Id_rel_Category: Number(data.category),
+          Description: data.description,
+          Id_rel_Account: Number(data.account),
+        }
+        await CreateExpense.mutateAsync(
+          newCategory
+        )
+        useToast({status: 'success', title:'Exito', description: 'Gastó agregado con exito'});
       }
-      const { data: response, status } = await CreateExpense.mutateAsync(
-        newCategory
-      )
-      if (status !== 404) {
-        console.log('data', response)
-        setOpen(false)
-      }
+    } catch (error) {
+      useToast({status: 'error', title: 'Error', description: 'Ocurrió un error'});
     }
   }
 
@@ -110,8 +120,8 @@ const ExpenseModal = () => {
   }
   return (
     <Modal
-      isOpen={open}
-      onClose={() => setOpen(false)}
+      isOpen={expense}
+      onClose={() => setOpen({ ...open, expense: false })}
       isCentered
       blockScrollOnMount
       closeOnOverlayClick={false}
@@ -132,7 +142,10 @@ const ExpenseModal = () => {
                   render={({ field }) => (
                     <Select placeholder="Seleccione una cuenta" {...field}>
                       {itemsAccounts?.map(({ Name, Id }: Account) => (
-                        <option key={`option_value_account_${Id}`} value={Id}>
+                        <option
+                          key={`option_value_account_${Id}`}
+                          value={String(Id)}
+                        >
                           {Name}
                         </option>
                       ))}
@@ -150,13 +163,12 @@ const ExpenseModal = () => {
                   name="category"
                   control={control}
                   render={({ field }) => (
-                    <Select
-                      placeholder="Seleccione una categoría"
-                      {...field}
-                      value={categorySelected}
-                    >
-                      {categories.map(({ Name, Id }: Category) => (
-                        <option key={`option_value_category_${Id}`} value={Id}>
+                    <Select placeholder="Seleccione una categoría" {...field}>
+                      {itemsCategories?.map(({ Name, Id }: Category) => (
+                        <option
+                          key={`option_value_category_${Id}`}
+                          value={String(Id)}
+                        >
                           {Name}
                         </option>
                       ))}
@@ -219,7 +231,7 @@ const ExpenseModal = () => {
               <Button
                 variant="outline"
                 colorScheme="gray"
-                onClick={() => setOpen(false)}
+                onClick={() => setOpen({ ...open, expense: false })}
               >
                 Cancelar
               </Button>

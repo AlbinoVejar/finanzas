@@ -1,11 +1,7 @@
-import { RecoilState, atom } from "recoil";
+import { RecoilState, atom } from 'recoil'
+import { ModalTypeState } from '../types/modal.type'
 
-export const ModalState: RecoilState<boolean> = atom<boolean>({
+export const ModalState: RecoilState<ModalTypeState> = atom<ModalTypeState>({
   key: 'modalState',
-  default: false
-});
-
-// export const ModalSelector = () => selector({
-//   key: 'modalSelector',
-
-// })
+  default: { expense: false },
+})

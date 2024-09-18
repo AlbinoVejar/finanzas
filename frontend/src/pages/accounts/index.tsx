@@ -16,38 +16,42 @@ import { UserState } from '../../context/userState'
 import { UserStateType } from '../../types/user.type'
 import { useEffect } from 'react'
 import useAccounts from '../../hooks/useAccounts.hook'
+import ExpenseModal from '../../components/expense.modal'
 
 type propsTypes = {
   account: Account
 }
 
 const Accounts = () => {
-  let {id:idURL} = useParams();
-  const [userState, setUserState] = useRecoilState<UserStateType>(UserState);
-  const {filters} = userState;
-  const {getAccount} = useAccounts();
-  const { data } = getAccount({...filters, id_account: idURL})
+  let { id: idURL } = useParams()
+  const [userState, setUserState] = useRecoilState<UserStateType>(UserState)
+  const { filters } = userState
+  const { getAccount } = useAccounts()
+  const { data } = getAccount({ ...filters, id_account: idURL })
   useEffect(() => {
-    if(data){
-      setUserState({...userState, details: data})
+    if (data) {
+      setUserState({ ...userState, details: data })
     }
-  }, [data]);
+  }, [data])
   return (
-    <Card>
-      <CardBody>
-        <Grid height="92vh" templateColumns="20% 80%" gap={4}>
-          <GridItem borderWidth="1px" borderRadius="lg">
-            <VStack gap={2} divider={<StackDivider />}>
-              <DetailsAccount />
-              <ActionsAccount />
-            </VStack>
-          </GridItem>
-          <GridItem borderWidth="1px" borderRadius="lg">
-            <TableAllExpenses />
-          </GridItem>
-        </Grid>
-      </CardBody>
-    </Card>
+    <>
+      <Card>
+        <CardBody>
+          <Grid height="92vh" templateColumns="20% 80%" gap={4}>
+            <GridItem borderWidth="1px" borderRadius="lg">
+              <VStack gap={2} divider={<StackDivider />}>
+                <DetailsAccount />
+                <ActionsAccount />
+              </VStack>
+            </GridItem>
+            <GridItem borderWidth="1px" borderRadius="lg">
+              <TableAllExpenses />
+            </GridItem>
+          </Grid>
+        </CardBody>
+      </Card>
+      <ExpenseModal />
+    </>
   )
 }
 

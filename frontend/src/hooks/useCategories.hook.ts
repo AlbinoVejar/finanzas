@@ -4,8 +4,8 @@ import { ResponseAPI } from '../types/response.type';
 import { Category } from '../types/category.type';
 
 const useCategories = () => {
-  const query = useQuery({
-    queryKey:["categories"],
+  const GetItemsCategories = () => useQuery({
+    queryKey:["get_categories"],
     queryFn: async () => await GetCategories(),
     refetchOnMount: true,
     refetchOnWindowFocus: false,
@@ -22,7 +22,7 @@ const useCategories = () => {
     mutationKey: ["create_category"]
   })
 
-  return {query, mutation}
+  return {GetItemsCategories, mutation}
 }
 
 export default useCategories
