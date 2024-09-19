@@ -10,8 +10,7 @@ const onRequest = (config: InternalAxiosRequestConfig): InternalAxiosRequestConf
 }
   
 const onRequestError = (error: AxiosError): Promise<AxiosError> => {
-  console.error(`[request error] [${JSON.stringify(error)}]`);
-  return Promise.reject(error);
+  throw error;
 }
 
 const onResponse = (response: AxiosResponse): AxiosResponse => {

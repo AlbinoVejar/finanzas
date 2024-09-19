@@ -13,9 +13,10 @@ func GetAccounts(context *fiber.Ctx) error {
 	if id_User == 0 {
 		return context.SendStatus(status)
 	}
-	db := config.Connection()
+	db, dbClose := config.Connection()
 	var accounts []models.Account
 	errQuery := db.Raw("CALL get_accounts(?)", id_User).Scan(&accounts).Error
+	defer dbClose()
 	if errQuery != nil {
 		return context.SendStatus(fiber.ErrBadRequest.Code)
 	}
@@ -31,10 +32,11 @@ func CreateAccount(context *fiber.Ctx) error {
 	if id_User == 0 {
 		return context.SendStatus(status)
 	}
-	db := config.Connection()
+	db, dbClose := config.Connection()
 	var account models.Account
 	context.BodyParser(&account)
 	errQuery := db.Exec("CALL create_account(?,?,?,?)", account.Name, account.Credit, id_User, account.Limit_amount).Error
+	defer dbClose()
 	if errQuery != nil {
 		return context.SendStatus(fiber.ErrBadRequest.Code)
 	}
@@ -48,10 +50,11 @@ func UpdateAccount(context *fiber.Ctx) error {
 	if id_User == 0 {
 		return context.SendStatus(status)
 	}
-	db := config.Connection()
+	db, dbClose := config.Connection()
 	var account models.Account
 	context.BodyParser(&account)
 	errQuery := db.Exec("CALL update_account(?,?,?,?)", account.Id, account.Name, account.Credit, account.Limit_amount).Error
+	defer dbClose()
 	if errQuery != nil {
 		return context.SendStatus(fiber.ErrBadRequest.Code)
 	}
@@ -64,7 +67,7 @@ func GetTotalsAccounts(context *fiber.Ctx) error {
 	if id_User == 0 {
 		return context.SendStatus(status)
 	}
-	db := config.Connection()
+	db, dbClose := config.Connection()
 	filters := context.Queries()
 	var totals []models.AccountTotalResponse
 	id_account, errParseAccount := strconv.Atoi(filters["id_account"])
@@ -72,6 +75,7 @@ func GetTotalsAccounts(context *fiber.Ctx) error {
 		return context.SendStatus(fiber.ErrBadRequest.Code)
 	}
 	err := db.Raw("CALL get_total_waste_by_account(?,?,?,?)", id_User, id_account, filters["init"], filters["end"]).Scan(&totals).Error
+	defer dbClose()
 	if err != nil {
 		return context.SendStatus(fiber.ErrBadRequest.Code)
 	}
@@ -93,10 +97,11 @@ func DeleteAccount(context *fiber.Ctx) error {
 	if id_User == 0 {
 		return context.SendStatus(status)
 	}
-	db := config.Connection()
+	db, dbClose := config.Connection()
 	var account models.Account
 	context.BodyParser(&account)
 	errQuery := db.Exec("CALL delete_account(?)", account.Id).Error
+	defer dbClose()
 	if errQuery != nil {
 		return context.SendStatus(fiber.ErrBadRequest.Code)
 	}

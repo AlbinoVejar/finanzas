@@ -10,7 +10,6 @@ const DetailsAccount = () => {
   const {Account, Limit_amount, Total}: TotalWasteAccount = details;
   const ValueLimit = Number((Total*100)/Limit_amount);
   const LimitCondition = ValueLimit >= 100 ? 100 : ValueLimit;
-  console.log("Limit Condition",LimitCondition)
   return (
     <Box>
       <VStack spacing={2} align='normal' divider={<StackDivider />}>

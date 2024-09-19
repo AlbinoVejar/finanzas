@@ -10,8 +10,8 @@ import TableAction from './tableAction'
 
 const TableAllExpenses = () => {
   const {details, filters} = useRecoilValue<UserStateType>(UserSelector);
-  const {getAllExpenses} = useExpenses();
-  const {data} = getAllExpenses(details.Id_rel_Account, filters)
+  const {GetAllExpenses} = useExpenses();
+  const {data} = GetAllExpenses(details.Id_rel_Account, filters)
   return (
     <>
       <VStack spacing={4} align='flex-start'>

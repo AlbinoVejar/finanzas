@@ -6,15 +6,16 @@ import {
 } from '../services/expenses.service'
 
 const useExpenses = () => {
-  const createExpense = () =>
+  const NewExpense =
     useMutation({
       mutationKey: ['create_expense'],
       mutationFn: async (value: NewExpense) => await CreateExpense(value),
       onError(error) {
+        console.log('EERRRORR')
         throw error
       },
     })
-  const getAllExpenses = (id: number, filters: any) =>
+  const GetAllExpenses = (id: number, filters: any) =>
     useQuery({
       queryKey: ['get_expenses_account', id],
       queryFn: async () => await GetExpenseByAccount({ ...filters, id }),
@@ -22,8 +23,12 @@ const useExpenses = () => {
       select(data) {
         return data.data
       },
+      throwOnError(error) {
+        console.log("EEERRROROROR")
+        throw error
+      },
     })
-  return { createExpense, getAllExpenses }
+  return { NewExpense, GetAllExpenses }
 }
 
 export default useExpenses

@@ -9,8 +9,13 @@ import (
 	"gorm.io/gorm"
 )
 
-func Connection() *gorm.DB {
-  godotenv.Load(".env")
+var db *gorm.DB
+
+func Connection() (*gorm.DB, func()) {
+	if db != nil {
+		return db, func() {}
+	}
+	godotenv.Load(".env")
 	db_connection := fmt.Sprintf(db_connection_localhost,
 		os.Getenv("DB_USER"),
 		os.Getenv("DB_PASSWORD"),
@@ -18,12 +23,12 @@ func Connection() *gorm.DB {
 		os.Getenv("DB_PORT"),
 		os.Getenv("DB_NAME"))
 	db, err := gorm.Open(mysql.Open(db_connection), &gorm.Config{})
+	dbClose, _ := db.DB()
 	if err != nil {
 		fmt.Println(db_connection)
 		panic(err)
 	}
-	return db
-}
-
-func CloseConnection() {
+	return db, func() {
+		dbClose.Close()
+	}
 }

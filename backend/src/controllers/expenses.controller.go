@@ -14,7 +14,7 @@ func UpdateExpense(context *fiber.Ctx) error {
 		return context.SendStatus(status)
 	}
 	id_account, _ := context.ParamsInt("id")
-	db := config.Connection()
+	db, dbClose := config.Connection()
 	var expense models.Expense
 	context.BodyParser(&expense)
 	err := db.Exec("CALL update_expense(?,?,?,?)",
@@ -22,6 +22,7 @@ func UpdateExpense(context *fiber.Ctx) error {
 		expense.Description,
 		expense.Amount,
 		expense.Date_expense).Error
+	defer dbClose()
 	if err != nil {
 		return context.SendStatus(fiber.ErrBadRequest.Code)
 
@@ -35,7 +36,7 @@ func CreateExpense(context *fiber.Ctx) error {
 	if id_User == 0 {
 		return context.SendStatus(status)
 	}
-	db := config.Connection()
+	db, dbClose := config.Connection()
 	var expense models.NewExpense
 	context.BodyParser(&expense)
 	err := db.Exec("CALL create_expense(?,?,?,?,?,?)",
@@ -45,6 +46,7 @@ func CreateExpense(context *fiber.Ctx) error {
 		expense.Description,
 		expense.Amount,
 		expense.Date_expense).Error
+	defer dbClose()
 	if err != nil {
 		return context.SendStatus(fiber.ErrBadRequest.Code)
 
@@ -58,13 +60,14 @@ func GetExpensesByAccount(context *fiber.Ctx) error {
 	if id_User == 0 {
 		return context.SendStatus(status)
 	}
-	db := config.Connection()
+	db, dbClose := config.Connection()
 	filters := context.Queries()
 	var expenses []models.ExpenseByAccount
 	var params models.TotalExpenseRequest
 	context.BodyParser(&params)
 	id_rel_account, _ := strconv.Atoi(filters["id_account"])
 	err := db.Raw("CALL get_expenses_by_account(?,?,?,?)", id_User, id_rel_account, filters["init"], filters["end"]).Scan(&expenses).Error
+	defer dbClose()
 	if err != nil {
 		return context.SendStatus(fiber.ErrBadRequest.Code)
 	}

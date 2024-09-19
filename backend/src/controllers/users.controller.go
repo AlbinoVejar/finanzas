@@ -13,11 +13,12 @@ import (
 
 func Login(context *fiber.Ctx) error {
 	var status int = fiber.StatusAccepted
-	db := config.Connection()
+	db, dbClose := config.Connection()
 	var user models.User
 	var userDB models.User
 	context.BodyParser(&user)
 	errQuery := db.Raw("CALL login_user(?)", user.Email).Scan(&userDB).Error
+	defer dbClose()
 	if errQuery != nil {
 		return context.SendStatus(fiber.StatusNotFound)
 	} else {
@@ -49,8 +50,9 @@ func GetUser(context *fiber.Ctx) error {
 		return context.SendStatus(status)
 	}
 	var user models.User
-	db := config.Connection()
+	db, dbClose := config.Connection()
 	errQuery := db.Raw("CALL get_user(?)", id_User).Scan(&user).Error
+	defer dbClose()
 	if errQuery != nil {
 		return context.SendStatus(fiber.ErrBadRequest.Code)
 	}
@@ -60,7 +62,7 @@ func GetUser(context *fiber.Ctx) error {
 
 func CreateUser(context *fiber.Ctx) error {
 	var status int = fiber.StatusOK
-	db := config.Connection()
+	db, dbClose := config.Connection()
 	var newUser models.User
 	context.BodyParser(&newUser)
 	passEncoded, err := utils.EncodedPass(newUser.Password)
@@ -68,6 +70,7 @@ func CreateUser(context *fiber.Ctx) error {
 		panic(err)
 	}
 	errQuery := db.Exec("CALL create_user(?,?,?);", newUser.Name, newUser.Email, passEncoded).Error
+	defer dbClose()
 	if errQuery != nil {
 		return context.SendStatus(fiber.ErrBadRequest.Code)
 	}
@@ -80,7 +83,7 @@ func UpdateUser(context *fiber.Ctx) error {
 	if id_User == 0 {
 		return context.SendStatus(status)
 	}
-	db := config.Connection()
+	db, dbClose := config.Connection()
 	var newUser models.User
 	context.BodyParser(&newUser)
 	passEncoded, err := utils.EncodedPass(newUser.Password)
@@ -88,6 +91,7 @@ func UpdateUser(context *fiber.Ctx) error {
 		panic(err)
 	}
 	errQuery := db.Exec("CALL update_user(?,?,?,?)", id_User, newUser.Name, newUser.Email, passEncoded).Error
+	defer dbClose()
 	if errQuery != nil {
 		return context.SendStatus(fiber.ErrBadRequest.Code)
 	}

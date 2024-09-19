@@ -25,14 +25,12 @@ import {
 } from '@chakra-ui/react'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { ModalState } from '../context/modalState'
-import { CategorySelector } from '../context/categoryState'
-import { Category, ResumeCategory } from '../types/category.type'
+import { Category } from '../types/category.type'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { NewExpense } from '../types/expense.type'
 import useExpenses from '../hooks/useExpenses.hook'
-import { AccountSelector } from '../context/accountState'
 import { Account } from '../types/account.type'
 import { UserSelector } from '../context/userState'
 import { UserStateType } from '../types/user.type'
@@ -40,9 +38,8 @@ import { useEffect } from 'react'
 import useAccounts from '../hooks/useAccounts.hook'
 import { ModalTypeState } from '../types/modal.type'
 import useCategories from '../hooks/useCategories.hook'
-import ToastComponent from './toast.component'
-import dayjs from 'dayjs'
 import useToastComponent from './toast.component'
+import dayjs from 'dayjs'
 
 interface IExpenseInputs {
   account: string
@@ -61,10 +58,11 @@ const schemaExpense = z.object({
 const ExpenseModal = () => {
   const [open, setOpen] = useRecoilState<ModalTypeState>(ModalState)
   const { expense } = open
-  const { details } = useRecoilValue<UserStateType>(UserSelector)
+  const { details, filters } = useRecoilValue<UserStateType>(UserSelector)
   const { data: itemsAccounts } = useAccounts().getAllItemsAccounts()
   const { data: itemsCategories } = useCategories().GetItemsCategories()
-  const CreateExpense = useExpenses().createExpense()
+  const {NewExpense, GetAllExpenses} = useExpenses();
+  const {refetch} = GetAllExpenses(details.Id_rel_Account, filters);
   const useToast = useToastComponent();
   const {
     control,
@@ -97,10 +95,13 @@ const ExpenseModal = () => {
           Id_rel_Category: Number(data.category),
           Description: data.description,
           Id_rel_Account: Number(data.account),
+          Date_expense: dayjs().format("YYYY-MM-DD")
         }
-        await CreateExpense.mutateAsync(
+        await NewExpense.mutateAsync(
           newCategory
         )
+        reset();
+        refetch();
         useToast({status: 'success', title:'Exito', description: 'Gastó agregado con exito'});
       }
     } catch (error) {
