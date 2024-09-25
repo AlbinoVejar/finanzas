@@ -20,6 +20,8 @@ const useExpenses = () => {
       queryKey: ['get_expenses_account', id],
       queryFn: async () => await GetExpenseByAccount({ ...filters, id }),
       enabled: id > 0,
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
       select(data) {
         return data.data
       },

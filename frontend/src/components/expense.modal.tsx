@@ -32,7 +32,7 @@ import { z } from 'zod'
 import { NewExpense } from '../types/expense.type'
 import useExpenses from '../hooks/useExpenses.hook'
 import { Account } from '../types/account.type'
-import { UserSelector } from '../context/userState'
+import { UserSelector, UserState } from '../context/userState'
 import { UserStateType } from '../types/user.type'
 import { useEffect } from 'react'
 import useAccounts from '../hooks/useAccounts.hook'
@@ -58,11 +58,13 @@ const schemaExpense = z.object({
 const ExpenseModal = () => {
   const [open, setOpen] = useRecoilState<ModalTypeState>(ModalState)
   const { expense } = open
-  const { details, filters } = useRecoilValue<UserStateType>(UserSelector)
-  const { data: itemsAccounts } = useAccounts().getAllItemsAccounts()
+  const [{filters, details, refetches}, setUserState] = useRecoilState<UserStateType>(UserState);
+  const { detailsAccount: getDetailsAccount } = refetches;
+  const { getAllItemsAccounts } = useAccounts()
+  const {data: itemsAccounts} = getAllItemsAccounts()
   const { data: itemsCategories } = useCategories().GetItemsCategories()
   const {NewExpense, GetAllExpenses} = useExpenses();
-  const {refetch} = GetAllExpenses(details.Id_rel_Account, filters);
+  const { refetch: refecthAllExpenses } = GetAllExpenses(details.Id_rel_Account, filters);
   const useToast = useToastComponent();
   const {
     control,
@@ -80,7 +82,7 @@ const ExpenseModal = () => {
   })
 
   useEffect(() => {
-    if (details) {
+    if(details){
       reset({ ...defaultValues, account: String(details.Id_rel_Account) })
     }
   }, [details])
@@ -101,7 +103,8 @@ const ExpenseModal = () => {
           newCategory
         )
         reset();
-        refetch();
+        refecthAllExpenses();
+        getDetailsAccount();
         useToast({status: 'success', title:'Exito', description: 'Gastó agregado con exito'});
       }
     } catch (error) {

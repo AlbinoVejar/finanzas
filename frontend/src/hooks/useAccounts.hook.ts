@@ -28,6 +28,8 @@ const useAccounts = () => {
       queryKey: ['get_account', filters],
       queryFn: async () => await GetOneAccounts(filters),
       enabled: Boolean(filters),
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
       select(data) {
         return data.data
       },

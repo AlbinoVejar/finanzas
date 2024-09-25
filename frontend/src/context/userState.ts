@@ -36,6 +36,9 @@ export const UserState: RecoilState<UserStateType> = atom<UserStateType>({
       Total: 11111,
       Limit_amount: 99999,
       Created_at: dayjs().format('YYYY-MM-DD')
+    },
+    refetches: {
+      detailsAccount: () => ({})
     }
   },
   effects: [

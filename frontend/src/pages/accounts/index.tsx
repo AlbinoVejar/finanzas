@@ -18,19 +18,15 @@ import { useEffect } from 'react'
 import useAccounts from '../../hooks/useAccounts.hook'
 import ExpenseModal from '../../components/expense.modal'
 
-type propsTypes = {
-  account: Account
-}
-
 const Accounts = () => {
   let { id: idURL } = useParams()
   const [userState, setUserState] = useRecoilState<UserStateType>(UserState)
   const { filters } = userState
   const { getAccount } = useAccounts()
-  const { data } = getAccount({ ...filters, id_account: idURL })
+  const { data, refetch } = getAccount({ ...filters, id_account: idURL })
   useEffect(() => {
     if (data) {
-      setUserState({ ...userState, details: data })
+      setUserState({ ...userState, details: data, refetches: { detailsAccount: refetch} })
     }
   }, [data])
   return (

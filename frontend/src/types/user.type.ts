@@ -6,7 +6,10 @@ export type UserStateType = {
     init_date: string;
     end_date: string;
   },
-  details: TotalWasteAccount
+  details: TotalWasteAccount,
+  refetches: {
+    detailsAccount: any;
+  }
 }
 
 export type UserDashboard = {
