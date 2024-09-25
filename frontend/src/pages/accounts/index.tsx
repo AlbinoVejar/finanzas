@@ -6,7 +6,6 @@ import {
   StackDivider,
   VStack,
 } from '@chakra-ui/react'
-import { Account } from '../../types/account.type'
 import DetailsAccount from './details'
 import ActionsAccount from './actions'
 import TableAllExpenses from './tableExpenses'
@@ -26,7 +25,7 @@ const Accounts = () => {
   const { data, refetch } = getAccount({ ...filters, id_account: idURL })
   useEffect(() => {
     if (data) {
-      setUserState({ ...userState, details: data, refetches: { detailsAccount: refetch} })
+      setUserState({ ...userState, details: data, refetches: { detailsAccount: refetch } })
     }
   }, [data])
   return (

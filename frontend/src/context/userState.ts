@@ -2,7 +2,7 @@ import { RecoilState, atom, selector, AtomEffect } from "recoil";
 import { UserStateType } from "../types/user.type";
 import dayjs from "dayjs";
 
-const localStorageEffect = (key: string): AtomEffect<UserStateType> => ({setSelf, onSet}) => {
+const localStorageEffect = (key: string): AtomEffect<UserStateType> => ({ setSelf, onSet }) => {
   const savedValue: string = String(localStorage.getItem(key) ?? '');
   if (Boolean(savedValue)) {
     setSelf((prevState: any) => ({
@@ -14,12 +14,12 @@ const localStorageEffect = (key: string): AtomEffect<UserStateType> => ({setSelf
     if (isReset) {
       localStorage.removeItem(key)
     } else {
-      if(String(newValue.token) !== ''){
+      if (String(newValue.token) !== '') {
         localStorage.setItem(key, String(newValue.token));
       }
     }
   });
-} 
+}
 
 export const UserState: RecoilState<UserStateType> = atom<UserStateType>({
   key: "UserState",
@@ -48,7 +48,7 @@ export const UserState: RecoilState<UserStateType> = atom<UserStateType>({
 
 export const UserSelector = selector({
   key: "UserSelect",
-  get: ({get}) => {
+  get: ({ get }) => {
     return get(UserState);
   }
 })

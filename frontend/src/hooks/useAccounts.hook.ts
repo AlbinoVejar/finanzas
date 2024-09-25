@@ -9,7 +9,7 @@ const useAccounts = () => {
   const getAllItemsAccounts = () =>
     useQuery({
       queryKey: ['get_items_accounts'],
-      queryFn: async () => await GetItemsAccounts(),      
+      queryFn: async () => await GetItemsAccounts(),
       select(data) {
         return data.data
       },

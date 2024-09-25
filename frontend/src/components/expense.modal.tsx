@@ -58,12 +58,12 @@ const schemaExpense = z.object({
 const ExpenseModal = () => {
   const [open, setOpen] = useRecoilState<ModalTypeState>(ModalState)
   const { expense } = open
-  const [{filters, details, refetches}, setUserState] = useRecoilState<UserStateType>(UserState);
+  const [{ filters, details, refetches }, setUserState] = useRecoilState<UserStateType>(UserState);
   const { detailsAccount: getDetailsAccount } = refetches;
   const { getAllItemsAccounts } = useAccounts()
-  const {data: itemsAccounts} = getAllItemsAccounts()
+  const { data: itemsAccounts } = getAllItemsAccounts()
   const { data: itemsCategories } = useCategories().GetItemsCategories()
-  const {NewExpense, GetAllExpenses} = useExpenses();
+  const { NewExpense, GetAllExpenses } = useExpenses();
   const { refetch: refecthAllExpenses } = GetAllExpenses(details.Id_rel_Account, filters);
   const useToast = useToastComponent();
   const {
@@ -82,7 +82,7 @@ const ExpenseModal = () => {
   })
 
   useEffect(() => {
-    if(details){
+    if (details) {
       reset({ ...defaultValues, account: String(details.Id_rel_Account) })
     }
   }, [details])
@@ -105,10 +105,10 @@ const ExpenseModal = () => {
         reset();
         refecthAllExpenses();
         getDetailsAccount();
-        useToast({status: 'success', title:'Exito', description: 'Gastó agregado con exito'});
+        useToast({ status: 'success', title: 'Exito', description: 'Gastó agregado con exito' });
       }
     } catch (error) {
-      useToast({status: 'error', title: 'Error', description: 'Ocurrió un error'});
+      useToast({ status: 'error', title: 'Error', description: 'Ocurrió un error' });
     }
   }
 

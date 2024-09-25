@@ -9,9 +9,9 @@ import useExpenses from '../../hooks/useExpenses.hook'
 import TableAction from './tableAction'
 
 const TableAllExpenses = () => {
-  const {details, filters} = useRecoilValue<UserStateType>(UserSelector);
-  const {GetAllExpenses} = useExpenses();
-  const {data} = GetAllExpenses(details.Id_rel_Account, filters)
+  const { details, filters } = useRecoilValue<UserStateType>(UserSelector);
+  const { GetAllExpenses } = useExpenses();
+  const { data } = GetAllExpenses(details.Id_rel_Account, filters)
   return (
     <>
       <VStack spacing={4} align='flex-start'>
@@ -50,13 +50,13 @@ const TableAllExpenses = () => {
                     <Tr key={`tr_row_${index}`}>
                       {
                         TableHeadersID.map((value: string) => {
-                            if (value === "Acciones"){
-                              return <Td key={`td_row_actions_${index}`}>
-                                <TableAction row={row}/>
-                              </Td>
-                            } else {
-                              return <Td key={`td_row_${value}_${index}`}>{value === '#' ? index+1 : row[value]}</Td>
-                            }
+                          if (value === "Acciones") {
+                            return <Td key={`td_row_actions_${index}`}>
+                              <TableAction row={row} />
+                            </Td>
+                          } else {
+                            return <Td key={`td_row_${value}_${index}`}>{value === '#' ? index + 1 : row[value]}</Td>
+                          }
                         })
                       }
 
