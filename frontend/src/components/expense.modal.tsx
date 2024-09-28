@@ -87,6 +87,16 @@ const ExpenseModal = () => {
     }
   }, [details])
 
+  useEffect(() => {
+    
+  }, [itemsCategories]);
+
+  useEffect(() => {
+    if(Array.isArray(itemsAccounts) && itemsAccounts.length > 0){
+      
+    }
+  }, [itemsAccounts]);
+
   const onSubmit: SubmitHandler<IExpenseInputs> = async (
     data: IExpenseInputs
   ) => {

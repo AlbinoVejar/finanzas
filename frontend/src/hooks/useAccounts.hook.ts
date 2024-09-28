@@ -10,6 +10,8 @@ const useAccounts = () => {
     useQuery({
       queryKey: ['get_items_accounts'],
       queryFn: async () => await GetItemsAccounts(),
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
       select(data) {
         return data.data
       },
@@ -19,6 +21,8 @@ const useAccounts = () => {
       queryKey: ['get_accounts', filters],
       queryFn: async () => await GetAccounts(filters),
       enabled: Boolean(filters),
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
       select(data) {
         return data.data
       },

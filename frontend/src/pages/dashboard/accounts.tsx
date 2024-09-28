@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { UserState } from '../../context/userState'
 import { RiEyeLine, RiSettings3Line } from '@remixicon/react'
 import { FormatCurreny } from '../../utils'
-import { Account, TotalWasteAccount } from '../../types/account.type'
+import { TotalWasteAccount } from '../../types/account.type'
 
 type propsTypes = {
   account: TotalWasteAccount

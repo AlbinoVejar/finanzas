@@ -1,12 +1,28 @@
 import { Menu, MenuButton, IconButton, MenuList, MenuItem } from '@chakra-ui/react'
 import { RiDeleteBin2Fill, RiEditFill, RiMore2Fill } from '@remixicon/react'
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useRecoilRefresher_UNSTABLE, useRecoilState } from 'recoil'
+import { ModalState } from '../../context/modalState'
+import { ModalTypeState } from '../../types/modal.type'
 
 type propsTypes = {
   row: any
 }
 
 const TableAction = ({row}: propsTypes) => {
+  const refresh = useRecoilRefresher_UNSTABLE(ModalState);
+  const [modalState, setModalState] = useRecoilState<ModalTypeState>(ModalState);
+  const onOpenDetailsModal = () => {
+    setModalState({...modalState, details: row , expense: true})
+  }
+  const onOpenDeleteModal = () => {
+    setModalState({...modalState, details: row, deleteExpense: true})
+  }
+
+  useEffect(() => {
+    refresh();
+  }, []);
+
   return (
     <Menu isLazy placement='auto'>
       <MenuButton
@@ -15,10 +31,10 @@ const TableAction = ({row}: propsTypes) => {
         icon={<RiMore2Fill />}
       />
       <MenuList>
-        <MenuItem icon={<RiEditFill />}>
+        <MenuItem icon={<RiEditFill />} onClick={onOpenDetailsModal}>
           Editar
         </MenuItem>
-        <MenuItem icon={<RiDeleteBin2Fill />}>
+        <MenuItem icon={<RiDeleteBin2Fill />} onClick={onOpenDeleteModal}>
           Eliminar
         </MenuItem>
       </MenuList>

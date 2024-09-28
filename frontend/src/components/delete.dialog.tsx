@@ -6,33 +6,33 @@ import {
   AlertDialogBody,
   AlertDialogFooter,
   Button,
-  useDisclosure,
-  UseDisclosureProps,
 } from '@chakra-ui/react'
-import React from 'react'
+import { useRecoilState } from 'recoil'
+import { ModalTypeState } from '../types/modal.type'
+import { ModalState } from '../context/modalState'
 
 type propsTypes = {
-  setOpen: UseDisclosureProps
-  title: string
-  message: string
-  htmlRef: any
-  onConfirm: any
+  title: string;
+  message: string;
+  onConfirm: any;
+  htmlRef: any;
 }
 
-const DeleteDialog = ({ setOpen, htmlRef, message, title, onConfirm }: propsTypes) => {
-  const { isOpen = false, onClose = () => {} } = setOpen
-
+const DeleteDialog = ({ message, title, onConfirm, htmlRef }: propsTypes) => {
+  const [modalState, setModalState] = useRecoilState<ModalTypeState>(ModalState);
+  
   const onSubmit = () => {
-    if(onClose){
-      onClose()
-    }
     onConfirm();
+  }
+
+  const onClose = () => {
+    setModalState({...modalState, deleteExpense: false});
   }
 
   return (
     <AlertDialog
     motionPreset='slideInBottom'
-      isOpen={isOpen}
+      isOpen={modalState.deleteExpense}
       leastDestructiveRef={htmlRef}
       onClose={onClose}
       closeOnOverlayClick={false}

@@ -3,5 +3,5 @@ import { ModalTypeState } from '../types/modal.type'
 
 export const ModalState: RecoilState<ModalTypeState> = atom<ModalTypeState>({
   key: 'modalState',
-  default: { expense: false },
+  default: { expense: false, deleteExpense: false, details: null, globalConfiguration: false },
 })

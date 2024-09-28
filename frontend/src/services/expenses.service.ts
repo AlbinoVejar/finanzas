@@ -9,7 +9,6 @@ export const CreateExpense = async (expense: NewExpense): Promise<ResponseAPI<an
     const { data } = await axiosConfig.post(`${mainUrl}`, expense);
     return data;
   } catch (error: any) {
-    console.log("ERRRRRRROOOOORR")
     throw error.response;
   }
 }

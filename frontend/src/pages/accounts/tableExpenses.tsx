@@ -7,11 +7,20 @@ import { UserStateType } from '../../types/user.type'
 import { UserSelector } from '../../context/userState'
 import useExpenses from '../../hooks/useExpenses.hook'
 import TableAction from './tableAction'
+import DeleteDialog from '../../components/delete.dialog'
+import { useRef } from 'react'
+import { Category } from '../../types/category.type'
+import { CategorySelector } from '../../context/categoryState'
 
 const TableAllExpenses = () => {
   const { details, filters } = useRecoilValue<UserStateType>(UserSelector);
+  const { details, filters } = useRecoilValue<Category>(CategorySelector);
   const { GetAllExpenses } = useExpenses();
   const { data } = GetAllExpenses(details.Id_rel_Account, filters)
+  const cancelRef = useRef();
+  const onDeleteExpense = () => {
+    console.log("Function DELETE")
+  }
   return (
     <>
       <VStack spacing={4} align='flex-start'>
@@ -68,6 +77,7 @@ const TableAllExpenses = () => {
           </Table>
         </TableContainer>
       </VStack>
+      <DeleteDialog title='Eliminar Gasto' message='¿Estás seguro de eliminar Gasto?' htmlRef={cancelRef} onConfirm={onDeleteExpense}/>
     </>
   )
 }
