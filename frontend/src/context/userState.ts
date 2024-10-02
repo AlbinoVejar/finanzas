@@ -39,6 +39,10 @@ export const UserState: RecoilState<UserStateType> = atom<UserStateType>({
     },
     refetches: {
       detailsAccount: () => ({})
+    },
+    items: {
+      categories: [],
+      accounts: [],
     }
   },
   effects: [

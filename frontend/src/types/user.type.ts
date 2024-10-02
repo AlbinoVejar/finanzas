@@ -1,4 +1,5 @@
-import { TotalWasteAccount } from "./account.type";
+import { Account, TotalWasteAccount } from "./account.type";
+import { Category } from "./category.type";
 
 export type UserStateType = {
   token: string;
@@ -9,6 +10,10 @@ export type UserStateType = {
   details: TotalWasteAccount,
   refetches: {
     detailsAccount: any;
+  },
+  items: {
+    accounts: Account[],
+    categories: Category[]
   }
 }
 

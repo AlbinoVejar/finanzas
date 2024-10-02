@@ -23,7 +23,7 @@ import {
   Textarea,
   FormErrorMessage,
 } from '@chakra-ui/react'
-import { useRecoilRefresher_UNSTABLE, useRecoilState, useRecoilValue } from 'recoil'
+import { useRecoilRefresher_UNSTABLE, useRecoilState } from 'recoil'
 import { ModalState } from '../context/modalState'
 import { Category } from '../types/category.type'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
@@ -32,7 +32,7 @@ import { z } from 'zod'
 import { Expense, NewExpense } from '../types/expense.type'
 import useExpenses from '../hooks/useExpenses.hook'
 import { Account } from '../types/account.type'
-import { UserSelector, UserState } from '../context/userState'
+import { UserState } from '../context/userState'
 import { UserStateType } from '../types/user.type'
 import { useEffect } from 'react'
 import useAccounts from '../hooks/useAccounts.hook'
@@ -59,7 +59,8 @@ const ExpenseModal = () => {
   const refresh = useRecoilRefresher_UNSTABLE(ModalState);
   const [open, setOpen] = useRecoilState<ModalTypeState<Expense>>(ModalState)
   const { expense, details: rowDetails } = open
-  const [{ filters, details, refetches }, setUserState] = useRecoilState<UserStateType>(UserState);
+  const [ userState, setUserState] = useRecoilState<UserStateType>(UserState);
+  const { filters, details, refetches } = userState;
   const { detailsAccount: getDetailsAccount } = refetches;
   const { getAllItemsAccounts } = useAccounts()
   const { data: itemsAccounts } = getAllItemsAccounts()
@@ -102,13 +103,13 @@ const ExpenseModal = () => {
 
   useEffect(() => {
     if(Array.isArray(itemsCategories) && itemsCategories.length > 0){
-      
+      setUserState({...userState, items: {...userState.items, categories: itemsCategories}})
     }
   }, [itemsCategories]);
 
   useEffect(() => {
     if(Array.isArray(itemsAccounts) && itemsAccounts.length > 0){
-      
+      setUserState({...userState, items: {...userState.items, accounts: itemsAccounts}})
     }
   }, [itemsAccounts]);
 
