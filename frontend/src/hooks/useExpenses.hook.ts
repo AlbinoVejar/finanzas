@@ -4,6 +4,7 @@ import {
   CreateExpense,
   DeleteExpense,
   GetExpenseByAccount,
+  UpdateExpense,
 } from '../services/expenses.service'
 
 const useExpenses = () => {
@@ -26,7 +27,15 @@ const useExpenses = () => {
         return data.data
       },
       throwOnError(error) {
-        console.log("EEERRROROROR")
+        throw error
+      },
+    })
+
+    const updateExpense = 
+    useMutation({
+      mutationKey: ["update_expense"],
+      mutationFn: async(value: Expense) => await UpdateExpense(value),
+      onError(error) {
         throw error
       },
     })
@@ -39,7 +48,7 @@ const useExpenses = () => {
         throw error
       },
     })
-  return { NewExpense, GetAllExpenses, deleteExpense }
+  return { NewExpense, GetAllExpenses, updateExpense, deleteExpense }
 }
 
 export default useExpenses

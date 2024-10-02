@@ -14,6 +14,7 @@ import { CategorySelector } from '../../context/categoryState'
 import { Expense } from '../../types/expense.type'
 import { ModalState } from '../../context/modalState'
 import { ModalTypeState } from '../../types/modal.type'
+import useToastComponent from '../../components/toast.component'
 
 const TableAllExpenses = () => {
   const { details, filters, refetches } = useRecoilValue<UserStateType>(UserSelector);
@@ -21,6 +22,8 @@ const TableAllExpenses = () => {
   const { items } = useRecoilValue<CategoryStateType>(CategorySelector);
   const { GetAllExpenses, deleteExpense } = useExpenses();
   const { data, refetch } = GetAllExpenses(details.Id_rel_Account, filters)
+  const useToast = useToastComponent();
+  
   const cancelRef = useRef();
   const onDeleteExpense = async () => {
     if(modalState.details){
@@ -29,6 +32,7 @@ const TableAllExpenses = () => {
         setModalState({...modalState, deleteExpense: false, details: null});
         refetch();
         refetches.detailsAccount();
+        useToast({ status: 'success', title: 'Exito', description: 'Gastó se eliminó con exito' });
       }
     }
   }

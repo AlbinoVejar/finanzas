@@ -29,7 +29,7 @@ import { Category } from '../types/category.type'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { NewExpense } from '../types/expense.type'
+import { Expense, NewExpense } from '../types/expense.type'
 import useExpenses from '../hooks/useExpenses.hook'
 import { Account } from '../types/account.type'
 import { UserSelector, UserState } from '../context/userState'
@@ -57,14 +57,14 @@ const schemaExpense = z.object({
 
 const ExpenseModal = () => {
   const refresh = useRecoilRefresher_UNSTABLE(ModalState);
-  const [open, setOpen] = useRecoilState<ModalTypeState<any>>(ModalState)
-  const { expense } = open
+  const [open, setOpen] = useRecoilState<ModalTypeState<Expense>>(ModalState)
+  const { expense, details: rowDetails } = open
   const [{ filters, details, refetches }, setUserState] = useRecoilState<UserStateType>(UserState);
   const { detailsAccount: getDetailsAccount } = refetches;
   const { getAllItemsAccounts } = useAccounts()
   const { data: itemsAccounts } = getAllItemsAccounts()
   const { data: itemsCategories } = useCategories().GetItemsCategories()
-  const { NewExpense, GetAllExpenses } = useExpenses();
+  const { NewExpense, GetAllExpenses, updateExpense } = useExpenses();
   const { refetch: refecthAllExpenses } = GetAllExpenses(details.Id_rel_Account, filters);
   const useToast = useToastComponent();
   const {
@@ -83,13 +83,27 @@ const ExpenseModal = () => {
   })
 
   useEffect(() => {
-    if (details) {
-      reset({ ...defaultValues, account: String(details.Id_rel_Account) })
+    if (!!rowDetails) {
+      reset({ ...defaultValues, 
+        account: String(rowDetails.Id_rel_Account) ?? String(details.Id_rel_Account),
+        category: String(itemsCategories?.find((e) => (e.Name === rowDetails.Category))?.Id) ?? '',
+        amount: Number(rowDetails.Amount) ?? 0,
+        description: rowDetails.Description ?? ''
+      })
+    }else{
+      reset({
+        account: String(details.Id_rel_Account),
+        category: '',
+        amount: 0,
+        description: '',
+      });
     }
-  }, [details])
+  }, [rowDetails])
 
   useEffect(() => {
-    
+    if(Array.isArray(itemsCategories) && itemsCategories.length > 0){
+      
+    }
   }, [itemsCategories]);
 
   useEffect(() => {
@@ -107,20 +121,33 @@ const ExpenseModal = () => {
   ) => {
     try {
       if (isValid) {
-        const newCategory: NewExpense = {
+        const newExpense: NewExpense = {
           Amount: data.amount,
           Id_rel_Category: Number(data.category),
           Description: data.description,
           Id_rel_Account: Number(data.account),
           Date_expense: dayjs().format("YYYY-MM-DD")
         }
-        await NewExpense.mutateAsync(
-          newCategory
-        )
+        if(!rowDetails){
+          await NewExpense.mutateAsync(
+            newExpense
+          )
+          useToast({ status: 'success', title: 'Exito', description: 'Gastó agregado con exito' });
+        }else{
+          const newValues: Expense = {
+            ...newExpense,
+            Category: rowDetails.Category,
+            Date_expense: rowDetails.Date_expense,
+            Id: rowDetails.Id,
+            Id_rel_Expense: rowDetails.Id_rel_Expense
+          }
+          await updateExpense.mutateAsync(newValues);
+          useToast({ status: 'success', title: 'Exito', description: 'Gastó actualizado con exito' });
+          setOpen({...open, details: null});
+        }
         reset();
         refecthAllExpenses();
         getDetailsAccount();
-        useToast({ status: 'success', title: 'Exito', description: 'Gastó agregado con exito' });
       }
     } catch (error) {
       useToast({ status: 'error', title: 'Error', description: 'Ocurrió un error' });
@@ -149,7 +176,7 @@ const ExpenseModal = () => {
       <ModalOverlay />
       <ModalContent>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <ModalHeader>Agregar gasto</ModalHeader>
+          <ModalHeader>{rowDetails ? 'Actualizar gasto' :'Agregar gasto'}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <VStack spacing={2}>
@@ -250,7 +277,7 @@ const ExpenseModal = () => {
               <Button
                 variant="outline"
                 colorScheme="gray"
-                onClick={() => setOpen({ ...open, expense: false })}
+                onClick={() => setOpen({ ...open, expense: false, details: null })}
               >
                 Cancelar
               </Button>

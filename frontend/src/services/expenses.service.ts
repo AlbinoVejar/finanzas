@@ -22,6 +22,15 @@ export const GetExpenseByAccount = async (filter: any): Promise<ResponseAPI<any>
   }
 }
 
+export const UpdateExpense = async (expense: Expense): Promise<ResponseAPI<Expense>> => {
+  try {
+    const { data } = await axiosConfig.put(`${mainUrl}/${expense.Id}`, expense);
+    return data;
+  } catch (error) {
+    throw { data: null, status: 404 }
+  }
+}
+
 export const DeleteExpense = async (expense: Expense): Promise<ResponseAPI<Expense>> => {
   try {
     const { data } = await axiosConfig.delete(`${mainUrl}/${expense.Id}`);

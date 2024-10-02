@@ -1,7 +1,5 @@
-import { useRecoilState } from 'recoil'
 import { Card, CardBody, CardHeader, Flex, HStack, Heading, IconButton, StackDivider, Stat, StatLabel, VStack } from '@chakra-ui/react'
 import { useNavigate } from 'react-router-dom'
-import { UserState } from '../../context/userState'
 import { RiEyeLine, RiSettings3Line } from '@remixicon/react'
 import { FormatCurreny } from '../../utils'
 import { TotalWasteAccount } from '../../types/account.type'
@@ -12,9 +10,7 @@ type propsTypes = {
 
 const AccountsDashboard = ({ account }: propsTypes) => {
   const navigate = useNavigate();
-  const [userState, setUserState] = useRecoilState(UserState)
   function onOpenDetails(value: number | undefined): void {
-    setUserState({...userState})
     navigate(`cuenta/${value}`)
   }
   

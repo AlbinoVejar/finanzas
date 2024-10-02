@@ -11,7 +11,7 @@ const ActionsAccount = () => {
   const refresh = useRecoilRefresher_UNSTABLE(ModalState);
   const [openModal, setOpenModal] = useRecoilState<ModalTypeState<any>>(ModalState);
   const onOpenExpenseModal = () => {
-    setOpenModal({ ...openModal, expense: true });
+    setOpenModal({ ...openModal, expense: true, details: null });
   }
   const onOpenConfiguration = () => {
     setOpenModal({ ...openModal, globalConfiguration: true });

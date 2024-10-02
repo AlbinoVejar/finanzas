@@ -18,8 +18,8 @@ const DetailsAccount = () => {
           <Text align='center' fontSize='xl'>Tarjeta Credito</Text>
         </Box>
         <Box>
-          <Text fontSize='xl'>Limite de Credito: {FormatCurreny(Limit_amount)}</Text>
           <Text fontSize='xl'>Total Usado: {FormatCurreny(Total)}</Text>
+          <Text fontSize='xl'>Limite de Credito: {FormatCurreny(Limit_amount)}</Text>
         </Box>
           <Progress value={LimitCondition} borderRadius={5} colorScheme={LimitCondition > 100 ? 'red' : LimitCondition === 100 ? 'green' : 'blue'}/>
       </VStack>
