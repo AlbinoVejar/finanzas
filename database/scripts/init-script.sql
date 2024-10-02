@@ -416,6 +416,21 @@ WHERE
   id_expense = _id_expense;
 END //
 
+DROP PROCEDURE IF EXISTS delete_expense //
+CREATE PROCEDURE delete_expense(
+  _id_expense integer, 
+  _id_user integer
+) BEGIN 
+UPDATE 
+  rel_expense
+SET 
+  deleted = CURRENT_TIMESTAMP()
+WHERE 
+  id = _id_expense
+  AND
+  id_user = _id_user;
+END //
+
 DROP PROCEDURE IF EXISTS get_expenses_by_account //
 CREATE PROCEDURE get_expenses_by_account(
     IN _id_user integer,
@@ -425,13 +440,14 @@ CREATE PROCEDURE get_expenses_by_account(
 )
 BEGIN
 SELECT
-  A.id_expense AS Id,
-  A.id AS Id_rel_Expense,
+  A.id AS Id,
+  A.id_expense AS Id_rel_Expense,
+  A.id_rel_category AS Id_rel_Category,
   CA.name AS Category,
+  A.id_rel_account AS Id_rel_Account,
   B.amount AS Amount,   
   B.description AS Description,
-  A.id_rel_category AS Id_rel_Category,
-  B.date_expense as Date_expense
+  B.date_expense AS Date_expense
 FROM rel_expense  AS A
 INNER JOIN expenses AS B
     ON B.id = A.id_expense

@@ -22,9 +22,10 @@ type TotalExpenseRequest struct {
 type ExpenseByAccount struct {
 	Id              int
 	Id_rel_Expense  int
+	Id_rel_Category int
 	Category        string
+	Id_rel_Account  int
 	Amount          float32
 	Description     string
-	Id_rel_Category int
 	Date_expense    string
 }

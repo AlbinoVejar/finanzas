@@ -1,5 +1,5 @@
 import { ResponseAPI } from "../types/response.type";
-import { NewExpense } from "../types/expense.type";
+import { Expense, NewExpense } from "../types/expense.type";
 import axiosConfig from "../utils/axiosConfig";
 
 const mainUrl: string = "/expenses";
@@ -16,6 +16,15 @@ export const CreateExpense = async (expense: NewExpense): Promise<ResponseAPI<an
 export const GetExpenseByAccount = async (filter: any): Promise<ResponseAPI<any>> => {
   try {
     const { data } = await axiosConfig.get(`${mainUrl}/totals?init=${filter.init_date}&end=${filter.end_date}&id_account=${filter.id}`);
+    return data;
+  } catch (error) {
+    throw { data: null, status: 404 }
+  }
+}
+
+export const DeleteExpense = async (expense: Expense): Promise<ResponseAPI<Expense>> => {
+  try {
+    const { data } = await axiosConfig.delete(`${mainUrl}/${expense.Id}`);
     return data;
   } catch (error) {
     throw { data: null, status: 404 }

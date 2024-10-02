@@ -3,10 +3,14 @@ import { Category } from "./category.type"
 import { TableActionType } from "./table.type"
 
 export type Expense = {
-  Id?: number
-  Description: string
-  Amount: number
-  Id_Category: number
+  Id: number;
+  Id_rel_Expense: number;
+  Id_rel_Category: number;
+  Category: string;
+  Id_rel_Account: number;
+  Amount: number; 
+  Description: string;
+  Date_expense: string;
 }
 
 export type Resume = {

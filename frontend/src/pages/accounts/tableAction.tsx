@@ -4,14 +4,15 @@ import React, { useEffect } from 'react'
 import { useRecoilRefresher_UNSTABLE, useRecoilState } from 'recoil'
 import { ModalState } from '../../context/modalState'
 import { ModalTypeState } from '../../types/modal.type'
+import { Expense } from '../../types/expense.type'
 
 type propsTypes = {
-  row: any
+  row: Expense
 }
 
 const TableAction = ({row}: propsTypes) => {
   const refresh = useRecoilRefresher_UNSTABLE(ModalState);
-  const [modalState, setModalState] = useRecoilState<ModalTypeState>(ModalState);
+  const [modalState, setModalState] = useRecoilState<ModalTypeState<Expense>>(ModalState);
   const onOpenDetailsModal = () => {
     setModalState({...modalState, details: row , expense: true})
   }

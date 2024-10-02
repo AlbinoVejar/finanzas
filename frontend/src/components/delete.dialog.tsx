@@ -7,9 +7,11 @@ import {
   AlertDialogFooter,
   Button,
 } from '@chakra-ui/react'
-import { useRecoilState } from 'recoil'
+import { useRecoilRefresher_UNSTABLE, useRecoilState } from 'recoil'
 import { ModalTypeState } from '../types/modal.type'
 import { ModalState } from '../context/modalState'
+import { Expense } from '../types/expense.type'
+import { useEffect } from 'react'
 
 type propsTypes = {
   title: string;
@@ -18,16 +20,21 @@ type propsTypes = {
   htmlRef: any;
 }
 
-const DeleteDialog = ({ message, title, onConfirm, htmlRef }: propsTypes) => {
-  const [modalState, setModalState] = useRecoilState<ModalTypeState>(ModalState);
+const DeleteDialog = ({ message, title, onConfirm, htmlRef }: propsTypes) => {  
+  const refresh = useRecoilRefresher_UNSTABLE(ModalState);
+  const [modalState, setModalState] = useRecoilState<ModalTypeState<Expense>>(ModalState);
   
-  const onSubmit = () => {
-    onConfirm();
+  const onSubmit = async () => {
+    await onConfirm();
   }
 
   const onClose = () => {
     setModalState({...modalState, deleteExpense: false});
   }
+
+  useEffect(() => {
+    refresh();
+  }, []);
 
   return (
     <AlertDialog

@@ -1,13 +1,15 @@
 import { Button, VStack } from '@chakra-ui/react'
 import { RiAddFill, RiArrowGoBackFill, RiToolsFill } from '@remixicon/react'
-import { useRecoilState } from 'recoil'
+import { useRecoilRefresher_UNSTABLE, useRecoilState } from 'recoil'
 import { ModalTypeState } from '../../types/modal.type'
 import { ModalState } from '../../context/modalState'
 import { useNavigate } from 'react-router-dom'
+import { useEffect } from 'react'
 
 const ActionsAccount = () => {
   const navigate = useNavigate();
-  const [openModal, setOpenModal] = useRecoilState<ModalTypeState>(ModalState);
+  const refresh = useRecoilRefresher_UNSTABLE(ModalState);
+  const [openModal, setOpenModal] = useRecoilState<ModalTypeState<any>>(ModalState);
   const onOpenExpenseModal = () => {
     setOpenModal({ ...openModal, expense: true });
   }
@@ -17,6 +19,11 @@ const ActionsAccount = () => {
   const onGoToBack = () => {
     navigate('/');
   }
+
+  useEffect(() => {
+    refresh();
+  }, []);
+
   return (
     <>
       <VStack spacing={4} justify='center' align='strech'>

@@ -77,3 +77,22 @@ func GetExpensesByAccount(context *fiber.Ctx) error {
 		"status": status,
 	})
 }
+
+func DeleteExpense(context *fiber.Ctx) error {
+	id_User, status := InitController(context)
+	if id_User == 0 {
+		return context.SendStatus(status)
+	}
+	id, _ := context.ParamsInt("id")
+	db, dbClose := config.Connection()
+	err := db.Exec("CALL delete_expense(?,?)", id, id_User).Error
+	defer dbClose()
+	if err != nil {
+		return context.SendStatus(fiber.ErrBadRequest.Code)
+	}
+	status = fiber.StatusOK
+	return context.JSON(fiber.Map{
+		"data":   true,
+		"status": status,
+	})
+}

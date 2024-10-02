@@ -18,11 +18,11 @@ import useAccounts from '../../hooks/useAccounts.hook'
 import ExpenseModal from '../../components/expense.modal'
 
 const Accounts = () => {
-  let { id: idURL } = useParams()
-  const [userState, setUserState] = useRecoilState<UserStateType>(UserState)
-  const { filters } = userState
-  const { getAccount } = useAccounts()
-  const { data, refetch } = getAccount({ ...filters, id_account: idURL })
+  let { id: idURL } = useParams();
+  const [userState, setUserState] = useRecoilState<UserStateType>(UserState);
+  const { filters } = userState;
+  const { getAccount } = useAccounts();
+  const { data, refetch } = getAccount({ ...filters, id_account: idURL });
   useEffect(() => {
     if (data) {
       setUserState({ ...userState, details: data, refetches: { detailsAccount: refetch } })

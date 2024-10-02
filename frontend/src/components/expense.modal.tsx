@@ -23,7 +23,7 @@ import {
   Textarea,
   FormErrorMessage,
 } from '@chakra-ui/react'
-import { useRecoilState, useRecoilValue } from 'recoil'
+import { useRecoilRefresher_UNSTABLE, useRecoilState, useRecoilValue } from 'recoil'
 import { ModalState } from '../context/modalState'
 import { Category } from '../types/category.type'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
@@ -56,7 +56,8 @@ const schemaExpense = z.object({
 })
 
 const ExpenseModal = () => {
-  const [open, setOpen] = useRecoilState<ModalTypeState>(ModalState)
+  const refresh = useRecoilRefresher_UNSTABLE(ModalState);
+  const [open, setOpen] = useRecoilState<ModalTypeState<any>>(ModalState)
   const { expense } = open
   const [{ filters, details, refetches }, setUserState] = useRecoilState<UserStateType>(UserState);
   const { detailsAccount: getDetailsAccount } = refetches;
@@ -96,6 +97,10 @@ const ExpenseModal = () => {
       
     }
   }, [itemsAccounts]);
+
+  useEffect(() => {
+    refresh();
+  }, []);
 
   const onSubmit: SubmitHandler<IExpenseInputs> = async (
     data: IExpenseInputs

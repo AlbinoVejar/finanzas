@@ -2,24 +2,35 @@ import { Button, FormControl, FormLabel, HStack, IconButton, Select, Table, Tabl
 import { TableHeaders, TableHeadersID } from './headers'
 import SelectDates from '../../components/selectDates'
 import { RiLayoutGridFill, RiTable2 } from '@remixicon/react'
-import { useRecoilValue } from 'recoil'
+import { useRecoilState, useRecoilValue } from 'recoil'
 import { UserStateType } from '../../types/user.type'
 import { UserSelector } from '../../context/userState'
 import useExpenses from '../../hooks/useExpenses.hook'
 import TableAction from './tableAction'
 import DeleteDialog from '../../components/delete.dialog'
 import { useRef } from 'react'
-import { Category } from '../../types/category.type'
+import { CategoryStateType } from '../../types/category.type'
 import { CategorySelector } from '../../context/categoryState'
+import { Expense } from '../../types/expense.type'
+import { ModalState } from '../../context/modalState'
+import { ModalTypeState } from '../../types/modal.type'
 
 const TableAllExpenses = () => {
-  const { details, filters } = useRecoilValue<UserStateType>(UserSelector);
-  const { details, filters } = useRecoilValue<Category>(CategorySelector);
-  const { GetAllExpenses } = useExpenses();
-  const { data } = GetAllExpenses(details.Id_rel_Account, filters)
+  const { details, filters, refetches } = useRecoilValue<UserStateType>(UserSelector);
+  const [modalState, setModalState] = useRecoilState<ModalTypeState<Expense>>(ModalState);
+  const { items } = useRecoilValue<CategoryStateType>(CategorySelector);
+  const { GetAllExpenses, deleteExpense } = useExpenses();
+  const { data, refetch } = GetAllExpenses(details.Id_rel_Account, filters)
   const cancelRef = useRef();
-  const onDeleteExpense = () => {
-    console.log("Function DELETE")
+  const onDeleteExpense = async () => {
+    if(modalState.details){
+      const {data: responseDelete} = await deleteExpense.mutateAsync(modalState.details);
+      if(responseDelete){
+        setModalState({...modalState, deleteExpense: false, details: null});
+        refetch();
+        refetches.detailsAccount();
+      }
+    }
   }
   return (
     <>
@@ -28,7 +39,9 @@ const TableAllExpenses = () => {
           <FormControl>
             <FormLabel>Categorias</FormLabel>
             <Select placeholder='Categoría'>
-              <option>United Arab Emirates</option>
+              {!!items && items.map(item => (
+                <option value={String(item.Id)}>{item.Name}</option>
+              ))}
               <option>Nigeria</option>
             </Select>
           </FormControl>
@@ -42,7 +55,7 @@ const TableAllExpenses = () => {
           <IconButton aria-label='Search database' icon={<RiTable2 />} />
           <IconButton aria-label='Search database' icon={<RiLayoutGridFill />} />
         </HStack>
-        <TableContainer width="100%">
+        <TableContainer width="100%" maxHeight={'80vh'} overflowY={'auto'}>
           <Table variant='striped'>
             <Thead>
               <Tr>
@@ -77,7 +90,7 @@ const TableAllExpenses = () => {
           </Table>
         </TableContainer>
       </VStack>
-      <DeleteDialog title='Eliminar Gasto' message='¿Estás seguro de eliminar Gasto?' htmlRef={cancelRef} onConfirm={onDeleteExpense}/>
+      <DeleteDialog title='Eliminar Gasto' message='¿Estás seguro de eliminar Gasto?' htmlRef={cancelRef} onConfirm={onDeleteExpense} />
     </>
   )
 }

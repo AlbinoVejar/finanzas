@@ -1,7 +1,8 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { NewExpense } from '../types/expense.type'
+import { Expense, NewExpense } from '../types/expense.type'
 import {
   CreateExpense,
+  DeleteExpense,
   GetExpenseByAccount,
 } from '../services/expenses.service'
 
@@ -11,7 +12,6 @@ const useExpenses = () => {
       mutationKey: ['create_expense'],
       mutationFn: async (value: NewExpense) => await CreateExpense(value),
       onError(error) {
-        console.log('EERRRORR')
         throw error
       },
     })
@@ -30,7 +30,16 @@ const useExpenses = () => {
         throw error
       },
     })
-  return { NewExpense, GetAllExpenses }
+
+  const deleteExpense = 
+    useMutation({
+      mutationKey: ["delete_expense"],
+      mutationFn: async(value: Expense) => await DeleteExpense(value),
+      onError(error) {
+        throw error
+      },
+    })
+  return { NewExpense, GetAllExpenses, deleteExpense }
 }
 
 export default useExpenses

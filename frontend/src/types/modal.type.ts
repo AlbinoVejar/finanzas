@@ -1,6 +1,6 @@
-export type ModalTypeState = {
+export type ModalTypeState<T> = {
   expense: boolean;
   deleteExpense: boolean;
-  details: any | null;
+  details: T | null;
   globalConfiguration: boolean;
 }
