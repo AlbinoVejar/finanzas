@@ -233,7 +233,7 @@ VALUES
 END //
 
 DROP PROCEDURE IF EXISTS update_account //
-CREATE PROCEDURE update_account(k
+CREATE PROCEDURE update_account(
   _id_account integer, 
   _name VARCHAR(60), 
   _is_credit bool,
@@ -461,7 +461,7 @@ WHERE
     A.deleted = '0000-00-00 00:00:00'
     AND CAST(B.Date_expense AS Date) BETWEEN _init_date  AND _end_date
     AND U.id = _id_user
-    AND A.id_rel_account = _id_account
+    OR A.id_rel_account = _id_account
 ORDER BY B.Date_expense DESC, A.id DESC;
 END //
 

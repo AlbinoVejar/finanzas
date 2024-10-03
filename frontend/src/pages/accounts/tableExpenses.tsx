@@ -2,24 +2,24 @@ import { Button, FormControl, FormLabel, HStack, IconButton, Select, Table, Tabl
 import { TableHeaders, TableHeadersID } from './headers'
 import SelectDates from '../../components/selectDates'
 import { RiLayoutGridFill, RiTable2 } from '@remixicon/react'
-import { useRecoilState, useRecoilValue } from 'recoil'
+import { useRecoilState } from 'recoil'
 import { UserStateType } from '../../types/user.type'
-import { UserSelector } from '../../context/userState'
+import { UserState } from '../../context/userState'
 import useExpenses from '../../hooks/useExpenses.hook'
 import TableAction from './tableAction'
 import DeleteDialog from '../../components/delete.dialog'
-import { useRef } from 'react'
-import { CategoryStateType } from '../../types/category.type'
-import { CategorySelector } from '../../context/categoryState'
+import { useEffect, useRef } from 'react'
 import { Expense } from '../../types/expense.type'
 import { ModalState } from '../../context/modalState'
 import { ModalTypeState } from '../../types/modal.type'
 import useToastComponent from '../../components/toast.component'
+import useCategories from '../../hooks/useCategories.hook'
 
 const TableAllExpenses = () => {
-  const { details, filters, refetches } = useRecoilValue<UserStateType>(UserSelector);
+  const [userState, setUserState] = useRecoilState<UserStateType>(UserState);
+  const { details, filters, refetches} = userState;
+  const { data: itemsCategories } = useCategories().GetItemsCategories()
   const [modalState, setModalState] = useRecoilState<ModalTypeState<Expense>>(ModalState);
-  const { items } = useRecoilValue<CategoryStateType>(CategorySelector);
   const { GetAllExpenses, deleteExpense } = useExpenses();
   const { data, refetch } = GetAllExpenses(details.Id_rel_Account, filters)
   const useToast = useToastComponent();
@@ -36,6 +36,13 @@ const TableAllExpenses = () => {
       }
     }
   }
+
+  useEffect(() => {
+    if(Array.isArray(itemsCategories) && itemsCategories.length > 0){
+      setUserState({...userState, items: {...userState.items, categories: itemsCategories}})
+    }
+  }, [itemsCategories]);
+
   return (
     <>
       <VStack spacing={4} align='flex-start'>
@@ -43,10 +50,9 @@ const TableAllExpenses = () => {
           <FormControl>
             <FormLabel>Categorias</FormLabel>
             <Select placeholder='Categoría'>
-              {!!items && items.map(item => (
+              {!!itemsCategories && itemsCategories.map(item => (
                 <option value={String(item.Id)}>{item.Name}</option>
               ))}
-              <option>Nigeria</option>
             </Select>
           </FormControl>
           <FormControl>
