@@ -22,6 +22,7 @@ import {
   InputLeftAddon,
   Textarea,
   FormErrorMessage,
+  Input,
 } from '@chakra-ui/react'
 import { useRecoilRefresher_UNSTABLE, useRecoilState } from 'recoil'
 import { ModalState } from '../context/modalState'
@@ -46,6 +47,7 @@ interface IExpenseInputs {
   category: string
   amount: number
   description: string
+  date_expense: string
 }
 
 const schemaExpense = z.object({
@@ -53,13 +55,14 @@ const schemaExpense = z.object({
   category: z.coerce.number().positive('Debe seleccionar una categoría'),
   amount: z.coerce.number().positive(),
   description: z.string().optional(),
+  date_expense: z.string().optional(),
 })
 
 const ExpenseModal = () => {
   const refresh = useRecoilRefresher_UNSTABLE(ModalState);
   const [open, setOpen] = useRecoilState<ModalTypeState<Expense>>(ModalState)
   const { expense, details: rowDetails } = open
-  const [ userState, setUserState] = useRecoilState<UserStateType>(UserState);
+  const [userState, setUserState] = useRecoilState<UserStateType>(UserState);
   const { filters, details, refetches } = userState;
   const { detailsAccount: getDetailsAccount } = refetches;
   const { getAllItemsAccounts } = useAccounts()
@@ -72,44 +75,49 @@ const ExpenseModal = () => {
     control,
     handleSubmit,
     formState: { errors, isValid, defaultValues },
-    reset,
+    reset
   } = useForm<IExpenseInputs>({
     defaultValues: {
       account: '',
       category: '',
       amount: 0,
       description: '',
+      date_expense: '',
     },
     resolver: zodResolver(schemaExpense),
   })
 
   useEffect(() => {
     if (!!rowDetails) {
-      reset({ ...defaultValues, 
+      reset({
+        ...defaultValues,
         account: String(rowDetails.Id_rel_Account) ?? String(details.Id_rel_Account),
         category: String(itemsCategories?.find((e) => (e.Name === rowDetails.Category))?.Id) ?? '',
         amount: Number(rowDetails.Amount) ?? 0,
-        description: rowDetails.Description ?? ''
+        description: rowDetails.Description ?? '',
+        date_expense: rowDetails.Date_expense ?? ''
       })
-    }else{
+    } else {
       reset({
         account: String(details.Id_rel_Account),
         category: '',
         amount: 0,
         description: '',
+        date_expense: ''
       });
     }
   }, [rowDetails])
+  
 
   useEffect(() => {
-    if(Array.isArray(itemsCategories) && itemsCategories.length > 0){
-      setUserState({...userState, items: {...userState.items, categories: itemsCategories}})
+    if (Array.isArray(itemsCategories) && itemsCategories.length > 0) {
+      setUserState({ ...userState, items: { ...userState.items, categories: itemsCategories } })
     }
   }, [itemsCategories]);
 
   useEffect(() => {
-    if(Array.isArray(itemsAccounts) && itemsAccounts.length > 0){
-      setUserState({...userState, items: {...userState.items, accounts: itemsAccounts}})
+    if (Array.isArray(itemsAccounts) && itemsAccounts.length > 0) {
+      setUserState({ ...userState, items: { ...userState.items, accounts: itemsAccounts } })
     }
   }, [itemsAccounts]);
 
@@ -127,14 +135,14 @@ const ExpenseModal = () => {
           Id_rel_Category: Number(data.category),
           Description: data.description,
           Id_rel_Account: Number(data.account),
-          Date_expense: dayjs().format("YYYY-MM-DD")
+          Date_expense: dayjs(data.date_expense).format("YYYY-MM-DD")
         }
-        if(!rowDetails){
+        if (!rowDetails) {
           await NewExpense.mutateAsync(
             newExpense
           )
           useToast({ status: 'success', title: 'Exito', description: 'Gastó agregado con exito' });
-        }else{
+        } else {
           const newValues: Expense = {
             ...newExpense,
             Category: rowDetails.Category,
@@ -144,7 +152,7 @@ const ExpenseModal = () => {
           }
           await updateExpense.mutateAsync(newValues);
           useToast({ status: 'success', title: 'Exito', description: 'Gastó actualizado con exito' });
-          setOpen({...open, details: null});
+          setOpen({ ...open, details: null, expense: false });
         }
         reset();
         refecthAllExpenses();
@@ -168,7 +176,10 @@ const ExpenseModal = () => {
   return (
     <Modal
       isOpen={expense}
-      onClose={() => setOpen({ ...open, expense: false })}
+      onClose={() => {reset();
+      setOpen({ ...open, expense: false, details: null }); 
+    }
+    }
       isCentered
       blockScrollOnMount
       closeOnOverlayClick={false}
@@ -177,7 +188,7 @@ const ExpenseModal = () => {
       <ModalOverlay />
       <ModalContent>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <ModalHeader>{rowDetails ? 'Actualizar gasto' :'Agregar gasto'}</ModalHeader>
+          <ModalHeader>{rowDetails ? 'Actualizar gasto' : 'Agregar gasto'}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <VStack spacing={2}>
@@ -202,6 +213,20 @@ const ExpenseModal = () => {
                 {renderErrorsText(
                   errors?.account?.message,
                   'Seleccione una cuenta.'
+                )}
+              </FormControl>
+              <FormControl isInvalid={Boolean(errors?.date_expense)}>
+                <FormLabel>Fecha</FormLabel>
+                <Controller
+                  name="date_expense"
+                  control={control}
+                  render={({ field }) => (
+                    <Input placeholder='Date' type='date' {...field}/>
+                  )}
+                />
+                {renderErrorsText(
+                  errors?.date_expense?.message,
+                  'Introduce una fecha valida.'
                 )}
               </FormControl>
               <FormControl isInvalid={Boolean(errors?.category)}>
@@ -278,7 +303,10 @@ const ExpenseModal = () => {
               <Button
                 variant="outline"
                 colorScheme="gray"
-                onClick={() => setOpen({ ...open, expense: false, details: null })}
+                onClick={() => {
+                  reset();
+                  setOpen({ ...open, expense: false, details: null });
+                }}
               >
                 Cancelar
               </Button>

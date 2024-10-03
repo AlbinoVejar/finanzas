@@ -51,7 +51,7 @@ const TableAllExpenses = () => {
             <FormLabel>Categorias</FormLabel>
             <Select placeholder='Categoría'>
               {!!itemsCategories && itemsCategories.map(item => (
-                <option value={String(item.Id)}>{item.Name}</option>
+                <option key={`category_table_expenses_${item.Id}`} value={String(item.Id)}>{item.Name}</option>
               ))}
             </Select>
           </FormControl>

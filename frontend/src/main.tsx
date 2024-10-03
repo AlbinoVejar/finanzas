@@ -4,7 +4,6 @@ import App from './App.tsx'
 import { RecoilRoot, useRecoilSnapshot } from 'recoil'
 import { ChakraProvider } from '@chakra-ui/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import ToastComponent from './components/toast.component.tsx'
 
 const queryClient = new QueryClient();
 

@@ -29,8 +29,10 @@ const SelectDates = () => {
       const newDateEndFilter = ParseDate(value[1])
       setUserState({
         ...userState,
-        Init_date: newDateInitFilter,
-        End_date: newDateEndFilter,
+        filters: {
+          init_date: newDateInitFilter,
+          end_date: newDateEndFilter,
+        }
       })
       setDate(`${newDateInitFilter} - `)
     } else {
@@ -38,50 +40,51 @@ const SelectDates = () => {
       const newDateEndFilter = dayjs(value).endOf('month').format(FormatDate)
       setUserState({
         ...userState,
-        Init_date: newDateInitFilter,
-        End_date: newDateEndFilter,
+        filters: {
+          init_date: newDateInitFilter,
+          end_date: newDateEndFilter,
+        }
       })
     }
   }
 
   const displayDate = () => {
     if (!modeSelect) {
-      return `${ParseDate(userState.Init_date, true)}`
+      return `${ParseDate(userState.filters.init_date, true)}`
     } else {
-      return `${ParseDate(userState.Init_date)} - ${ParseDate(userState.End_date)}`
+      return `${ParseDate(userState.filters.init_date)} - ${ParseDate(userState.filters.end_date)}`
     }
   }
 
   const onChangeSwitch = () => setModeSelect(!modeSelect)
 
   return (
-    <>
-      <Popover>
-        <PopoverTrigger>
-          <Input readOnly value={displayDate()} />
-        </PopoverTrigger>
-        <Portal>
-          <PopoverContent>
-            <PopoverHeader>
-              <FormControl display="flex" alignItems="center">
-                <FormLabel htmlFor="email-alerts" mb="0">
-                  Rango de Fechas
-                </FormLabel>
-                <Switch id="email-alerts" onChange={onChangeSwitch} />
-              </FormControl>
-            </PopoverHeader>
-            <PopoverArrow />
-            <PopoverBody>
-              <Calendar
-                onChange={onChangeDataInput}
-                maxDetail={modeSelect ? 'month' : 'year'}
-                selectRange={modeSelect}
-              />
-            </PopoverBody>
-          </PopoverContent>
-        </Portal>
-      </Popover>
-    </>
+    <Popover>
+      <PopoverTrigger>
+        <Input readOnly value={displayDate()} />
+      </PopoverTrigger>
+      <Portal>
+        <PopoverContent>
+          <PopoverHeader>
+            <FormControl display="flex" alignItems="center">
+              <FormLabel htmlFor="email-alerts" mb="0">
+                Rango de Fechas
+              </FormLabel>
+              <Switch id="email-alerts" onChange={onChangeSwitch} />
+            </FormControl>
+          </PopoverHeader>
+          <PopoverArrow />
+          <PopoverBody>
+            <Calendar
+              onChange={onChangeDataInput}
+              maxDetail={modeSelect ? 'month' : 'year'}
+              selectRange={modeSelect}
+            />
+          </PopoverBody>
+        </PopoverContent>
+      </Portal>
+    </Popover>
+
   )
 }
 
