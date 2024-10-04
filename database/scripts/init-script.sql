@@ -461,7 +461,7 @@ WHERE
     A.deleted = '0000-00-00 00:00:00'
     AND CAST(B.Date_expense AS Date) BETWEEN _init_date  AND _end_date
     AND U.id = _id_user
-    OR A.id_rel_account = _id_account
+    AND A.id_rel_account = _id_account
 ORDER BY B.Date_expense DESC, A.id DESC;
 END //
 
