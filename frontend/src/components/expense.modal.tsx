@@ -59,7 +59,6 @@ const schemaExpense = z.object({
 })
 
 const ExpenseModal = () => {
-  const refresh = useRecoilRefresher_UNSTABLE(ModalState);
   const [open, setOpen] = useRecoilState<ModalTypeState<Expense>>(ModalState)
   const { expense, details: rowDetails } = open
   const [userState, setUserState] = useRecoilState<UserStateType>(UserState);
@@ -120,10 +119,6 @@ const ExpenseModal = () => {
       setUserState({ ...userState, items: { ...userState.items, accounts: itemsAccounts } })
     }
   }, [itemsAccounts]);
-
-  useEffect(() => {
-    refresh();
-  }, []);
 
   const onSubmit: SubmitHandler<IExpenseInputs> = async (
     data: IExpenseInputs

@@ -9,13 +9,15 @@ import {
 import DetailsAccount from './details'
 import ActionsAccount from './actions'
 import TableAllExpenses from './tableExpenses'
-import { useRecoilState } from 'recoil'
+import { useRecoilRefresher_UNSTABLE, useRecoilState } from 'recoil'
 import { useParams } from 'react-router-dom'
 import { UserState } from '../../context/userState'
 import { UserStateType } from '../../types/user.type'
 import { useEffect } from 'react'
 import useAccounts from '../../hooks/useAccounts.hook'
 import ExpenseModal from '../../components/expense.modal'
+import { ModalState } from '../../context/modalState'
+import GlobalConfiguration from '../configuration'
 
 const Accounts = () => {
   let { id: idURL } = useParams();
@@ -46,6 +48,7 @@ const Accounts = () => {
         </CardBody>
       </Card>
       <ExpenseModal />
+      <GlobalConfiguration />
     </>
   )
 }

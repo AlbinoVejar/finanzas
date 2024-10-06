@@ -7,29 +7,48 @@ import { useNavigate } from 'react-router-dom'
 import { useEffect } from 'react'
 
 const ActionsAccount = () => {
-  const navigate = useNavigate();
-  const refresh = useRecoilRefresher_UNSTABLE(ModalState);
-  const [openModal, setOpenModal] = useRecoilState<ModalTypeState<any>>(ModalState);
+  const navigate = useNavigate()
+  const refresh = useRecoilRefresher_UNSTABLE(ModalState)
+  const [openModal, setOpenModal] =
+    useRecoilState<ModalTypeState<any>>(ModalState)
   const onOpenExpenseModal = () => {
-    setOpenModal({ ...openModal, expense: true, details: null });
+    setOpenModal({ ...openModal, expense: true, details: null })
   }
   const onOpenConfiguration = () => {
-    setOpenModal({ ...openModal, globalConfiguration: true });
+    setOpenModal({ ...openModal, globalConfiguration: true })
   }
   const onGoToBack = () => {
-    navigate('/');
+    navigate('/')
   }
 
   useEffect(() => {
-    refresh();
-  }, []);
+    refresh()
+  }, [])
 
   return (
     <>
-      <VStack spacing={4} justify='center' align='strech'>
-        <Button colorScheme='blue' leftIcon={<RiAddFill />} onClick={onOpenExpenseModal}>Agregar Gasto</Button>
-        <Button colorScheme='gray' leftIcon={<RiToolsFill />} onClick={onOpenConfiguration}>Configuración</Button>
-        <Button variant='outline' leftIcon={<RiArrowGoBackFill />} onClick={onGoToBack}>Mis Cuentas</Button>
+      <VStack spacing={4} justify="center" align="strech">
+        <Button
+          colorScheme="blue"
+          leftIcon={<RiAddFill />}
+          onClick={onOpenExpenseModal}
+        >
+          Agregar Gasto
+        </Button>
+        <Button
+          colorScheme="gray"
+          leftIcon={<RiToolsFill />}
+          onClick={onOpenConfiguration}
+        >
+          Configuración
+        </Button>
+        <Button
+          variant="outline"
+          leftIcon={<RiArrowGoBackFill />}
+          onClick={onGoToBack}
+        >
+          Mis Cuentas
+        </Button>
       </VStack>
     </>
   )
