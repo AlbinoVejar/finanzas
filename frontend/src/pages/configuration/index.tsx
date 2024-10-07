@@ -13,7 +13,7 @@ import React from 'react'
 import { useRecoilState } from 'recoil'
 import { ModalTypeState } from '../../types/modal.type'
 import { ModalState } from '../../context/modalState'
-import TablesSection from './tableConfig'
+// import TablesSection from './tableConfig'
 
 const GlobalConfiguration = () => {
   const [open, setOpen] = useRecoilState<ModalTypeState<any>>(ModalState)
