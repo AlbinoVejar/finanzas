@@ -1,13 +1,10 @@
-import React from 'react'
 import Quicktable from '../../components/quicktable'
-import { TableHeadersAccounts, TableHeadersCategories } from './headers'
-import useAccounts from '../../hooks/useAccounts.hook'
-import useCategories from '../../hooks/useCategories.hook'
 import { Card, CardBody, CardHeader, Heading, SimpleGrid } from '@chakra-ui/react'
 import { RiDeleteBin2Fill, RiEditFill } from '@remixicon/react'
 import { TableActionType, TableHeaderType } from '../../types/table.type'
 
 type propsTypes<T> = {
+  title: string;
   data: T[];
   headers: TableHeaderType[];
   onCreate: any;
@@ -15,9 +12,16 @@ type propsTypes<T> = {
   onDelete: any;
 }
 
-const TablesSection = <T>({data, }: propsTypes<T>) => {
-  const onHandlerEdit = (row) => {}
-  const onHandlerDelete = (row) => {}
+const TablesSection = ({title, data, headers, onCreate, onEdit, onDelete}: propsTypes<any>) => {
+  const onHandlerCreate = (row: any) => {
+    onCreate(row);
+  }
+  const onHandlerEdit = (row: any) => {
+    onEdit(row);
+  }
+  const onHandlerDelete = (row: any) => {
+    onDelete(row)
+  }
   const actions: TableActionType[] = [
     {
       id: 'edit',
@@ -37,13 +41,13 @@ const TablesSection = <T>({data, }: propsTypes<T>) => {
     <SimpleGrid columns={1} spacing={8}>
       <Card>
         <CardHeader>
-          <Heading size="md">Categorias</Heading>
+          <Heading size="md">{title}</Heading>
         </CardHeader>
         <CardBody>
-          {itemsCategories && (
+          {data && (
             <Quicktable
-              data={itemsCategories.map((item) => ({...item, Actions: actions}))}
-              headers={TableHeadersCategories}
+              data={data.map((item) => ({...item, Actions: actions}))}
+              headers={headers}
               keyTable="categories"
               config={{showMenuAction: false}}
             />
