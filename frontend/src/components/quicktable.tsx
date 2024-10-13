@@ -13,18 +13,18 @@ import {
   MenuItem,
   ButtonGroup,
   Button,
-} from '@chakra-ui/react'
-import { TableActionType, TableHeaderType } from '../types/table.type'
-import { RiMenuFill } from '@remixicon/react'
+} from '@chakra-ui/react';
+import { TableActionType, TableHeaderType } from '../types/table.type';
+import { RiMenuFill } from '@remixicon/react';
 
 type quickTableProps<T> = {
-  headers: TableHeaderType[]
-  data: T[]
-  keyTable: string
+  headers: TableHeaderType[];
+  data: T[];
+  keyTable: string;
   config: {
-    showMenuAction: boolean
-  }
-}
+    showMenuAction: boolean;
+  };
+};
 
 const Quicktable = <T,>({
   headers,
@@ -49,8 +49,7 @@ const Quicktable = <T,>({
               <MenuItem
                 key={`action_item_${action.id}_${id}_${item.id}`}
                 icon={action.icon}
-                onClick={() => action.handler(item)}
-              >
+                onClick={() => action.handler(item)}>
                 {action.label}
               </MenuItem>
             ))}
@@ -68,16 +67,16 @@ const Quicktable = <T,>({
             />
           ))}
       </ButtonGroup>
-    )
-  }
+    );
+  };
 
   const returnLabel = (value: any, empty: string) => {
     if (typeof value === 'boolean') {
-      return Boolean(value) ? 'Si' : 'No'
+      return Boolean(value) ? 'Si' : 'No';
     } else {
-      return String(value ?? empty)
+      return String(value ?? empty);
     }
-  }
+  };
 
   return (
     <TableContainer borderWidth="2px" borderRadius="lg">
@@ -86,7 +85,11 @@ const Quicktable = <T,>({
           <Tr>
             {!!headers &&
               headers.map((header: TableHeaderType) => (
-                <Th key={`header_key_${header.id}`}>{header.label}</Th>
+                <Th
+                  key={`header_key_${header.id}`}
+                  textAlign={header.id === 'Actions' ? 'center' : 'left'}>
+                  {header.label}
+                </Th>
               ))}
           </Tr>
         </Thead>
@@ -97,8 +100,7 @@ const Quicktable = <T,>({
                 {headers.map(({ id, empty }: TableHeaderType) => (
                   <Td
                     textAlign={id === 'Actions' ? 'center' : 'start'}
-                    key={`row_data_${id}`}
-                  >
+                    key={`row_data_${id}`}>
                     {id === 'Actions'
                       ? RenderActions(item, id)
                       : returnLabel(item[id], empty)}
@@ -109,7 +111,7 @@ const Quicktable = <T,>({
         </Tbody>
       </Table>
     </TableContainer>
-  )
-}
+  );
+};
 
-export default Quicktable
+export default Quicktable;

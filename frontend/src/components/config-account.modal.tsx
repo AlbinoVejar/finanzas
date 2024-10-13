@@ -22,21 +22,22 @@ import {
   Switch,
   useDisclosure,
   VStack,
-} from '@chakra-ui/react'
-import React from 'react'
-import { Controller, useForm } from 'react-hook-form'
-import { renderErrorsText } from '../utils/tools'
-import { RiDeleteBin7Line } from '@remixicon/react'
-import DeleteDialog from './delete.dialog'
+} from '@chakra-ui/react';
+import React from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { renderErrorsText } from '../utils/tools';
+import { RiDeleteBin7Line } from '@remixicon/react';
+import DeleteDialog from './delete.dialog';
 
 type propsTypes = {
-  open: boolean
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>
-}
+  open: boolean;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  details: any;
+};
 
-const ConfigAccountModal = ({ open, setOpen }: propsTypes) => {
-  const setOpenDeleteDialog = useDisclosure()
-  const cancelRef = React.useRef()
+const ConfigAccountModal = ({ open, setOpen, details }: propsTypes) => {
+  const setOpenDeleteDialog = useDisclosure();
+  const cancelRef = React.useRef();
   const {
     control,
     handleSubmit,
@@ -46,13 +47,13 @@ const ConfigAccountModal = ({ open, setOpen }: propsTypes) => {
       name: '',
     },
     // resolver: zodResolver(schemaExpense),
-  })
+  });
   const onSubmit = () => {
-    console.log('hello', true)
-  }
+    console.log('hello', true);
+  };
   const onCofirmDelete = () => {
-    console.log('hello', true)
-  }
+    console.log('hello', true);
+  };
 
   return (
     <>
@@ -62,8 +63,7 @@ const ConfigAccountModal = ({ open, setOpen }: propsTypes) => {
         isCentered
         blockScrollOnMount
         closeOnOverlayClick={false}
-        size="xl"
-      >
+        size="xl">
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Configurar Categoría</ModalHeader>
@@ -90,9 +90,7 @@ const ConfigAccountModal = ({ open, setOpen }: propsTypes) => {
                   <Controller
                     name="name"
                     control={control}
-                    render={({ field }) => (
-                      <Switch size='md' {...field} />
-                    )}
+                    render={({ field }) => <Switch size="md" {...field} />}
                   />
                   {renderErrorsText(
                     errors?.name?.message,
@@ -104,7 +102,7 @@ const ConfigAccountModal = ({ open, setOpen }: propsTypes) => {
                   <InputGroup>
                     <InputLeftAddon pointerEvents="none">$</InputLeftAddon>
                     <Controller
-                      name='name'
+                      name="name"
                       control={control}
                       render={({ field }) => (
                         <NumberInput
@@ -112,8 +110,7 @@ const ConfigAccountModal = ({ open, setOpen }: propsTypes) => {
                           min={0}
                           defaultValue={0.0}
                           width="100%"
-                          {...field}
-                        >
+                          {...field}>
                           <NumberInputField borderLeftRadius={0} />
                           <NumberInputStepper>
                             <NumberIncrementStepper />
@@ -137,16 +134,14 @@ const ConfigAccountModal = ({ open, setOpen }: propsTypes) => {
                 leftIcon={<RiDeleteBin7Line />}
                 variant="outline"
                 colorScheme="red"
-                onClick={() => setOpenDeleteDialog.onOpen()}
-              >
+                onClick={() => setOpenDeleteDialog.onOpen()}>
                 Eliminar
               </Button>
               <Spacer />
               <Button
                 variant="outline"
                 colorScheme="gray"
-                onClick={() => setOpen(false)}
-              >
+                onClick={() => setOpen(false)}>
                 Cancelar
               </Button>
               <Button variant="solid" colorScheme="blue" type="submit">
@@ -156,15 +151,15 @@ const ConfigAccountModal = ({ open, setOpen }: propsTypes) => {
           </ModalFooter>
         </ModalContent>
       </Modal>
-      <DeleteDialog
+      {/* <DeleteDialog
         setOpen={setOpenDeleteDialog}
         htmlRef={cancelRef}
         title="Eliminar Categoría"
         message="¿Estas seguro que desea eliminar esta categoría?"
         onConfirm={onCofirmDelete}
-      />
+      /> */}
     </>
-  )
-}
+  );
+};
 
-export default ConfigAccountModal
+export default ConfigAccountModal;
