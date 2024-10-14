@@ -12,8 +12,11 @@ import {
 } from '@chakra-ui/react';
 import { RiAddFill, RiDeleteBin2Fill, RiEditFill } from '@remixicon/react';
 import { TableActionType, TableHeaderType } from '../../types/table.type';
-import { useRef } from 'react';
 import DeleteDialog from '../../components/delete.dialog';
+import { ModalState } from '../../context/modalState';
+import { ModalTypeState } from '../../types/modal.type';
+import { useRecoilState } from 'recoil';
+import { useRef } from 'react';
 
 type propsTypes<T> = {
   title: string;
@@ -23,6 +26,7 @@ type propsTypes<T> = {
   onEdit: any;
   onDelete: any;
   setOpen: any;
+  setSelected: any;
 };
 
 const TablesSection = ({
@@ -33,17 +37,26 @@ const TablesSection = ({
   onEdit,
   onDelete,
   setOpen,
+  setSelected,
 }: propsTypes<any>) => {
+  const [openModal, setOpenModal] =
+    useRecoilState<ModalTypeState<any>>(ModalState);
   const cancelRef = useRef();
   const onHandlerCreate = (row: any) => {
     onCreate(row);
   };
+  const removeActions = (row: any) => {
+    const values = { ...row };
+    delete values.Actions;
+    return values;
+  };
   const onHandlerEdit = (row: any) => {
+    setSelected(removeActions(row));
     setOpen(true);
     onEdit(row);
   };
   const onHandlerDelete = (row: any) => {
-    onDelete(row);
+    onDelete(removeActions(row));
   };
   const actions: TableActionType[] = [
     {
@@ -54,7 +67,7 @@ const TablesSection = ({
     },
     {
       id: 'delete',
-      handler: onHandlerDelete,
+      handler: setOpenModal({ ...openModal, deleteExpense: true }),
       icon: <RiDeleteBin2Fill />,
       label: 'Eliminar',
     },
@@ -66,13 +79,13 @@ const TablesSection = ({
         <CardHeader>
           <Stack direction="column" gap={4}>
             <Heading size="md">{title}s</Heading>
-            <Box w='30%'>
-            <Button
-              leftIcon={<RiAddFill />}
-              variant="outline"
-              onClick={onHandlerCreate}>
-              Agregar {title}
-            </Button>
+            <Box w="30%">
+              <Button
+                leftIcon={<RiAddFill />}
+                variant="outline"
+                onClick={onHandlerCreate}>
+                Agregar {title}
+              </Button>
             </Box>
           </Stack>
         </CardHeader>

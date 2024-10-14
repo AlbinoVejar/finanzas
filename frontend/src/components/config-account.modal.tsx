@@ -51,9 +51,7 @@ const ConfigAccountModal = ({ open, setOpen, details }: propsTypes) => {
   const onSubmit = () => {
     console.log('hello', true);
   };
-  const onCofirmDelete = () => {
-    console.log('hello', true);
-  };
+  
 
   return (
     <>
@@ -151,13 +149,6 @@ const ConfigAccountModal = ({ open, setOpen, details }: propsTypes) => {
           </ModalFooter>
         </ModalContent>
       </Modal>
-      {/* <DeleteDialog
-        setOpen={setOpenDeleteDialog}
-        htmlRef={cancelRef}
-        title="Eliminar Categoría"
-        message="¿Estas seguro que desea eliminar esta categoría?"
-        onConfirm={onCofirmDelete}
-      /> */}
     </>
   );
 };

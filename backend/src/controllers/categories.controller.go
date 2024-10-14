@@ -65,9 +65,8 @@ func DeleteCategory(context *fiber.Ctx) error {
 		return context.SendStatus(status)
 	}
 	db, dbClose := config.Connection()
-	var category models.Category
-	context.BodyParser(&category)
-	err := db.Exec("CALL delete_category(?)", category.Id).Error
+	id, _ := context.ParamsInt("id")
+	err := db.Exec("CALL delete_category(?)", id).Error
 	defer dbClose()
 	if err != nil {
 		return context.SendStatus(fiber.ErrBadRequest.Code)

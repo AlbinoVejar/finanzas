@@ -24,17 +24,29 @@ import ConfigAccountModal from '../../components/config-account.modal';
 
 const GlobalConfiguration = () => {
   const [open, setOpen] = useRecoilState<ModalTypeState<any>>(ModalState);
-  const [openConfigCategoryModal, setOpenConfigCategoryModal] = useState<boolean>(false);
+  const [openConfigCategoryModal, setOpenConfigCategoryModal] =
+    useState<boolean>(false);
   const [categorySelected, setCategorySelected] = useState<any | null>(null);
-  const [openConfigAccountModal, setOpenConfigAccountModal] = useState<boolean>(false);
+  const [openConfigAccountModal, setOpenConfigAccountModal] =
+    useState<boolean>(false);
   const [accountSelected, setAccountSelected] = useState<any | null>(null);
 
   const { data: itemsAccounts } = useAccounts().getAllItemsAccounts();
-  const { data: itemsCategories } = useCategories().GetItemsCategories();
+  const { GetItemsCategories, DeleteCategory, createCategory } =
+    useCategories();
+  const { data: itemsCategories } = GetItemsCategories();
+  const { mutateAsync: DeleteMutationCategory } = DeleteCategory;
+  const { mutateAsync: CreateMutationCategory } = createCategory;
+  const {} = createCategory;
   const { globalConfiguration } = open;
-  const onCreateCategory = () => {};
+  const onCreateCategory = (values: any) => {
+    console.log('create', values);
+  };
   const onEditCategory = () => {};
-  const onDeleteCategory = () => {};
+  const onDeleteCategory = (values: any) => {
+    setOpen({ ...open, deleteExpense: true });
+    console.log('delete', values);
+  };
   const onCreateAccount = () => {};
   const onEditAccount = () => {};
   const onDeleteAccount = () => {};
@@ -70,6 +82,7 @@ const GlobalConfiguration = () => {
                     onEdit={onEditCategory}
                     onDelete={onDeleteCategory}
                     setOpen={setOpenConfigCategoryModal}
+                    setSelected={setCategorySelected}
                   />
                 </Box>
               </Stack>
@@ -83,6 +96,7 @@ const GlobalConfiguration = () => {
                     onEdit={onEditAccount}
                     onDelete={onDeleteAccount}
                     setOpen={setOpenConfigAccountModal}
+                    setSelected={setAccountSelected}
                   />
                 </Box>
               </Stack>
@@ -92,8 +106,17 @@ const GlobalConfiguration = () => {
             <Button variant="outline">Cerrar</Button>
           </ModalFooter>
         </ModalContent>
-        <ConfigCategoryModal open={openConfigCategoryModal} setOpen={setOpenConfigCategoryModal} details={categorySelected} />
-        <ConfigAccountModal open={openConfigAccountModal} setOpen={setOpenConfigAccountModal} details={accountSelected}/>
+        <ConfigCategoryModal
+          open={openConfigCategoryModal}
+          setOpen={setOpenConfigCategoryModal}
+          details={categorySelected}
+          onHandlerSubmit={onCreateCategory}
+        />
+        <ConfigAccountModal
+          open={openConfigAccountModal}
+          setOpen={setOpenConfigAccountModal}
+          details={accountSelected}
+        />
       </Modal>
     </>
   );

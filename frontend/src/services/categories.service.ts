@@ -12,3 +12,19 @@ export const GetCategories = async (): Promise<ResponseAPI<Category[]>> => {
     return {data: [], status: 404};
   }
 }
+export const CreateCategory = async (values: any): Promise<ResponseAPI<any>> => {
+  try {
+    const { data } = await axiosConfig.post(`${mainUrl}`, values);
+    return data;
+  } catch (error) {
+    return {data: [], status: 404};
+  }
+}
+export const DeleteCategories = async (id: number): Promise<ResponseAPI<any>> => {
+  try {
+    const { data } = await axiosConfig.delete(`${mainUrl}/${id}`);
+    return data;
+  } catch (error) {
+    return {data: [], status: 404};
+  }
+}

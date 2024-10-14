@@ -1,4 +1,4 @@
-import { GetCategories } from '../services/categories.service';
+import { CreateCategory, DeleteCategories, GetCategories } from '../services/categories.service';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { ResponseAPI } from '../types/response.type';
 import { Category } from '../types/category.type';
@@ -18,11 +18,23 @@ const useCategories = () => {
       }
     },
   });
-  const mutation = useMutation({
-    mutationKey: ["create_category"]
+  const createCategory = useMutation({
+    mutationKey: ["create_category"],
+    mutationFn: async(values: any) => await CreateCategory(values),
+      onError(error) {
+        throw error
+      },
   })
+  const DeleteCategory = 
+    useMutation({
+      mutationKey: ["delete_category"],
+      mutationFn: async(Id: number) => await DeleteCategories(Id),
+      onError(error) {
+        throw error
+      },
+    })
 
-  return {GetItemsCategories, mutation}
+  return {GetItemsCategories, createCategory, DeleteCategory}
 }
 
 export default useCategories
