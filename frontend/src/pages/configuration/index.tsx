@@ -78,7 +78,6 @@ const GlobalConfiguration = () => {
                     title="Categoria"
                     data={itemsCategories ?? []}
                     headers={TableHeadersCategories}
-                    onCreate={onCreateCategory}
                     onEdit={onEditCategory}
                     onDelete={onDeleteCategory}
                     setOpen={setOpenConfigCategoryModal}
@@ -92,7 +91,6 @@ const GlobalConfiguration = () => {
                     title="Cuenta"
                     data={itemsAccounts ?? []}
                     headers={TableHeadersAccounts}
-                    onCreate={onCreateAccount}
                     onEdit={onEditAccount}
                     onDelete={onDeleteAccount}
                     setOpen={setOpenConfigAccountModal}
@@ -110,7 +108,7 @@ const GlobalConfiguration = () => {
           open={openConfigCategoryModal}
           setOpen={setOpenConfigCategoryModal}
           details={categorySelected}
-          onHandlerSubmit={onCreateCategory}
+          onHandlerSubmit={!!categorySelected ? onEditCategory : onCreateCategory}
         />
         <ConfigAccountModal
           open={openConfigAccountModal}

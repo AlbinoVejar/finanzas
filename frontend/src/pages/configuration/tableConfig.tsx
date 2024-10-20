@@ -22,7 +22,6 @@ type propsTypes<T> = {
   title: string;
   data: T[];
   headers: TableHeaderType[];
-  onCreate: any;
   onEdit: any;
   onDelete: any;
   setOpen: any;
@@ -33,7 +32,6 @@ const TablesSection = ({
   title,
   data,
   headers,
-  onCreate,
   onEdit,
   onDelete,
   setOpen,
@@ -42,9 +40,6 @@ const TablesSection = ({
   const [openModal, setOpenModal] =
     useRecoilState<ModalTypeState<any>>(ModalState);
   const cancelRef = useRef();
-  const onHandlerCreate = (row: any) => {
-    onCreate(row);
-  };
   const removeActions = (row: any) => {
     const values = { ...row };
     delete values.Actions;
@@ -67,7 +62,7 @@ const TablesSection = ({
     },
     {
       id: 'delete',
-      handler: setOpenModal({ ...openModal, deleteExpense: true }),
+      handler: () => setOpenModal({ ...openModal, deleteExpense: true }),
       icon: <RiDeleteBin2Fill />,
       label: 'Eliminar',
     },
@@ -83,7 +78,7 @@ const TablesSection = ({
               <Button
                 leftIcon={<RiAddFill />}
                 variant="outline"
-                onClick={onHandlerCreate}>
+                onClick={() =>setOpen(true)}>
                 Agregar {title}
               </Button>
             </Box>
