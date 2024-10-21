@@ -11,7 +11,7 @@ import {
   ModalOverlay,
   Stack,
 } from '@chakra-ui/react';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { ModalTypeState } from '../../types/modal.type';
 import { ModalState } from '../../context/modalState';
@@ -21,8 +21,10 @@ import useAccounts from '../../hooks/useAccounts.hook';
 import useCategories from '../../hooks/useCategories.hook';
 import ConfigCategoryModal from '../../components/config-category.modal';
 import ConfigAccountModal from '../../components/config-account.modal';
+import DeleteDialog from '../../components/delete.dialog';
 
 const GlobalConfiguration = () => {
+  const cancelRef = useRef();
   const [open, setOpen] = useRecoilState<ModalTypeState<any>>(ModalState);
   const [openConfigCategoryModal, setOpenConfigCategoryModal] =
     useState<boolean>(false);
@@ -32,20 +34,28 @@ const GlobalConfiguration = () => {
   const [accountSelected, setAccountSelected] = useState<any | null>(null);
 
   const { data: itemsAccounts } = useAccounts().getAllItemsAccounts();
-  const { GetItemsCategories, DeleteCategory, createCategory } =
+  const { GetItemsCategories, DeleteCategory, createCategory, updateCategory } =
     useCategories();
-  const { data: itemsCategories } = GetItemsCategories();
+  const { data: itemsCategories, refetch: refetchCategories } = GetItemsCategories();
   const { mutateAsync: DeleteMutationCategory } = DeleteCategory;
   const { mutateAsync: CreateMutationCategory } = createCategory;
-  const {} = createCategory;
+  const { mutateAsync: UpdateMutationCategory } = updateCategory
   const { globalConfiguration } = open;
-  const onCreateCategory = (values: any) => {
-    console.log('create', values);
+  const onCreateCategory = async (values: any) => {
+    await CreateMutationCategory(values);
+    refetchCategories();
+    setOpenConfigCategoryModal(false);
   };
-  const onEditCategory = () => {};
-  const onDeleteCategory = (values: any) => {
-    setOpen({ ...open, deleteExpense: true });
-    console.log('delete', values);
+  const onEditCategory = async (values: any) => {
+    await UpdateMutationCategory(values);
+    refetchCategories();
+    setCategorySelected(null);
+    setOpenConfigCategoryModal(false);
+  };
+  const onDeleteCategory = async () => {
+    await DeleteMutationCategory(categorySelected.Id)
+    refetchCategories();
+    setCategorySelected(null);
   };
   const onCreateAccount = () => {};
   const onEditAccount = () => {};
@@ -108,13 +118,21 @@ const GlobalConfiguration = () => {
           open={openConfigCategoryModal}
           setOpen={setOpenConfigCategoryModal}
           details={categorySelected}
-          onHandlerSubmit={!!categorySelected ? onEditCategory : onCreateCategory}
+          onHandlerSubmit={
+            !!categorySelected ? onEditCategory : onCreateCategory
+          }
         />
         <ConfigAccountModal
           open={openConfigAccountModal}
           setOpen={setOpenConfigAccountModal}
           details={accountSelected}
         />
+        {/* <DeleteDialog
+          title={`Eliminar elemento`}
+          message={`¿Estás seguro de eliminar este elemento?`}
+          htmlRef={cancelRef}
+          onConfirm={() => { console.log('HEEWERERERE')}}
+        /> */}
       </Modal>
     </>
   );

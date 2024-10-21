@@ -1,5 +1,11 @@
 import Quicktable from '../../components/quicktable';
 import {
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogOverlay,
   Box,
   Button,
   Card,
@@ -9,6 +15,7 @@ import {
   Heading,
   SimpleGrid,
   Stack,
+  useDisclosure,
 } from '@chakra-ui/react';
 import { RiAddFill, RiDeleteBin2Fill, RiEditFill } from '@remixicon/react';
 import { TableActionType, TableHeaderType } from '../../types/table.type';
@@ -16,7 +23,7 @@ import DeleteDialog from '../../components/delete.dialog';
 import { ModalState } from '../../context/modalState';
 import { ModalTypeState } from '../../types/modal.type';
 import { useRecoilState } from 'recoil';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 
 type propsTypes<T> = {
   title: string;
@@ -37,9 +44,11 @@ const TablesSection = ({
   setOpen,
   setSelected,
 }: propsTypes<any>) => {
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const cancelRef: any = useRef();
   const [openModal, setOpenModal] =
     useRecoilState<ModalTypeState<any>>(ModalState);
-  const cancelRef = useRef();
+  const [openDialog, setOpenDialog] = useState<boolean>(false);
   const removeActions = (row: any) => {
     const values = { ...row };
     delete values.Actions;
@@ -51,8 +60,13 @@ const TablesSection = ({
     onEdit(row);
   };
   const onHandlerDelete = (row: any) => {
-    onDelete(removeActions(row));
+    setSelected(removeActions(row));
+    onOpen();
   };
+  const onSubmitDelete = async () => {
+    await onDelete();
+    onClose();
+  }
   const actions: TableActionType[] = [
     {
       id: 'edit',
@@ -62,47 +76,69 @@ const TablesSection = ({
     },
     {
       id: 'delete',
-      handler: () => setOpenModal({ ...openModal, deleteExpense: true }),
+      handler: onHandlerDelete,
       icon: <RiDeleteBin2Fill />,
       label: 'Eliminar',
     },
   ];
 
   return (
-    <SimpleGrid columns={1} spacing={8}>
-      <Card>
-        <CardHeader>
-          <Stack direction="column" gap={4}>
-            <Heading size="md">{title}s</Heading>
-            <Box w="30%">
-              <Button
-                leftIcon={<RiAddFill />}
-                variant="outline"
-                onClick={() =>setOpen(true)}>
-                Agregar {title}
+    <>
+      <SimpleGrid columns={1} spacing={8}>
+        <Card>
+          <CardHeader>
+            <Stack direction="column" gap={4}>
+              <Heading size="md">{title}s</Heading>
+              <Box w="30%">
+                <Button
+                  leftIcon={<RiAddFill />}
+                  variant="outline"
+                  onClick={() => setOpen(true)}>
+                  Agregar {title}
+                </Button>
+              </Box>
+            </Stack>
+          </CardHeader>
+          <Divider />
+          <CardBody>
+            {data && (
+              <Quicktable
+                data={data.map((item) => ({ ...item, Actions: actions }))}
+                headers={headers}
+                keyTable="categories"
+                config={{ showMenuAction: false }}
+              />
+            )}
+          </CardBody>
+        </Card>
+      </SimpleGrid>
+      <AlertDialog
+        motionPreset="slideInBottom"
+        isOpen={isOpen}
+        leastDestructiveRef={cancelRef}
+        onClose={onClose}
+        closeOnOverlayClick={false}
+        closeOnEsc={false}
+        isCentered>
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              {`Eliminar ${title}`}
+            </AlertDialogHeader>
+            <AlertDialogBody>{`¿Estás seguro de eliminar ${title}?`}</AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button ref={cancelRef} onClick={onClose}>
+                Cancelar
               </Button>
-            </Box>
-          </Stack>
-        </CardHeader>
-        <Divider />
-        <CardBody>
-          {data && (
-            <Quicktable
-              data={data.map((item) => ({ ...item, Actions: actions }))}
-              headers={headers}
-              keyTable="categories"
-              config={{ showMenuAction: false }}
-            />
-          )}
-        </CardBody>
-      </Card>
-      <DeleteDialog
-        title={`Eliminar ${title}`}
-        message={`¿Estás seguro de eliminar ${title}?`}
-        htmlRef={cancelRef}
-        onConfirm={onHandlerDelete}
-      />
-    </SimpleGrid>
+              <Button colorScheme="red" onClick={onSubmitDelete} ml={3}>
+                Eliminar
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
+    </>
   );
 };
 
