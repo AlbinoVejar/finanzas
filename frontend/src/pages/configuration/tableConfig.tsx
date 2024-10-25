@@ -19,7 +19,6 @@ import {
 } from '@chakra-ui/react';
 import { RiAddFill, RiDeleteBin2Fill, RiEditFill } from '@remixicon/react';
 import { TableActionType, TableHeaderType } from '../../types/table.type';
-import DeleteDialog from '../../components/delete.dialog';
 import { ModalState } from '../../context/modalState';
 import { ModalTypeState } from '../../types/modal.type';
 import { useRecoilState } from 'recoil';
@@ -54,10 +53,14 @@ const TablesSection = ({
     delete values.Actions;
     return values;
   };
+  const onOpenCreateModal = () => {
+    setSelected(null);
+    setOpen(true);
+  }
   const onHandlerEdit = (row: any) => {
     setSelected(removeActions(row));
     setOpen(true);
-    onEdit(row);
+    // onEdit(row);
   };
   const onHandlerDelete = (row: any) => {
     setSelected(removeActions(row));
@@ -93,7 +96,7 @@ const TablesSection = ({
                 <Button
                   leftIcon={<RiAddFill />}
                   variant="outline"
-                  onClick={() => setOpen(true)}>
+                  onClick={onOpenCreateModal}>
                   Agregar {title}
                 </Button>
               </Box>

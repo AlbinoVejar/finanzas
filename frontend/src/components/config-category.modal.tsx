@@ -60,6 +60,8 @@ const ConfigCategoryModal = ({
       reset({
         name: details.Name ?? '',
       });
+    }else{
+      reset({name: ''});
     }
   }, [details]);
 
