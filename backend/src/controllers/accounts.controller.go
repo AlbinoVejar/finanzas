@@ -98,9 +98,8 @@ func DeleteAccount(context *fiber.Ctx) error {
 		return context.SendStatus(status)
 	}
 	db, dbClose := config.Connection()
-	var account models.Account
-	context.BodyParser(&account)
-	errQuery := db.Exec("CALL delete_account(?)", account.Id).Error
+	id, _ := context.ParamsInt("id")
+	errQuery := db.Exec("CALL delete_account(?)", id).Error
 	defer dbClose()
 	if errQuery != nil {
 		return context.SendStatus(fiber.ErrBadRequest.Code)

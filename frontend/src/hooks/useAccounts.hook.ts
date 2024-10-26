@@ -1,9 +1,12 @@
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query';
 import {
+  CreateAccount,
+  DeleteAccount,
   GetAccounts,
   GetItemsAccounts,
   GetOneAccounts,
-} from '../services/accounts.service'
+  UpdateAccount,
+} from '../services/accounts.service';
 
 const useAccounts = () => {
   const getAllItemsAccounts = () =>
@@ -13,9 +16,9 @@ const useAccounts = () => {
       refetchOnMount: false,
       refetchOnWindowFocus: false,
       select(data) {
-        return data.data
+        return data.data;
       },
-    })
+    });
   const getAccounts = (filters: any) =>
     useQuery({
       queryKey: ['get_accounts', filters],
@@ -24,9 +27,9 @@ const useAccounts = () => {
       refetchOnMount: false,
       refetchOnWindowFocus: false,
       select(data) {
-        return data.data
+        return data.data;
       },
-    })
+    });
   const getAccount = (filters: any) =>
     useQuery({
       queryKey: ['get_account', filters],
@@ -35,11 +38,39 @@ const useAccounts = () => {
       refetchOnMount: false,
       refetchOnWindowFocus: false,
       select(data) {
-        return data.data
+        return data.data;
       },
-    })
+    });
+  const createAccount = useMutation({
+    mutationKey: ['create_Account'],
+    mutationFn: async (values: any) => await CreateAccount(values),
+    onError(error) {
+      throw error;
+    },
+  });
+  const updateAccount = useMutation({
+    mutationKey: ['update_Account'],
+    mutationFn: async (values: any) => await UpdateAccount(values),
+    onError(error) {
+      throw error;
+    },
+  });
+  const deleteAccount = useMutation({
+    mutationKey: ['delete_Account'],
+    mutationFn: async (Id: number) => await DeleteAccount(Id),
+    onError(error) {
+      throw error;
+    },
+  });
 
-  return { getAllItemsAccounts, getAccounts, getAccount }
-}
+  return {
+    getAllItemsAccounts,
+    getAccounts,
+    getAccount,
+    createAccount,
+    updateAccount,
+    deleteAccount,
+  };
+};
 
-export default useAccounts
+export default useAccounts;

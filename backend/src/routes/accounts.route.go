@@ -12,6 +12,6 @@ func RoutesAccounts(app *fiber.App) {
 	route.Get("/", middlewares.Protected(), controllers.GetAccounts)
 	route.Post("/", middlewares.Protected(), controllers.CreateAccount)
 	route.Put("/", middlewares.Protected(), controllers.UpdateAccount)
-	route.Delete("/", middlewares.Protected(), controllers.DeleteAccount)
+	route.Delete("/:id", middlewares.Protected(), controllers.DeleteAccount)
 	route.Get("/totals", middlewares.Protected(), controllers.GetTotalsAccounts)
 }

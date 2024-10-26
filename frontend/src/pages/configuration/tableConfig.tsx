@@ -19,16 +19,12 @@ import {
 } from '@chakra-ui/react';
 import { RiAddFill, RiDeleteBin2Fill, RiEditFill } from '@remixicon/react';
 import { TableActionType, TableHeaderType } from '../../types/table.type';
-import { ModalState } from '../../context/modalState';
-import { ModalTypeState } from '../../types/modal.type';
-import { useRecoilState } from 'recoil';
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 
 type propsTypes<T> = {
   title: string;
   data: T[];
   headers: TableHeaderType[];
-  onEdit: any;
   onDelete: any;
   setOpen: any;
   setSelected: any;
@@ -38,16 +34,12 @@ const TablesSection = ({
   title,
   data,
   headers,
-  onEdit,
   onDelete,
   setOpen,
   setSelected,
 }: propsTypes<any>) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const cancelRef: any = useRef();
-  const [openModal, setOpenModal] =
-    useRecoilState<ModalTypeState<any>>(ModalState);
-  const [openDialog, setOpenDialog] = useState<boolean>(false);
   const removeActions = (row: any) => {
     const values = { ...row };
     delete values.Actions;
@@ -60,7 +52,6 @@ const TablesSection = ({
   const onHandlerEdit = (row: any) => {
     setSelected(removeActions(row));
     setOpen(true);
-    // onEdit(row);
   };
   const onHandlerDelete = (row: any) => {
     setSelected(removeActions(row));

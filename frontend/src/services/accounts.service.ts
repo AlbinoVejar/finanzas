@@ -30,9 +30,27 @@ export const GetOneAccounts = async (filter: any): Promise<ResponseAPI<TotalWast
   }
 }
 
-const CreateAccount = async (account: Account): Promise<ResponseAPI<any>> => {
+export const CreateAccount = async (account: Account): Promise<ResponseAPI<any>> => {
   try {
     const { data } = await axiosConfig.post(`${mainUrl}`, account)
+    return data
+  } catch (error) {
+    return { data: null, status: 404 }
+  }
+}
+
+export const UpdateAccount = async (account: Account): Promise<ResponseAPI<any>> => {
+  try {
+    const { data } = await axiosConfig.put(`${mainUrl}`, account)
+    return data
+  } catch (error) {
+    return { data: null, status: 404 }
+  }
+}
+
+export const DeleteAccount = async (id: number): Promise<ResponseAPI<any>> => {
+  try {
+    const { data } = await axiosConfig.delete(`${mainUrl}/${id}`)
     return data
   } catch (error) {
     return { data: null, status: 404 }

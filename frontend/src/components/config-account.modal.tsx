@@ -1,5 +1,6 @@
 import {
   Button,
+  ButtonGroup,
   Flex,
   FormControl,
   FormLabel,
@@ -18,40 +19,77 @@ import {
   NumberInput,
   NumberInputField,
   NumberInputStepper,
-  Spacer,
   Switch,
-  useDisclosure,
   VStack,
 } from '@chakra-ui/react';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { renderErrorsText } from '../utils/tools';
-import { RiDeleteBin7Line } from '@remixicon/react';
-import DeleteDialog from './delete.dialog';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 
-type propsTypes = {
+interface propsTypes {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  details: any;
-};
+  details: any | null;
+  onHandlerSubmit: any;
+}
 
-const ConfigAccountModal = ({ open, setOpen, details }: propsTypes) => {
-  const setOpenDeleteDialog = useDisclosure();
-  const cancelRef = React.useRef();
+interface fieldTypes {
+  name: string;
+  limit_amount: number;
+  credit: boolean;
+}
+
+const schemaExpense = z.object({
+  name: z.coerce.string().min(4, 'Ingresa un nombre valido.').trim(),
+  limit_amount: z.coerce
+    .number()
+    .min(1, 'Ingresa un monto mayor a 1')
+    .positive(),
+  credit: z.coerce.boolean().optional(),
+});
+
+const ConfigAccountModal = ({
+  open,
+  setOpen,
+  details,
+  onHandlerSubmit,
+}: propsTypes) => {
   const {
     control,
     handleSubmit,
-    formState: { errors, isValid, defaultValues },
-  } = useForm({
+    reset,
+    formState: { errors, isValid },
+  } = useForm<fieldTypes>({
     defaultValues: {
       name: '',
+      limit_amount: 0,
+      credit: false,
     },
-    // resolver: zodResolver(schemaExpense),
+    resolver: zodResolver(schemaExpense),
   });
-  const onSubmit = () => {
-    console.log('hello', true);
+  const onSubmit = (values: any) => {
+    if (isValid) {
+      let valuesSubmit = values;
+      if (details) {
+        valuesSubmit = { ...values, Id: details.Id };
+      }
+      onHandlerSubmit(valuesSubmit);
+    }
   };
-  
+
+  useEffect(() => {
+    if (!!details) {
+      reset({
+        name: details.Name ?? '',
+        credit: details.Credit,
+        limit_amount: Number(details.Limit_amount),
+      });
+    } else {
+      reset({ name: '', credit: false, limit_amount: 0 });
+    }
+  }, [details]);
 
   return (
     <>
@@ -64,12 +102,14 @@ const ConfigAccountModal = ({ open, setOpen, details }: propsTypes) => {
         size="xl">
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Configurar Categoría</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <form onSubmit={handleSubmit(onSubmit)}>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <ModalHeader>
+              {!!details ? 'Configurar' : 'Agregar'} Cuenta
+            </ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
               <VStack spacing={2}>
-                <FormControl>
+                <FormControl isInvalid={Boolean(errors?.name)}>
                   <FormLabel>Nombre</FormLabel>
                   <Controller
                     name="name"
@@ -83,12 +123,21 @@ const ConfigAccountModal = ({ open, setOpen, details }: propsTypes) => {
                     'No es obligatorio dejar una breve descripción.'
                   )}
                 </FormControl>
-                <FormControl>
-                  <FormLabel>¿Es Crédito?</FormLabel>
+                <FormControl isInvalid={Boolean(errors?.credit)}>
+                  <FormLabel htmlFor="is_credit">¿Es Crédito?</FormLabel>
                   <Controller
-                    name="name"
+                    name="credit"
                     control={control}
-                    render={({ field }) => <Switch size="md" {...field} />}
+                    render={({ field }) => (
+                      <Switch
+                        isChecked={field.value}
+                        id="is_credit"
+                        size="md"
+                        onChange={field.onChange}
+                        onBlur={field.onBlur}
+                        name={field.name}
+                      />
+                    )}
                   />
                   {renderErrorsText(
                     errors?.name?.message,
@@ -100,7 +149,7 @@ const ConfigAccountModal = ({ open, setOpen, details }: propsTypes) => {
                   <InputGroup>
                     <InputLeftAddon pointerEvents="none">$</InputLeftAddon>
                     <Controller
-                      name="name"
+                      name="limit_amount"
                       control={control}
                       render={({ field }) => (
                         <NumberInput
@@ -124,29 +173,27 @@ const ConfigAccountModal = ({ open, setOpen, details }: propsTypes) => {
                   )}
                 </FormControl>
               </VStack>
-            </form>
-          </ModalBody>
-          <ModalFooter>
-            <Flex gap={2} width="100%">
-              <Button
-                leftIcon={<RiDeleteBin7Line />}
-                variant="outline"
-                colorScheme="red"
-                onClick={() => setOpenDeleteDialog.onOpen()}>
-                Eliminar
-              </Button>
-              <Spacer />
-              <Button
-                variant="outline"
-                colorScheme="gray"
-                onClick={() => setOpen(false)}>
-                Cancelar
-              </Button>
-              <Button variant="solid" colorScheme="blue" type="submit">
-                Agregar
-              </Button>
-            </Flex>
-          </ModalFooter>
+            </ModalBody>
+            <ModalFooter>
+              <Flex
+                gap={2}
+                direction="row"
+                width="100%"
+                justifyContent="flex-end">
+                <ButtonGroup>
+                  <Button
+                    variant="outline"
+                    colorScheme="gray"
+                    onClick={() => setOpen(false)}>
+                    Cancelar
+                  </Button>
+                  <Button variant="solid" colorScheme="blue" type="submit">
+                    Agregar
+                  </Button>
+                </ButtonGroup>
+              </Flex>
+            </ModalFooter>
+          </form>
         </ModalContent>
       </Modal>
     </>

@@ -11,7 +11,7 @@ import {
   ModalOverlay,
   Stack,
 } from '@chakra-ui/react';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { ModalTypeState } from '../../types/modal.type';
 import { ModalState } from '../../context/modalState';
@@ -21,25 +21,30 @@ import useAccounts from '../../hooks/useAccounts.hook';
 import useCategories from '../../hooks/useCategories.hook';
 import ConfigCategoryModal from '../../components/config-category.modal';
 import ConfigAccountModal from '../../components/config-account.modal';
-import DeleteDialog from '../../components/delete.dialog';
+import { Account } from '../../types/account.type';
 
 const GlobalConfiguration = () => {
-  const cancelRef = useRef();
   const [open, setOpen] = useRecoilState<ModalTypeState<any>>(ModalState);
   const [openConfigCategoryModal, setOpenConfigCategoryModal] =
     useState<boolean>(false);
   const [categorySelected, setCategorySelected] = useState<any | null>(null);
   const [openConfigAccountModal, setOpenConfigAccountModal] =
     useState<boolean>(false);
-  const [accountSelected, setAccountSelected] = useState<any | null>(null);
+  const [accountSelected, setAccountSelected] = useState<Account | null>(null);
 
-  const { data: itemsAccounts } = useAccounts().getAllItemsAccounts();
+  const { getAllItemsAccounts, createAccount, updateAccount, deleteAccount } =
+    useAccounts();
+  const { data: itemsAccounts, refetch: refetchAccounts } = getAllItemsAccounts();
+  const { mutateAsync: CreateMutationAccount } = createAccount;
+  const { mutateAsync: UpdateMutationAccount } = updateAccount;
+  const { mutateAsync: DeleteMutationAccount } = deleteAccount;
   const { GetItemsCategories, DeleteCategory, createCategory, updateCategory } =
     useCategories();
-  const { data: itemsCategories, refetch: refetchCategories } = GetItemsCategories();
+  const { data: itemsCategories, refetch: refetchCategories } =
+    GetItemsCategories();
   const { mutateAsync: DeleteMutationCategory } = DeleteCategory;
   const { mutateAsync: CreateMutationCategory } = createCategory;
-  const { mutateAsync: UpdateMutationCategory } = updateCategory
+  const { mutateAsync: UpdateMutationCategory } = updateCategory;
   const { globalConfiguration } = open;
   const onCreateCategory = async (values: any) => {
     await CreateMutationCategory(values);
@@ -53,13 +58,28 @@ const GlobalConfiguration = () => {
     setOpenConfigCategoryModal(false);
   };
   const onDeleteCategory = async () => {
-    await DeleteMutationCategory(categorySelected.Id)
+    await DeleteMutationCategory(categorySelected.Id);
     refetchCategories();
     setCategorySelected(null);
   };
-  const onCreateAccount = () => {};
-  const onEditAccount = () => {};
-  const onDeleteAccount = () => {};
+  const onCreateAccount = async (values: Account) => {
+    await CreateMutationAccount(values);
+    refetchAccounts();
+    setOpenConfigAccountModal(false);
+  };
+  const onEditAccount = async (values: Account) => {
+    await UpdateMutationAccount(values);
+    refetchAccounts();
+    setAccountSelected(null);
+    setOpenConfigAccountModal(false);
+  };
+  const onDeleteAccount = async () => {
+    if(accountSelected?.Id){
+      await DeleteMutationAccount(accountSelected.Id);
+      refetchAccounts();
+      setOpenConfigAccountModal(false);
+    }
+  };
   return (
     <>
       <Modal
@@ -88,7 +108,6 @@ const GlobalConfiguration = () => {
                     title="Categoria"
                     data={itemsCategories ?? []}
                     headers={TableHeadersCategories}
-                    onEdit={onEditCategory}
                     onDelete={onDeleteCategory}
                     setOpen={setOpenConfigCategoryModal}
                     setSelected={setCategorySelected}
@@ -101,7 +120,6 @@ const GlobalConfiguration = () => {
                     title="Cuenta"
                     data={itemsAccounts ?? []}
                     headers={TableHeadersAccounts}
-                    onEdit={onEditAccount}
                     onDelete={onDeleteAccount}
                     setOpen={setOpenConfigAccountModal}
                     setSelected={setAccountSelected}
@@ -126,13 +144,8 @@ const GlobalConfiguration = () => {
           open={openConfigAccountModal}
           setOpen={setOpenConfigAccountModal}
           details={accountSelected}
+          onHandlerSubmit={!!accountSelected ? onEditAccount : onCreateAccount}
         />
-        {/* <DeleteDialog
-          title={`Eliminar elemento`}
-          message={`¿Estás seguro de eliminar este elemento?`}
-          htmlRef={cancelRef}
-          onConfirm={() => { console.log('HEEWERERERE')}}
-        /> */}
       </Modal>
     </>
   );

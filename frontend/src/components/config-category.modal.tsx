@@ -51,7 +51,11 @@ const ConfigCategoryModal = ({
 
   const onSubmit = (values: any) => {
     if (isValid) {
-      onHandlerSubmit(values);
+      let valuesSubmit = values;
+      if(details){
+        valuesSubmit = {...values, Id: details.Id}
+      }
+      onHandlerSubmit(valuesSubmit);
     }
   };
 

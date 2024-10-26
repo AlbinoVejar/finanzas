@@ -202,6 +202,7 @@ INNER JOIN users AS U
 INNER JOIN rel_user_account AS C
     ON CA.id = C.id_account
     AND U.id = C.id_user
+    AND C.deleted = '0000-00-00 00:00:00'
 LEFT JOIN rel_expense  AS A
     ON A.id_rel_account = C.id
     AND A.id_user = U.id
