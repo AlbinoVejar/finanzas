@@ -193,6 +193,7 @@ SELECT
   CA.id AS Id_Account,
   C.id AS Id_rel_Account,
   CA.name AS Account,
+  CA.credit AS Credit,
   CA.limit_amount AS Limit_amount,
   IFNULL(SUM(B.amount), 0) AS Total,
   C.created_at AS Create_at

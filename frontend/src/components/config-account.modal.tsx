@@ -54,7 +54,7 @@ const ConfigAccountModal = ({
   open,
   setOpen,
   details,
-  onHandlerSubmit,
+  onHandlerSubmit
 }: propsTypes) => {
   const {
     control,
@@ -188,7 +188,7 @@ const ConfigAccountModal = ({
                     Cancelar
                   </Button>
                   <Button variant="solid" colorScheme="blue" type="submit">
-                    Agregar
+                    Guardar
                   </Button>
                 </ButtonGroup>
               </Flex>

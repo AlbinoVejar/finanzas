@@ -8,17 +8,19 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
-  Portal,
 } from '@chakra-ui/react'
 import { RiUserSettingsLine, RiWallet3Line } from '@remixicon/react'
-import Toolbar from './toolbar'
 import ConfigUserModal from '../../components/config-user.modal'
 import { useState } from 'react'
+import { useRecoilState } from 'recoil'
+import { ModalTypeState } from '../../types/modal.type'
+import { ModalState } from '../../context/modalState'
+import GlobalConfiguration from '../../pages/configuration'
 
 const Navbar = () => {
-  const [openConfigModal, setOpenConfigModal] = useState<boolean>(false)
+  const [open, setOpen] = useRecoilState<ModalTypeState<any>>(ModalState);
   const onOpenConfigModal = () => {
-    setOpenConfigModal(true)
+    setOpen({...open, globalConfiguration: true})
   }
   return (
     <>
@@ -52,7 +54,7 @@ const Navbar = () => {
           </Box>
         </Flex>
       </GridItem>
-      <ConfigUserModal open={openConfigModal} setOpen={setOpenConfigModal} />
+      <GlobalConfiguration />
     </>
   )
 }
