@@ -10,17 +10,22 @@ import {
   MenuList,
 } from '@chakra-ui/react'
 import { RiUserSettingsLine, RiWallet3Line } from '@remixicon/react'
-import ConfigUserModal from '../../components/config-user.modal'
-import { useState } from 'react'
 import { useRecoilState } from 'recoil'
 import { ModalTypeState } from '../../types/modal.type'
 import { ModalState } from '../../context/modalState'
 import GlobalConfiguration from '../../pages/configuration'
+import { UserState } from '../../context/userState'
+import { UserStateType } from '../../types/user.type'
 
 const Navbar = () => {
+  const [userState, setValue] = useRecoilState<UserStateType>(UserState);
   const [open, setOpen] = useRecoilState<ModalTypeState<any>>(ModalState);
   const onOpenConfigModal = () => {
     setOpen({...open, globalConfiguration: true})
+  }
+  const onLogOut = () => {
+    localStorage.removeItem('userToken');
+    setValue({...userState, token: ''})
   }
   return (
     <>
@@ -29,7 +34,6 @@ const Navbar = () => {
           height="100%"
           justifyContent="space-between"
           alignItems="center"
-          // borderWidth="2px"
           px={2}
         >
           <Box>
@@ -48,7 +52,7 @@ const Navbar = () => {
               />
               <MenuList>
                 <MenuItem onClick={onOpenConfigModal}>Configuración</MenuItem>
-                <MenuItem>Cerrar Sesión</MenuItem>
+                <MenuItem onClick={onLogOut}>Cerrar Sesión</MenuItem>
               </MenuList>
             </Menu>
           </Box>

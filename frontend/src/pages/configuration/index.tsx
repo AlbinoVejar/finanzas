@@ -74,7 +74,7 @@ const GlobalConfiguration = () => {
     setOpenConfigAccountModal(false);
   };
   const onDeleteAccount = async () => {
-    if(accountSelected?.Id){
+    if (accountSelected?.Id) {
       await DeleteMutationAccount(accountSelected.Id);
       refetchAccounts();
       setOpenConfigAccountModal(false);
@@ -129,7 +129,10 @@ const GlobalConfiguration = () => {
             </Container>
           </ModalBody>
           <ModalFooter>
-            <Button variant="outline">Cerrar</Button>
+            <Button
+              variant="outline"
+              onClick={() => setOpen({ ...open, globalConfiguration: false })}
+            >Cerrar</Button>
           </ModalFooter>
         </ModalContent>
         <ConfigCategoryModal

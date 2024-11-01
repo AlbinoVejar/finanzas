@@ -1,5 +1,6 @@
 import {
   HStack,
+  Stack,
 } from '@chakra-ui/react'
 import { useRecoilValue } from 'recoil'
 import { Account, TotalWasteAccount } from '../../types/account.type'
@@ -62,7 +63,7 @@ const Dashboard = () => {
       ) : isError ? (
         <span>Error:{error.message}</span>
       ) : (
-        <HStack spacing={6} justify="center" align="stretch" margin="1rem 1rem">
+        <Stack direction={['row', 'column']} spacing={6} justify="center" align="stretch" margin="1rem 1rem" height="100vh">
           {
             !!accounts &&
             accounts.length > 0 &&
@@ -70,7 +71,7 @@ const Dashboard = () => {
               <AccountsDashboard key={`account_${item.Id_Account}`} account={item} />
             ))
           }
-        </HStack>
+        </Stack>
       )}
     </>
   )

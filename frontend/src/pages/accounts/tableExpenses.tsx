@@ -1,4 +1,4 @@
-import { Button, FormControl, FormLabel, HStack, IconButton, Select, Table, TableContainer, Tbody, Td, Th, Thead, Tr, VStack } from '@chakra-ui/react'
+import { Button, FormControl, FormLabel, HStack, IconButton, Select, Stack, Table, TableContainer, Tbody, Td, Th, Thead, Tr, VStack } from '@chakra-ui/react'
 import { TableHeaders, TableHeadersID } from './headers'
 import SelectDates from '../../components/selectDates'
 import { RiLayoutGridFill, RiTable2 } from '@remixicon/react'
@@ -46,7 +46,7 @@ const TableAllExpenses = () => {
   return (
     <>
       <VStack spacing={4} align='flex-start'>
-        <HStack spacing={4} margin={4} align='end' justify='stretch'>
+        <Stack direction={['column', 'row']} spacing={4} margin={4} align='end' justify='stretch'>
           <FormControl>
             <FormLabel>Categorias</FormLabel>
             <Select placeholder='Categoría'>
@@ -64,7 +64,7 @@ const TableAllExpenses = () => {
           </FormControl>
           <IconButton aria-label='Search database' icon={<RiTable2 />} />
           <IconButton aria-label='Search database' icon={<RiLayoutGridFill />} />
-        </HStack>
+        </Stack>
         <TableContainer width="100%" maxHeight={'80vh'} overflowY={'auto'}>
           <Table variant='striped'>
             <Thead>

@@ -7,7 +7,6 @@ import {
   Input,
   Button,
   Heading,
-  FormErrorMessage,
   Alert,
   AlertIcon,
 } from '@chakra-ui/react'
@@ -60,7 +59,7 @@ const Login = () => {
         }
       }
     } catch (error) {
-      
+      console.warn('ERROR');
     } finally {
       setSubmitted(true);
     }

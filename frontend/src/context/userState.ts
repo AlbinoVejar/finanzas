@@ -4,7 +4,7 @@ import dayjs from "dayjs";
 
 const localStorageEffect = (key: string): AtomEffect<UserStateType> => ({ setSelf, onSet }) => {
   const savedValue: string = String(localStorage.getItem(key) ?? '');
-  if (Boolean(savedValue)) {
+  if (savedValue) {
     setSelf((prevState: any) => ({
       ...prevState,
       token: String(savedValue)
@@ -33,6 +33,7 @@ export const UserState: RecoilState<UserStateType> = atom<UserStateType>({
       Id_Account: 0,
       Id_rel_Account: 0,
       Account: 'Example1',
+      Credit: false,
       Total: 11111,
       Limit_amount: 99999,
       Created_at: dayjs().format('YYYY-MM-DD')
