@@ -1,7 +1,6 @@
 import {
-  Box,
   Button,
-  Container,
+  Divider,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -96,37 +95,26 @@ const GlobalConfiguration = () => {
         <ModalContent>
           <ModalHeader>Configuración</ModalHeader>
           <ModalCloseButton />
+          <Divider />
           <ModalBody>
-            <Container
-              maxWidth="80%"
-              display="flex"
-              flexDirection="column"
-              gap={12}>
-              <Stack direction="column">
-                <Box>
-                  <TablesSection
-                    title="Categoria"
-                    data={itemsCategories ?? []}
-                    headers={TableHeadersCategories}
-                    onDelete={onDeleteCategory}
-                    setOpen={setOpenConfigCategoryModal}
-                    setSelected={setCategorySelected}
-                  />
-                </Box>
-              </Stack>
-              <Stack direction="column">
-                <Box>
-                  <TablesSection
-                    title="Cuenta"
-                    data={itemsAccounts ?? []}
-                    headers={TableHeadersAccounts}
-                    onDelete={onDeleteAccount}
-                    setOpen={setOpenConfigAccountModal}
-                    setSelected={setAccountSelected}
-                  />
-                </Box>
-              </Stack>
-            </Container>
+            <Stack direction="column" gap={12}>
+              <TablesSection
+                title="Categoria"
+                data={itemsCategories ?? []}
+                headers={TableHeadersCategories}
+                onDelete={onDeleteCategory}
+                setOpen={setOpenConfigCategoryModal}
+                setSelected={setCategorySelected}
+              />
+              <TablesSection
+                title="Cuenta"
+                data={itemsAccounts ?? []}
+                headers={TableHeadersAccounts}
+                onDelete={onDeleteAccount}
+                setOpen={setOpenConfigAccountModal}
+                setSelected={setAccountSelected}
+              />
+            </Stack>
           </ModalBody>
           <ModalFooter>
             <Button

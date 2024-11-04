@@ -1,4 +1,4 @@
-import { Box, Heading, Progress, StackDivider, Text, VStack } from '@chakra-ui/react'
+import { Box, Heading, Progress, Stack, StackDivider, Text } from '@chakra-ui/react'
 import { FormatCurreny } from '../../utils'
 import { useRecoilValue } from 'recoil'
 import { UserStateType } from '../../types/user.type'
@@ -12,7 +12,7 @@ const DetailsAccount = () => {
   const LimitCondition = ValueLimit >= 100 ? 101 : ValueLimit;
   return (
     <Box>
-      <VStack spacing={2} align='normal' divider={<StackDivider />}>
+      <Stack spacing={2} align='normal' divider={<StackDivider />}>
         <Box>
           <Heading marginTop='10%' textAlign='center'>{Account}</Heading>
           <Text align='center' fontSize='xl'>Tarjeta Credito</Text>
@@ -22,7 +22,7 @@ const DetailsAccount = () => {
           <Text fontSize='xl'>Limite de Credito: {FormatCurreny(Limit_amount)}</Text>
         </Box>
           <Progress value={LimitCondition} borderRadius={5} colorScheme={LimitCondition > 100 ? 'red' : LimitCondition === 100 ? 'green' : 'blue'}/>
-      </VStack>
+      </Stack>
     </Box>
   )
 }

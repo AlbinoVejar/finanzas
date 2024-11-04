@@ -27,7 +27,7 @@ const ActionsAccount = () => {
 
   return (
     <>
-      <VStack spacing={4} justify="center" align="strech">
+      <VStack spacing={4} justify="center" align="strech" paddingBottom={4}>
         <Button
           colorScheme="blue"
           leftIcon={<RiAddFill />}

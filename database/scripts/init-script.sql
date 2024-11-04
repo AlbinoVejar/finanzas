@@ -168,7 +168,8 @@ SELECT
   B.id, 
   B.name,
   B.credit,
-  B.limit_amount
+  B.limit_amount,
+  A.created_at
 FROM 
   rel_user_account AS A 
   INNER JOIN accounts AS B ON A.id_account = B.id
@@ -273,7 +274,8 @@ CREATE PROCEDURE get_categories(
 BEGIN 
 SELECT 
   B.id, 
-  B.name
+  B.name,
+  A.created_at
 FROM 
     rel_user_category AS A
 INNER JOIN categories AS B 
