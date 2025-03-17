@@ -12,7 +12,7 @@ const AppLayout = () => {
 
   useEffect(() => {
     if(!Boolean(token)){
-      navigate('/login')
+      navigate('/')
     }
   }, [token]);
 

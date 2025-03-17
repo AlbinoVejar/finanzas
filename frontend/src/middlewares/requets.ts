@@ -19,7 +19,7 @@ const onResponse = (response: AxiosResponse): AxiosResponse => {
 
 const handleUnauthorized = () => {
   localStorage.removeItem('userToken');
-  window.location.href = '/login';
+  window.location.href = '/';
 };
 
 const onResponseError = (error: AxiosError): Promise<AxiosError> => {
