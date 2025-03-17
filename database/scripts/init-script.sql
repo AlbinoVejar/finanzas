@@ -469,4 +469,8 @@ WHERE
 ORDER BY B.Date_expense DESC, A.id DESC;
 END //
 
+-- Initial User
+CALL create_user('admin','admin', '$2a$10$EFH5F/PnlZNOn4ZSJ6g43eBxLt9r3nLtN8LTZwgZSsMGCpJ7Nz5EK');
+END //
+
 DELIMITER ;
