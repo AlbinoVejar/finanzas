@@ -16,7 +16,14 @@ func Connection() (*gorm.DB, func()) {
 		return db, func() {}
 	}
 	godotenv.Load(".env")
-	db_connection := fmt.Sprintf(db_connection_localhost,
+	env := os.Getenv("APP_ENV")
+	var stringConnection string
+	if env == "production" {
+		stringConnection = db_connection_prod
+	} else {
+		stringConnection = db_connection_localhost
+	}
+	db_connection := fmt.Sprintf(stringConnection,
 		os.Getenv("DB_USER"),
 		os.Getenv("DB_PASSWORD"),
 		os.Getenv("DB_HOST"),

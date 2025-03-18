@@ -1,10 +1,23 @@
 FROM golang:latest
 
 WORKDIR /backend
-
-RUN go install github.com/air-verse/air@latest
+# COMMENTS is for localhost
+# RUN go install github.com/air-verse/air@latest
 
 COPY go.mod go.sum ./
 RUN go mod download
+COPY . .
+RUN CGO_ENABLED=0 GOOS=linux go build -o myapp .RUN CGO_
 
-CMD ["air", "-c", ".air.toml"]
+# CMD ["air", "-c", ".air.toml"]
+FROM alpine:latest
+# Instalar ca-certificates para conexiones HTTPS
+RUN apk --no-cache add ca-certificates
+# Establecer el directorio de trabajo
+WORKDIR /root/
+# Copiar el binario desde la etapa de construcción
+COPY --from=builder /app/myapp .
+# Exponer el puerto en el que la aplicación escucha
+EXPOSE 8080
+# Comando para ejecutar la aplicación
+CMD ["./myapp"]
