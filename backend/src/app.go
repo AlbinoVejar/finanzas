@@ -12,8 +12,6 @@ import (
 
 func getPort() string {
 	port := os.Getenv("PORT")
-	env := os.Getenv("APP_ENV")
-	prod_url := os.Getenv("APP_URL")
 
 	if port == "" {
 		port = ":3000"
