@@ -11,7 +11,7 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
-  ButtonGroup,
+  ButtonGroup
 } from '@chakra-ui/react';
 import { TableActionType, TableHeaderType } from '../types/table.type';
 import { RiMenuFill } from '@remixicon/react';
