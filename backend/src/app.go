@@ -19,7 +19,7 @@ func getPort() string {
 		port = ":3000"
 	}
 
-	url = fmt.Sprintf("%s:%s", prod_url, port)
+	url := fmt.Sprintf("%s:%s", prod_url, port)
 	if (env == "production") {
 		return url
 	}
