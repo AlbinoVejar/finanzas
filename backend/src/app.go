@@ -25,7 +25,7 @@ func getPort() string {
 }
 
 func InitServer() {
-	app := fiber.New(
+	app := fiber.New()
 
 	app.Use(cors.New(cors.Config{
 		AllowOrigins:     "*",
