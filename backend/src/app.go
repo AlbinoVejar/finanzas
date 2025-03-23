@@ -21,6 +21,7 @@ func getPort() string {
 
 func InitServer() {
 	app := fiber.New()
+	env := os.Getenv("APP_ENV")
 
 	app.Use(cors.New(cors.Config{
 		AllowOrigins:     "*",
@@ -33,5 +34,9 @@ func InitServer() {
 
 	routes.AllRoutes(app)
 
-	app.Listen(getPort())
+	if(env == "production"){
+		app.Listen(os.Getenv("APP_URL"))
+	}else{
+		app.Listen(getPort())
+	}
 }
