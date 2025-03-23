@@ -1,7 +1,6 @@
 package src
 
 import (
-	"log"
 	"fmt"
 	"os"
 
@@ -18,17 +17,14 @@ func getPort() string {
 
 	if port == "" {
 		port = ":3000"
-	}
-
-	url := fmt.Sprintf("%s:%s", prod_url, port)
-	if (env == "production") {
-		return url
+	} else {
+		port = ":" + port
 	}
 	return port
 }
 
 func InitServer() {
-	app := fiber.New()
+	app := fiber.New(
 
 	app.Use(cors.New(cors.Config{
 		AllowOrigins:     "*",
