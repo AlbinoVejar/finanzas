@@ -1,5 +1,4 @@
 import { AxiosError, AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from "axios";
-import { APP_ENV, prodURL, url_localhost } from "../shared/enviroment";
 
 const onRequest = (config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
   const token = localStorage.getItem('userToken');
@@ -26,7 +25,6 @@ const onResponseError = (error: AxiosError): Promise<AxiosError> => {
 }
 
 export function setupInterceptorsTo(axiosInstance: AxiosInstance): AxiosInstance {
-  axiosInstance.defaults.baseURL = APP_ENV === "production" ? prodURL : url_localhost;
   axiosInstance.interceptors.request.use(onRequest);
   axiosInstance.interceptors.response.use(onResponse, onResponseError);
   return axiosInstance;
