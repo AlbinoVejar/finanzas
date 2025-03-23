@@ -35,6 +35,7 @@ func Connection() (*gorm.DB, func()) {
 		fmt.Println(db_connection)
 		panic(err)
 	}
+	println("Connection Success")
 	return db, func() {
 		dbClose.Close()
 	}

@@ -1,4 +1,4 @@
-import { Box, Button, ButtonGroup, Divider, FormControl, FormLabel, IconButton, Select, Stack, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr, VStack } from '@chakra-ui/react'
+import { Button, ButtonGroup, Divider, FormControl, FormLabel, IconButton, Select, Stack, Table, TableContainer, Tbody, Td, Th, Thead, Tr, VStack } from '@chakra-ui/react'
 import { TableHeaders, TableHeadersID } from './headers'
 import SelectDates from '../../components/selectDates'
 import { RiLayoutGridFill, RiTable2 } from '@remixicon/react'

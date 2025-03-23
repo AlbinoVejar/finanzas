@@ -1,6 +1,6 @@
 import { Menu, MenuButton, IconButton, MenuList, MenuItem } from '@chakra-ui/react'
 import { RiDeleteBin2Fill, RiEditFill, RiMore2Fill } from '@remixicon/react'
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { useRecoilRefresher_UNSTABLE, useRecoilState } from 'recoil'
 import { ModalState } from '../../context/modalState'
 import { ModalTypeState } from '../../types/modal.type'

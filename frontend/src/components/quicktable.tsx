@@ -12,7 +12,6 @@ import {
   MenuList,
   MenuItem,
   ButtonGroup,
-  Button,
 } from '@chakra-ui/react';
 import { TableActionType, TableHeaderType } from '../types/table.type';
 import { RiMenuFill } from '@remixicon/react';
@@ -34,7 +33,7 @@ const Quicktable = <T,>({
     showMenuAction: true,
   },
 }: quickTableProps<T>) => {
-  const RenderActions = (item: T, id: string) => {
+  const RenderActions = (item: any, id: string) => {
     return config.showMenuAction ? (
       <Menu>
         <MenuButton
@@ -95,7 +94,7 @@ const Quicktable = <T,>({
         </Thead>
         <Tbody>
           {!!data &&
-            data.map((item: T, index: number) => (
+            data.map((item: any, index: number) => (
               <Tr key={`table_row_${keyTable}_${index}`}>
                 {headers.map(({ id, empty }: TableHeaderType) => (
                   <Td

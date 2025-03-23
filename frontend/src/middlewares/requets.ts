@@ -1,5 +1,4 @@
 import { AxiosError, AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from "axios";
-import { useNavigate } from "react-router-dom";
 
 const onRequest = (config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
   const token = localStorage.getItem('userToken');
@@ -7,10 +6,6 @@ const onRequest = (config: InternalAxiosRequestConfig): InternalAxiosRequestConf
     config.headers['Authorization'] = `Bearer ${token}`;
   }
   return config;
-}
-  
-const onRequestError = (error: AxiosError): Promise<AxiosError> => {
-  throw error;
 }
 
 const onResponse = (response: AxiosResponse): AxiosResponse => {
