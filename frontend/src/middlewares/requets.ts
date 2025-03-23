@@ -1,5 +1,4 @@
 import { AxiosError, AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from "axios";
-import { APP_ENV, prodURL, url_localhost } from "../shared/enviroment";
 
 const onRequest = (config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
   const token = localStorage.getItem('userToken');
