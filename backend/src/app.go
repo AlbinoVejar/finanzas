@@ -2,7 +2,6 @@ package src
 
 import (
 	"log"
-	"fmt"
 	"os"
 
 	"github.com/gofiber/fiber/v2"
