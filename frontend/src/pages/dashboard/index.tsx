@@ -1,9 +1,8 @@
 import {
-  HStack,
-  Stack,
+  Stack
 } from '@chakra-ui/react'
 import { useRecoilValue } from 'recoil'
-import { Account, TotalWasteAccount } from '../../types/account.type'
+import { TotalWasteAccount } from '../../types/account.type'
 import AccountsDashboard from './accounts'
 import { UserStateType } from '../../types/user.type'
 import { UserSelector } from '../../context/userState'

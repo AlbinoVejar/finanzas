@@ -1,32 +1,38 @@
 # Etapa 1: Construcción
 FROM node:iron-slim AS builder
 
+ENV NPM_CONFIG_UPDATE_NOTIFIER=false
+ENV NPM_CONFIG_FUND=false
+
 # Establecer el directorio de trabajo
 WORKDIR /app
 
 # Copiar los archivos de configuración
-COPY package.json package-lock.json ./
+COPY package.json yarn-lock ./
 
 # Instalar las dependencias
-RUN npm install
+RUN yarn install
 
 # Copiar el resto del código fuente
 COPY . .
 
 # Construir la aplicación
-RUN npm run build
+RUN yarn build
 
 # Etapa 2: Servir la aplicación
-FROM nginx:alpine
+FROM caddy
 
-# Copiar los archivos construidos desde la etapa de construcción
-COPY --from=builder /app/dist /usr/share/nginx/html
+# Create and change to the app directory.
+WORKDIR /app
 
-# Copiar la configuración de Nginx (opcional)
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Copy Caddyfile to the container image.
+COPY Caddyfile ./
 
-# Exponer el puerto en el que Nginx escucha
-EXPOSE 80
+# Copy local code to the container image.
+RUN caddy fmt Caddyfile --overwrite
 
-# Comando para ejecutar Nginx
-CMD ["nginx", "-g", "daemon off;"]
+# Copy files to the container image.
+COPY --from=build /app/dist ./dist
+
+# Use Caddy to run/serve the app
+CMD ["caddy", "run", "--config", "Caddyfile", "--adapter", "caddyfile"]

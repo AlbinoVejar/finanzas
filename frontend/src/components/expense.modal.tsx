@@ -24,7 +24,7 @@ import {
   FormErrorMessage,
   Input,
 } from '@chakra-ui/react'
-import { useRecoilRefresher_UNSTABLE, useRecoilState } from 'recoil'
+import { useRecoilState } from 'recoil'
 import { ModalState } from '../context/modalState'
 import { Category } from '../types/category.type'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'

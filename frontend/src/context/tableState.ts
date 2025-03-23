@@ -6,7 +6,7 @@ export const TableState: RecoilState<TableType> = atom({
   default: {
     headers: [],
     data: []
-  }
+  } as TableType
 });
 
 export const TableSelector = selector({

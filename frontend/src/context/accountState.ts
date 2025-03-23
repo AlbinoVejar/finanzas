@@ -1,8 +1,8 @@
 import { RecoilState, atom, selector } from "recoil";
-import { Account, AccountStateType } from "../types/account.type";
+import { AccountStateType } from "../types/account.type";
 import dayjs from "dayjs";
 
-export const AccountState: RecoilState<AccountStateType> = atom<AccountStateType>({
+export const AccountState: RecoilState<AccountStateType<any>> = atom<AccountStateType>({
   key: 'accountState',
   default: {
     id: 1,

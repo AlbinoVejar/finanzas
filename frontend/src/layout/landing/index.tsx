@@ -1,5 +1,5 @@
-import { Box, Container, Flex } from '@chakra-ui/react'
-import React, { useEffect } from 'react'
+import { Container } from '@chakra-ui/react'
+import { useEffect } from 'react'
 import { Outlet, useNavigate } from 'react-router-dom'
 import { UserSelector } from '../../context/userState'
 import { useRecoilValue } from 'recoil'
