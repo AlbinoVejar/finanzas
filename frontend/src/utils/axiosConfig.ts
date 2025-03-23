@@ -4,10 +4,7 @@ import { setupInterceptorsTo } from "../middlewares/requets";
 
 const axiosConfig = setupInterceptorsTo(axios.create({
   baseURL: APP_ENV === "production" ? prodURL : url_localhost,
-  timeout: 10000,
-  headers: {
-    "Content-Type": 'application/json',
-  }
+  timeout: 10000
 }))
 
 
