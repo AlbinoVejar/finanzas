@@ -16,7 +16,7 @@ func getPort() string {
 	if port == "" {
 		port = ":3000"
 	} else {
-		port = "::" + port
+		port = "[::]:" + port
 	}
 	return port
 }
