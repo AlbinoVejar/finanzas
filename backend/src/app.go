@@ -16,15 +16,13 @@ func getPort() string {
 	if port == "" {
 		port = ":3000"
 	} else {
-		port = "[::]:" + port
+		port = ":" + port
 	}
 	return port
 }
 
 func InitServer() {
-	app := fiber.New(fiber.Config{
-		Network: "tcp6",
-	})
+	app := fiber.New()
 
 	app.Use(cors.New(cors.Config{
 		AllowOrigins:     "*",
