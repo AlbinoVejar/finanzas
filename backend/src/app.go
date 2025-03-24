@@ -22,9 +22,7 @@ func getPort() string {
 }
 
 func InitServer() {
-	app := fiber.New(fiber.Config{
-		Network: "tcp6",
-	})
+	app := fiber.New()
 
 	app.Use(cors.New(cors.Config{
 		AllowOrigins:     "*",
@@ -37,5 +35,5 @@ func InitServer() {
 
 	routes.AllRoutes(app)
 
-	log.Fatal(app.Listen(getPort()))
+	log.Fatal(app.Listen("tcp6",getPort()))
 }
