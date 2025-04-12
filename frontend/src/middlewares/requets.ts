@@ -25,7 +25,6 @@ const onResponseError = (error: AxiosError): Promise<AxiosError> => {
 }
 
 export function setupInterceptorsTo(axiosInstance: AxiosInstance): AxiosInstance {
-  axiosInstance.defaults.baseURL = APP_ENV === "production" ? prodURL : url_localhost;
   axiosInstance.interceptors.request.use(onRequest);
   axiosInstance.interceptors.response.use(onResponse, onResponseError);
   return axiosInstance;
