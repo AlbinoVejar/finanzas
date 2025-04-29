@@ -449,23 +449,27 @@ SELECT
   A.id_rel_category AS Id_rel_Category,
   CA.name AS Category,
   A.id_rel_account AS Id_rel_Account,
+  UAC.name AS Account,
   B.amount AS Amount,   
   B.description AS Description,
   B.date_expense AS Date_expense
 FROM rel_expense  AS A
 INNER JOIN expenses AS B
-    ON B.id = A.id_expense
+    ON B.id = A.id_expense 
+    AND CAST(B.Date_expense AS Date) BETWEEN _init_date AND _end_date
+    OR (_id_account = 0 OR A.id_rel_account = _id_account)
 INNER JOIN rel_user_category AS C
-    ON C.ID = A.id_rel_category
+    ON C.ID = A.id_rel_category AND C.id_user = A.id_user
 INNER JOIN categories AS CA
     ON CA.id = C.id_category
+INNER JOIN rel_user_account AS UA
+    ON UA.id = A.id_rel_account AND UA.id_user = A.id_user
+INNER JOIN accounts AS UAC
+    ON UAC.id = UA.id_account
 INNER JOIN users AS U
-    ON U.id = A.id_user
+    ON U.id = A.id_user AND U.id = _id_user
 WHERE
     A.deleted = '0000-00-00 00:00:00'
-    AND CAST(B.Date_expense AS Date) BETWEEN _init_date  AND _end_date
-    AND U.id = _id_user
-    AND A.id_rel_account = _id_account
 ORDER BY B.Date_expense DESC, A.id DESC;
 END //
 
