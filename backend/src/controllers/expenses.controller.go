@@ -6,6 +6,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"gitlab.com/AlbinoVejar/finanzas/backend/src/config"
 	"gitlab.com/AlbinoVejar/finanzas/backend/src/models"
+	models_shared "gitlab.com/AlbinoVejar/finanzas/backend/src/models/shared"
 )
 
 func UpdateExpense(context *fiber.Ctx) error {
@@ -93,6 +94,34 @@ func DeleteExpense(context *fiber.Ctx) error {
 	status = fiber.StatusOK
 	return context.JSON(fiber.Map{
 		"data":   true,
+		"status": status,
+	})
+}
+
+func GetDashboardByUser(context *fiber.Ctx) error {
+	id_User, status := InitController(context)
+	if id_User == 0 {
+		return context.SendStatus(status)
+	}
+	db, dbClose := config.Connection()
+	filters := context.Queries()
+	var expenses []models.ExpenseByAccount
+	var accounts []models.AccountTotalResponse
+	var response models_shared.AccountExpensesResponse
+	err := db.Raw("CALL get_expenses_by_account(?,?,?,?)", id_User, 0, filters["current"], filters["current"]).Scan(&expenses).Error
+	errAccount := db.Raw("CALL get_total_waste_by_account(?,?,?,?)", id_User, 0, filters["init"], filters["end"]).Scan(&accounts).Error
+	defer dbClose()
+	response.Accounts = accounts
+	response.Expenses = expenses
+	for _, item := range accounts {
+		response.Total += item.Total
+	}
+	if err != nil || errAccount != nil {
+		return context.SendStatus(fiber.ErrBadRequest.Code)
+	}
+	status = fiber.StatusOK
+	return context.JSON(fiber.Map{
+		"data":   response,
 		"status": status,
 	})
 }
