@@ -213,7 +213,7 @@ LEFT JOIN expenses AS B
     ON B.id = A.id_expense
     AND CAST(B.date_expense AS Date) BETWEEN _init_date AND _end_date
 WHERE
-  C.id = _id_account OR _id_account IS NULL
+  _id_account IS NULL OR C.id = _id_account
 GROUP BY
     CA.id;
 END //
@@ -443,6 +443,9 @@ CREATE PROCEDURE get_expenses_by_account(
     IN _end_date date
 )
 BEGIN
+IF _id_account = 0 THEN
+    SET _id_account = null;
+END IF;
 SELECT
   A.id AS Id,
   A.id_expense AS Id_rel_Expense,
@@ -470,7 +473,7 @@ INNER JOIN users AS U
 WHERE
     A.deleted = '0000-00-00 00:00:00'
     AND A.id_user = _id_user
-    AND (_id_account = 0 OR A.id_rel_account = _id_account)
+    AND (_id_account is NULL OR A.id_rel_account = _id_account)
 ORDER BY B.Date_expense DESC, A.id DESC;
 END //
 
