@@ -7,14 +7,6 @@ type Account struct {
 	Limit_amount float32
 }
 
-type AccountDashboard struct {
-	Id           int
-	Name         string
-	Credit       bool
-	Limit_amount float32
-	Amount_used  float32
-}
-
 type AccountTotalRequest struct {
 	Init_date string
 	End_date  string
