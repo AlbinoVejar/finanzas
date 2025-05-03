@@ -13,6 +13,7 @@ const Dashboard = () => {
   const {filters} = useRecoilValue<UserStateType>(UserSelector)
   const {getAccounts} = useAccounts();
   const { isLoading, isError, error, data: accounts } = getAccounts(filters)
+
   return (
     <>
       {isLoading ? (
@@ -24,9 +25,7 @@ const Dashboard = () => {
           {
             !!accounts &&
             accounts.length > 0 &&
-            accounts.map((item: TotalWasteAccount) => (
-              <AccountsDashboard key={`account_${item.Id_Account}`} account={item} />
-            ))
+            <AccountsDashboard key={`accounts_table_dashboard`} accounts={accounts} />
           }
         </Stack>
       )}

@@ -1,108 +1,95 @@
-import { Card, CardBody, CardHeader, Flex, HStack, Heading, IconButton, StackDivider, Stat, StatLabel, VStack } from '@chakra-ui/react'
-import { useNavigate } from 'react-router-dom'
-import { RiEyeLine, RiSettings3Line } from '@remixicon/react'
-import { FormatCurreny } from '../../utils'
-import { Account, TotalWasteAccount } from '../../types/account.type'
-import ConfigAccountModal from '../../components/config-account.modal'
-import { useState } from 'react'
-import useAccounts from '../../hooks/useAccounts.hook'
-import { useRecoilValue } from 'recoil'
-import { UserStateType } from '../../types/user.type'
-import { UserSelector } from '../../context/userState'
+import {
+  Card,
+  CardBody,
+  CardHeader,
+  Flex,
+  HStack,
+  Heading,
+  IconButton,
+  StackDivider,
+  Stat,
+  StatLabel,
+  VStack,
+} from '@chakra-ui/react';
+import { useNavigate } from 'react-router-dom';
+import { RiEyeLine, RiSettings2Line, RiSettings3Line } from '@remixicon/react';
+import { FormatCurreny } from '../../utils';
+import { Account, TotalWasteAccount } from '../../types/account.type';
+import ConfigAccountModal from '../../components/config-account.modal';
+import { useState } from 'react';
+import useAccounts from '../../hooks/useAccounts.hook';
+import { useRecoilValue } from 'recoil';
+import { UserStateType } from '../../types/user.type';
+import { UserSelector } from '../../context/userState';
+import Quicktable from '../../components/quicktable';
+import { TableActionType } from '../../types/table.type';
 
 type propsTypes = {
-  account: TotalWasteAccount
-}
+  accounts: TotalWasteAccount[];
+};
 
-const AccountsDashboard = ({ account }: propsTypes) => {
+const AccountsDashboard = ({ accounts }: propsTypes) => {
   const navigate = useNavigate();
-  const {filters} = useRecoilValue<UserStateType>(UserSelector)
+  const { filters } = useRecoilValue<UserStateType>(UserSelector);
   const [openConfig, setOpenConfig] = useState(false);
   const [accountSelected, setAccountSelected] = useState<Account | null>(null);
-  const { getAccounts, updateAccount } =
-    useAccounts();
+  const { getAccounts, updateAccount } = useAccounts();
   const { refetch } = getAccounts(filters);
   const { mutateAsync } = updateAccount;
-  const onOpenDetails = (value: number | undefined): void => {
-    navigate(`cuenta/${value}`)
-  }
-  const onOpenConfig = () => {
+  const onOpenDetails = (row: any): void => {
+    navigate(`cuenta/${row.Id_Account}`);
+  };
+  const onOpenConfig = (row: any) => {
     setAccountSelected({
-      Id: account.Id_Account,
-      Name: account.Account,
-      Credit: account.Credit,
-      Limit_amount: account.Limit_amount
+      Id: row.Id_Account,
+      Name: row.Account,
+      Credit: row.Credit,
+      Limit_amount: row.Limit_amount
     })
     setOpenConfig(true);
-  }
+  };
 
-  const onEditAccount = async (values: Account) => { 
+  const onEditAccount = async (values: Account) => {
     await mutateAsync(values);
     refetch();
     setAccountSelected(null);
     setOpenConfig(false);
-  }
+  };
+
+  const actions: TableActionType[] = [
+    {
+      id: 'edit',
+      handler: onOpenDetails,
+      icon: <RiEyeLine />,
+      label: 'Ver Detalles',
+    },
+    {
+      id: 'delete',
+      handler: onOpenConfig,
+      icon: <RiSettings2Line />,
+      label: 'Configuración',
+    },
+  ];
 
   return (
     <>
-      <Card>
+      <Card width="100%">
         <CardHeader>
-          <Heading textAlign="center" size="lg">
-            {account.Account}
-          </Heading>
-          <HStack
-            divider={<StackDivider />}
-            gap={8}
-            align="center"
-            justify="center"
-            marginTop={4}
-          >
-            <VStack>
-              <Stat>
-                <StatLabel>Total Usado: {FormatCurreny(account.Total)}</StatLabel>
-                <StatLabel>Limite: {FormatCurreny(account.Limit_amount)}</StatLabel>
-                {/* <StatNumber>{FormatCurreny(total?.Total ?? 0)}</StatNumber> */}
-                {/* <StatHelpText>{getDate()}</StatHelpText> */}
-              </Stat>
-            </VStack>
-            <Flex gap={2}>
-              <IconButton
-                isRound
-                variant="outline"
-                aria-label="Ver Detalles"
-                icon={<RiEyeLine />}
-                onClick={() => onOpenDetails(account.Id_Account)}
-              />
-              <IconButton
-                isRound
-                variant="outline"
-                aria-label="Config"
-                icon={<RiSettings3Line />}
-                onClick={onOpenConfig}
-              />
-            </Flex>
-          </HStack>
+          <Heading>Mis cuentas</Heading>
         </CardHeader>
         <CardBody>
-          {/* <Flex justify="flex-start" align="center" marginBottom={2}>
-            <Button
-              leftIcon={<RiAddCircleLine />}
-              onClick={onOpenModal}
-              size="sm"
-              colorScheme="blue"
-            >
-              Agregar
-            </Button>
-          </Flex> */}
-          {/* <Box>
-            {resume.length > 0 && (
-              <Quicktable
-                headers={headers}
-                data={resume}
-                keyTable={category.Name}
-              />
-            )}
-          </Box> */}
+          <Quicktable
+            headers={[
+              { id: 'Account', label: 'Nombre', empty: '-' },
+              { id: 'Credit', label: '¿Credito?', empty: '-' },
+              { id: 'Limit_amount', label: 'Limite', empty: '-' },
+              { id: 'Total', label: 'Gastado', empty: '-' },
+              { id: 'Actions', label: 'Acciones', empty: '-' },
+            ]}
+            data={accounts.map((item: any) => ({ ...item, Actions: actions }))}
+            keyTable="accountsDashboard"
+            config={{ showMenuAction: false }}
+          />
         </CardBody>
       </Card>
       <ConfigAccountModal
@@ -112,7 +99,7 @@ const AccountsDashboard = ({ account }: propsTypes) => {
         onHandlerSubmit={!!accountSelected && onEditAccount}
       />
     </>
-  )
-}
+  );
+};
 
-export default AccountsDashboard
+export default AccountsDashboard;
