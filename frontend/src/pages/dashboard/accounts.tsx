@@ -25,10 +25,10 @@ import Quicktable from '../../components/quicktable';
 import { TableActionType } from '../../types/table.type';
 
 type propsTypes = {
-  accounts: TotalWasteAccount[];
+  account: TotalWasteAccount;
 };
 
-const AccountsDashboard = ({ accounts }: propsTypes) => {
+const AccountsDashboard = ({ account }: propsTypes) => {
   const navigate = useNavigate();
   const { filters } = useRecoilValue<UserStateType>(UserSelector);
   const [openConfig, setOpenConfig] = useState(false);
@@ -36,18 +36,18 @@ const AccountsDashboard = ({ accounts }: propsTypes) => {
   const { getAccounts, updateAccount } = useAccounts();
   const { refetch } = getAccounts(filters);
   const { mutateAsync } = updateAccount;
-  const onOpenDetails = (row: any): void => {
-    navigate(`cuenta/${row.Id_Account}`);
-  };
-  const onOpenConfig = (row: any) => {
+  const onOpenDetails = (value: number | undefined): void => {
+    navigate(`cuenta/${value}`)
+  }
+  const onOpenConfig = () => {
     setAccountSelected({
-      Id: row.Id_Account,
-      Name: row.Account,
-      Credit: row.Credit,
-      Limit_amount: row.Limit_amount
+      Id: account.Id_Account,
+      Name: account.Account,
+      Credit: account.Credit,
+      Limit_amount: account.Limit_amount
     })
     setOpenConfig(true);
-  };
+  }
 
   const onEditAccount = async (values: Account) => {
     await mutateAsync(values);
@@ -56,40 +56,48 @@ const AccountsDashboard = ({ accounts }: propsTypes) => {
     setOpenConfig(false);
   };
 
-  const actions: TableActionType[] = [
-    {
-      id: 'edit',
-      handler: onOpenDetails,
-      icon: <RiEyeLine />,
-      label: 'Ver Detalles',
-    },
-    {
-      id: 'delete',
-      handler: onOpenConfig,
-      icon: <RiSettings2Line />,
-      label: 'Configuración',
-    },
-  ];
-
   return (
     <>
-      <Card width="100%">
+      <Card width='100%'>
         <CardHeader>
-          <Heading>Mis cuentas</Heading>
+          {/* <Heading>Mis cuentas</Heading> */}
+          <Heading textAlign="center" size="lg">
+            {account.Account}
+          </Heading>
+          <HStack
+            divider={<StackDivider />}
+            gap={8}
+            align="center"
+            justify="center"
+            marginTop={4}
+          >
+            <VStack>
+              <Stat>
+                <StatLabel>Total Usado: {FormatCurreny(account.Total)}</StatLabel>
+                <StatLabel>Limite: {FormatCurreny(account.Limit_amount)}</StatLabel>
+                {/* <StatNumber>{FormatCurreny(total?.Total ?? 0)}</StatNumber> */}
+                {/* <StatHelpText>{getDate()}</StatHelpText> */}
+              </Stat>
+            </VStack>
+            <Flex gap={2}>
+              <IconButton
+                isRound
+                variant="outline"
+                aria-label="Ver Detalles"
+                icon={<RiEyeLine />}
+                onClick={() => onOpenDetails(account.Id_Account)}
+              />
+              <IconButton
+                isRound
+                variant="outline"
+                aria-label="Config"
+                icon={<RiSettings3Line />}
+                onClick={onOpenConfig}
+              />
+            </Flex>
+          </HStack>
         </CardHeader>
         <CardBody>
-          <Quicktable
-            headers={[
-              { id: 'Account', label: 'Nombre', empty: '-' },
-              { id: 'Credit', label: '¿Credito?', empty: '-' },
-              { id: 'Limit_amount', label: 'Limite', empty: '-' },
-              { id: 'Total', label: 'Gastado', empty: '-' },
-              { id: 'Actions', label: 'Acciones', empty: '-' },
-            ]}
-            data={accounts.map((item: any) => ({ ...item, Actions: actions }))}
-            keyTable="accountsDashboard"
-            config={{ showMenuAction: false }}
-          />
         </CardBody>
       </Card>
       <ConfigAccountModal
