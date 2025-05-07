@@ -79,7 +79,7 @@ const Quicktable = <T,>({
 
   return (
     <TableContainer borderWidth="2px" borderRadius="lg">
-      <Table size="sm" variant="striped">
+      <Table size='md' variant="striped">
         <Thead bg="gainsboro" textColor="black">
           <Tr>
             {!!headers &&

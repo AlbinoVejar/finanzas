@@ -30,3 +30,16 @@ type ExpenseByAccount struct {
 	Description     string
 	Date_expense    string
 }
+
+type ExpenseDetails struct {
+	Id int
+	Account string
+	Category string
+	Amount float32
+	Description string
+	Date_expense string
+	Id_expense int
+	Id_rel_account int
+	Id_rel_category int
+	Id_user int
+}

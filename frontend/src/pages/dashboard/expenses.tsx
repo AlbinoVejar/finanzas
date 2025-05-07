@@ -1,63 +1,71 @@
-import { Card, CardBody, CardHeader, Heading } from '@chakra-ui/react';
-import React from 'react';
+import { Button, Card, CardBody, CardHeader, Container, Flex, Heading } from '@chakra-ui/react';
 import Quicktable from '../../components/quicktable';
-import { useRecoilValue } from 'recoil';
-import { UserStateType } from '../../types/user.type';
-import { UserSelector } from '../../context/userState';
-import useExpenses from '../../hooks/useExpenses.hook';
-import { TableActionType } from '../../types/table.type';
-import { RiEyeLine, RiSettings2Line } from '@remixicon/react';
+import { Expense } from '../../types/expense.type';
+import { useRecoilState } from 'recoil';
+import { ModalTypeState } from '../../types/modal.type';
+import { ModalState } from '../../context/modalState';
+import ExpenseModal from '../../components/expense.modal';
+import { RiAddFill } from '@remixicon/react';
 
-const ExpenseDashboard = () => {
-  const { filters } = useRecoilValue<UserStateType>(UserSelector);
-  const { GetAllDashboardExpenses } = useExpenses();
-  const {
-    isLoading,
-    isError,
-    error,
-    data: expenses,
-  } = GetAllDashboardExpenses(filters);
-  const actions: TableActionType[] = [
-    {
-      id: 'edit',
-      handler: () => {},
-      icon: <RiEyeLine />,
-      label: 'Ver Detalles',
-    },
-    {
-      id: 'delete',
-      handler: () => {},
-      icon: <RiSettings2Line />,
-      label: 'Configuración',
-    },
-  ];
+type propsTypes = {
+  expenses: Expense[];
+  total: number;
+};
+
+const ExpenseDashboard = ({ expenses, total }: propsTypes) => {
+  const [openModal, setOpenModal] = useRecoilState<ModalTypeState<any>>(ModalState)
+  const onOpenExpenseModal = () => {
+    setOpenModal({ ...openModal, expense: true, details: null })
+  }
+  // const actions: TableActionType[] = [
+  //   {
+  //     id: 'edit',
+  //     handler: () => { },
+  //     icon: <RiEyeLine />,
+  //     label: 'Ver Detalles',
+  //   },
+  //   {
+  //     id: 'delete',
+  //     handler: () => { },
+  //     icon: <RiSettings2Line />,
+  //     label: 'Configuración',
+  //   },
+  // ];
 
   return (
-    <Card>
-      <CardHeader>
-        <Heading>Mis gastos</Heading>
-      </CardHeader>
-      <CardBody>
-        {isLoading ? (
-          <p>...</p>
-        ) : isError ? (
-          <span>Error:{error.message}</span>
-        ) : (
+    <>
+      <Card width='90%'>
+        <CardHeader>
+          <Flex justifyContent="space-between">
+            <Heading>Mis gastos</Heading>
+            <Button
+              colorScheme="blue"
+              leftIcon={<RiAddFill />}
+              onClick={onOpenExpenseModal}
+            >
+              Agregar Gasto
+            </Button>
+          </Flex>
+          <Heading>Gastos del día del hoy: {expenses.length} - Total Gastado: ${total}</Heading>
+        </CardHeader>
+        <CardBody>
           <Quicktable
             headers={[
-              { id: 'Account', label: 'Nombre', empty: '-' },
-              { id: 'Credit', label: '¿Credito?', empty: '-' },
-              { id: 'Limit_amount', label: 'Limite', empty: '-' },
-              { id: 'Total', label: 'Gastado', empty: '-' },
-              { id: 'Actions', label: 'Acciones', empty: '-' },
+              { id: 'Account', label: 'Cuenta', empty: '-' },
+              { id: 'Category', label: 'Categoría', empty: '-' },
+              { id: 'Description', label: 'Descripción', empty: '-' },
+              { id: 'Amount', label: 'Monto', empty: '-' },
+              { id: 'Date_expense', label: 'Fecha', empty: '-' },
             ]}
-            data={expenses.map((item: any) => ({ ...item, Actions: actions }))}
+            data={expenses}
             keyTable="accountsDashboard"
             config={{ showMenuAction: false }}
           />
-        )}
-      </CardBody>
-    </Card>
+        </CardBody>
+      </Card>
+
+      <ExpenseModal />
+    </>
   );
 };
 

@@ -1,3 +1,5 @@
+-- #region Tables
+-- Table Accounts
 DROP TABLE IF EXISTS accounts;
 CREATE TABLE IF NOT EXISTS accounts (
   id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT, 
@@ -64,9 +66,13 @@ CREATE TABLE IF NOT EXISTS rel_expense (
   FOREIGN KEY (id_rel_account) REFERENCES rel_user_account (id),
   FOREIGN KEY (id_user) REFERENCES users (id)
 );
+--#endregion
 
+-- Stores Procedures
+-- #region Functions
 DELIMITER // 
-
+-- USERS
+-- #region Users
 DROP PROCEDURE IF EXISTS login_user //
 CREATE PROCEDURE login_user (
   _email VARCHAR(80)
@@ -160,7 +166,10 @@ SET
 WHERE 
   id_user = _id_user;
 END //
+-- #endregion
 
+-- Accounts
+-- #region Accounts
 DROP PROCEDURE IF EXISTS get_accounts //
 CREATE PROCEDURE get_accounts(_id_user integer) 
 BEGIN 
@@ -186,10 +195,7 @@ CREATE PROCEDURE get_total_waste_by_account(
     IN _init_date date,
     IN _end_date date
 )
-BEGIN 
-IF _id_account = 0 THEN
-    SET _id_account = null;
-END IF;
+BEGIN
 SELECT
   CA.id AS Id_Account,
   C.id AS Id_rel_Account,
@@ -213,7 +219,7 @@ LEFT JOIN expenses AS B
     ON B.id = A.id_expense
     AND CAST(B.date_expense AS Date) BETWEEN _init_date AND _end_date
 WHERE
-  _id_account IS NULL OR C.id = _id_account
+  _id_account = 0 OR C.id = _id_account
 GROUP BY
     CA.id;
 END //
@@ -266,7 +272,10 @@ UPDATE rel_user_account AS A
 SET A.deleted = CURRENT_TIMESTAMP()
 WHERE A.id_account = _id_account;
 END //
+-- #endregion
 
+-- Categories
+-- #region Categories
 DROP PROCEDURE IF EXISTS get_categories //
 CREATE PROCEDURE get_categories(
   IN _id_user integer
@@ -362,7 +371,12 @@ UPDATE rel_user_category AS A
 SET A.deleted = CURRENT_TIMESTAMP()
 WHERE A.id_category = _id_category;
 END //
+-- #endregion
 
+-- Expenses
+-- #region Expenses
+
+-- #region CREATE
 DROP PROCEDURE IF EXISTS create_expense //
 CREATE PROCEDURE create_expense(
   _id_user integer,
@@ -387,7 +401,9 @@ VALUES
     @id_expense, _id_rel_category, _id_rel_account, _id_user
   ) RETURNING id;
 END // 
+-- #endregion
 
+-- #region UPDATE
 DROP PROCEDURE IF EXISTS update_expense //
 CREATE PROCEDURE update_expense(
   _id_expense integer, 
@@ -419,7 +435,9 @@ SET
 WHERE
   id_expense = _id_expense;
 END //
+-- #endregion
 
+-- #region DELETE
 DROP PROCEDURE IF EXISTS delete_expense //
 CREATE PROCEDURE delete_expense(
   _id_expense integer, 
@@ -434,7 +452,9 @@ WHERE
   AND
   id_user = _id_user;
 END //
+-- #endregion
 
+-- #region GET EXPENSE BY ACCOUNT
 DROP PROCEDURE IF EXISTS get_expenses_by_account //
 CREATE PROCEDURE get_expenses_by_account(
     IN _id_user integer,
@@ -443,9 +463,6 @@ CREATE PROCEDURE get_expenses_by_account(
     IN _end_date date
 )
 BEGIN
-IF _id_account = 0 THEN
-    SET _id_account = null;
-END IF;
 SELECT
   A.id AS Id,
   A.id_expense AS Id_rel_Expense,
@@ -473,14 +490,56 @@ INNER JOIN users AS U
 WHERE
     A.deleted = '0000-00-00 00:00:00'
     AND A.id_user = _id_user
-    AND (_id_account is NULL OR A.id_rel_account = _id_account)
+    AND (_id_account = 0 OR A.id_rel_account = _id_account)
 ORDER BY B.Date_expense DESC, A.id DESC;
 END //
+-- #endregion
 
+-- #region Get All Expenses
+DROP PROCEDURE IF EXISTS get_expenses_by_date //
+CREATE PROCEDURE get_expenses_by_date(
+    IN _id_user integer,
+    IN _init_date date,
+    IN _end_date date
+)
+BEGIN
+SELECT
+    Rex.id,
+    Ac.name AS Account,
+    Ca.name AS Category,
+    Ex.amount AS Amount,
+    Ex.description,
+    Ex.date_expense AS Date_expense,
+    Rex.id_expense,
+    Rex.id_rel_account,
+    Rex.id_rel_category,
+    Rex.id_user
+FROM rel_expense AS Rex
+INNER JOIN expenses AS Ex 
+    ON Rex.id_expense = Ex.id
+    AND CAST(Ex.date_expense AS Date) BETWEEN _init_date AND _end_date
+INNER JOIN rel_user_account AS Rua
+    ON Rua.id = Rex.id_rel_account
+    AND Rua.deleted = '0000-00-00 00:00:00'
+INNER JOIN accounts AS Ac
+    ON Ac.id = Rua.id_account
+INNER JOIN rel_user_category AS Ruc
+    ON Ruc.id = Rex.id_rel_category
+    AND Ruc.deleted = '0000-00-00 00:00:00'
+INNER JOIN categories AS Ca
+    ON Ca.id = Ruc.id_category
+INNER JOIN users AS U
+    ON U.id = Rex.id_user
+WHERE
+    Rex.deleted = '0000-00-00 00:00:00'
+    AND Rex.id_user = _id_user;
+END //
 -- Initial User
 -- user: admin@test.com
 -- pass: test
 CALL create_user('admin','admin@test.com', '$2a$10$EFH5F/PnlZNOn4ZSJ6g43eBxLt9r3nLtN8LTZwgZSsMGCpJ7Nz5EK');
+-- #endregion
 END //
 
 DELIMITER ;
+-- #endregion

@@ -105,10 +105,10 @@ func GetDashboardByUser(context *fiber.Ctx) error {
 	}
 	db, dbClose := config.Connection()
 	filters := context.Queries()
-	var expenses []models.ExpenseByAccount
+	var expenses []models.ExpenseDetails
 	var accounts []models.AccountTotalResponse
 	var response models_shared.AccountExpensesResponse
-	err := db.Raw("CALL get_expenses_by_account(?,?,?,?)", id_User, 0, filters["current"], filters["current"]).Scan(&expenses).Error
+	err := db.Raw("CALL get_expenses_by_date(?,?,?)", id_User, filters["current"], filters["current"]).Scan(&expenses).Error
 	errAccount := db.Raw("CALL get_total_waste_by_account(?,?,?,?)", id_User, 0, filters["init"], filters["end"]).Scan(&accounts).Error
 	defer dbClose()
 	response.Accounts = accounts

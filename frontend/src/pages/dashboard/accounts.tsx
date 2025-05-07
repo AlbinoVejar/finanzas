@@ -12,7 +12,7 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
-import { RiEyeLine, RiSettings2Line, RiSettings3Line } from '@remixicon/react';
+import { RiEyeLine, RiSettings3Line } from '@remixicon/react';
 import { FormatCurreny } from '../../utils';
 import { Account, TotalWasteAccount } from '../../types/account.type';
 import ConfigAccountModal from '../../components/config-account.modal';
@@ -21,8 +21,6 @@ import useAccounts from '../../hooks/useAccounts.hook';
 import { useRecoilValue } from 'recoil';
 import { UserStateType } from '../../types/user.type';
 import { UserSelector } from '../../context/userState';
-import Quicktable from '../../components/quicktable';
-import { TableActionType } from '../../types/table.type';
 
 type propsTypes = {
   account: TotalWasteAccount;
