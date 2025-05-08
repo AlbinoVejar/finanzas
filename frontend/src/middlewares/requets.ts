@@ -25,6 +25,7 @@ const onResponseError = (error: AxiosError): Promise<AxiosError> => {
 }
 
 export function setupInterceptorsTo(axiosInstance: AxiosInstance): AxiosInstance {
+  console.log('request', axiosInstance.defaults.baseURL);
   axiosInstance.interceptors.request.use(onRequest);
   axiosInstance.interceptors.response.use(onResponse, onResponseError);
   return axiosInstance;
