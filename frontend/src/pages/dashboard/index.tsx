@@ -21,13 +21,17 @@ const Dashboard = () => {
         <span>Error:{error.message}</span>
       ) : (
         <Stack
-          direction='column'
+          direction="column"
           spacing={2}
           justify="start"
           align="center"
-
-          height='100%'>
-          <SimpleGrid minChildWidth={'1fr'} spacing={6} maxHeight='30vh' overflowY='auto' paddingY='2%'>
+          height="100%">
+          <SimpleGrid
+            minChildWidth={'1fr'}
+            spacing={6}
+            maxHeight="30vh"
+            overflowY="auto"
+            paddingY="2%">
             {!!Accounts &&
               Accounts.length > 0 &&
               Accounts.map((item: TotalWasteAccount) => (
@@ -37,7 +41,9 @@ const Dashboard = () => {
                 />
               ))}
           </SimpleGrid>
-          <ExpenseDashboard expenses={Expenses} total={Total} />
+          {!!Expenses && Expenses.length > 0 && (
+            <ExpenseDashboard expenses={Expenses} total={Total} />
+          )}
         </Stack>
       )}
     </>
