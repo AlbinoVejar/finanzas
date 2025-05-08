@@ -2,7 +2,7 @@ import { Account } from "./account.type"
 import { Category } from "./category.type"
 import { TableActionType } from "./table.type"
 
-export type Expense = {
+export type ExpenseDetails = {
   Id: number;
   Id_expense: number;
   Account: string;
@@ -13,6 +13,17 @@ export type Expense = {
   Id_rel_Expense: number;
   Id_rel_Category: number;
   Id_rel_Account: number;
+}
+
+export type Expense = {
+  Id: number;
+  Id_rel_Expense: number;
+  Id_rel_Category: number;
+  Category: string;
+  Id_rel_Account: number;
+  Amount: number; 
+  Description: string;
+  Date_expense: string;
 }
 
 export type Resume = {

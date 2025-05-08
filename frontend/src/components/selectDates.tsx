@@ -32,6 +32,7 @@ const SelectDates = () => {
         filters: {
           init_date: newDateInitFilter,
           end_date: newDateEndFilter,
+          current: dayjs().format(FormatDate)
         }
       })
       setDate(`${newDateInitFilter} - `)
@@ -43,6 +44,7 @@ const SelectDates = () => {
         filters: {
           init_date: newDateInitFilter,
           end_date: newDateEndFilter,
+          current: dayjs().format(FormatDate)
         }
       })
     }
