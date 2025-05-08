@@ -12,6 +12,7 @@ export type AccountStateType = {
   filters: {
     init_date: string;
     end_date: string;
+    current: string;
   }
 }
 
