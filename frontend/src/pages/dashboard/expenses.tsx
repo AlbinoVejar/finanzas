@@ -1,6 +1,6 @@
-import { Button, Card, CardBody, CardHeader, Container, Flex, Heading } from '@chakra-ui/react';
+import { Button, Card, CardBody, CardHeader, Flex, Heading } from '@chakra-ui/react';
 import Quicktable from '../../components/quicktable';
-import { Expense } from '../../types/expense.type';
+import { ExpenseDetails } from '../../types/expense.type';
 import { useRecoilState } from 'recoil';
 import { ModalTypeState } from '../../types/modal.type';
 import { ModalState } from '../../context/modalState';
@@ -8,7 +8,7 @@ import ExpenseModal from '../../components/expense.modal';
 import { RiAddFill } from '@remixicon/react';
 
 type propsTypes = {
-  expenses: Expense[];
+  expenses: ExpenseDetails[];
   total: number;
 };
 

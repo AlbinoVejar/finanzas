@@ -39,7 +39,6 @@ const useExpenses = () => {
       refetchOnMount: false,
       refetchOnWindowFocus: false,
       select(data) {
-        console.log('data', data)
         return data.data;
       },
       throwOnError(error) {
