@@ -1,4 +1,4 @@
-import { SimpleGrid, Stack } from '@chakra-ui/react';
+import { Flex, SimpleGrid, Stack } from '@chakra-ui/react';
 import { useRecoilValue } from 'recoil';
 import { TotalWasteAccount } from '../../types/account.type';
 import AccountsDashboard from './accounts';
@@ -26,12 +26,16 @@ const Dashboard = () => {
           justify="start"
           align="center"
           height="100%">
-          <SimpleGrid
-            minChildWidth={'1fr'}
-            spacing={6}
+          <Flex
+            direction={['column', 'row']}
+            gap={3}
             maxHeight="30vh"
-            overflowY="auto"
-            paddingY="2%">
+            maxWidth="95vw"
+            overflow="auto"
+            paddingY="2%"
+            justifyContent='stretch'
+            width='90%'
+            >
             {!!Accounts &&
               Accounts.length > 0 &&
               Accounts.map((item: TotalWasteAccount) => (
@@ -40,7 +44,7 @@ const Dashboard = () => {
                   account={item}
                 />
               ))}
-          </SimpleGrid>
+          </Flex>
           <ExpenseDashboard expenses={Expenses} total={Total} />
         </Stack>
       )}

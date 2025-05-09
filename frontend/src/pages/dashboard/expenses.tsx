@@ -1,4 +1,4 @@
-import { Box, Button, Card, CardBody, CardHeader, Flex, Stat, StatGroup, StatHelpText, StatLabel, StatNumber, Tag, Text, useMediaQuery } from '@chakra-ui/react';
+import { Button, Card, CardBody, CardHeader, Flex, Tag, Text, useMediaQuery } from '@chakra-ui/react';
 import Quicktable from '../../components/quicktable';
 import { ExpenseDetails } from '../../types/expense.type';
 import { useRecoilState } from 'recoil';
@@ -20,27 +20,13 @@ const ExpenseDashboard = ({ expenses, total }: propsTypes) => {
   const onOpenExpenseModal = () => {
     setOpenModal({ ...openModal, expense: true, details: null })
   }
-  // const actions: TableActionType[] = [
-  //   {
-  //     id: 'edit',
-  //     handler: () => { },
-  //     icon: <RiEyeLine />,
-  //     label: 'Ver Detalles',
-  //   },
-  //   {
-  //     id: 'delete',
-  //     handler: () => { },
-  //     icon: <RiSettings2Line />,
-  //     label: 'Configuración',
-  //   },
-  // ];
 
   return (
     <>
-      <Card width='90%'>
+      <Card width='90%' rounded='lg' boxShadow='lg' borderWidth={1} borderColor={'gray.300'}>
         <CardHeader paddingBottom='1%'>
           <Tag size='lg'>{dayjs().format('dddd D MMMM YYYY')}</Tag>
-          <Flex direction='column' justifyContent={{ sm: 'flex-start', md: 'space-between' }} gap={2}>
+          <Flex direction={['column', 'row']} justifyContent={{ sm: 'flex-start', md: 'space-between' }} gap={2}>
             <Flex direction='column'>
               <Text fontSize='3xl'><strong>{expenses?.length ?? 0}</strong> Gastos hoy</Text>
               <Text fontSize='4xl'><strong>${total ?? 0}</strong> pesos</Text>
@@ -54,12 +40,11 @@ const ExpenseDashboard = ({ expenses, total }: propsTypes) => {
             </Button>
           </Flex>
         </CardHeader>
-        <CardBody>
+        <CardBody paddingTop='2%'>
           {
             isMobileDevice ? (
               <ListTable expenses={expenses} />
             ) : (
-
               <Quicktable
                 headers={[
                   { id: 'Account', label: 'Cuenta', empty: '-' },

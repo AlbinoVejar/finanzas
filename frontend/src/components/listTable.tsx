@@ -1,5 +1,4 @@
-import { Card, CardBody, CardHeader, SimpleGrid, StackDivider, Stat, StatHelpText, StatLabel, StatNumber, Tag, Text, useBreakpointValue, VStack } from '@chakra-ui/react'
-import React from 'react'
+import { Card, CardBody, CardHeader, SimpleGrid, Stat, StatHelpText, StatLabel, StatNumber, Tag, Text, useBreakpointValue } from '@chakra-ui/react'
 import { ExpenseDetails } from '../types/expense.type';
 
 type propsTypes = {

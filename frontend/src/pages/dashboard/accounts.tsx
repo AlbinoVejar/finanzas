@@ -1,6 +1,8 @@
 import {
+  Button,
   Card,
   CardBody,
+  CardFooter,
   CardHeader,
   Flex,
   HStack,
@@ -9,6 +11,7 @@ import {
   StackDivider,
   Stat,
   StatLabel,
+  Text,
   VStack,
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
@@ -35,17 +38,17 @@ const AccountsDashboard = ({ account }: propsTypes) => {
   const { refetch } = getAccounts(filters);
   const { mutateAsync } = updateAccount;
   const onOpenDetails = (value: number | undefined): void => {
-    navigate(`cuenta/${value}`)
-  }
+    navigate(`cuenta/${value}`);
+  };
   const onOpenConfig = () => {
     setAccountSelected({
       Id: account.Id_Account,
       Name: account.Account,
       Credit: account.Credit,
-      Limit_amount: account.Limit_amount
-    })
+      Limit_amount: account.Limit_amount,
+    });
     setOpenConfig(true);
-  }
+  };
 
   const onEditAccount = async (values: Account) => {
     await mutateAsync(values);
@@ -56,47 +59,38 @@ const AccountsDashboard = ({ account }: propsTypes) => {
 
   return (
     <>
-      <Card width='100%'>
-        <CardHeader>
-          {/* <Heading>Mis cuentas</Heading> */}
-          <Heading textAlign="center" size="lg">
-            {account.Account}
-          </Heading>
-          <HStack
-            divider={<StackDivider />}
-            gap={8}
-            align="center"
-            justify="center"
-            marginTop={4}
-          >
-            <VStack>
-              <Stat>
-                <StatLabel>Total Usado: {FormatCurreny(account.Total)}</StatLabel>
-                <StatLabel>Limite: {FormatCurreny(account.Limit_amount)}</StatLabel>
-                {/* <StatNumber>{FormatCurreny(total?.Total ?? 0)}</StatNumber> */}
-                {/* <StatHelpText>{getDate()}</StatHelpText> */}
-              </Stat>
-            </VStack>
-            <Flex gap={2}>
-              <IconButton
-                isRound
-                variant="outline"
-                aria-label="Ver Detalles"
-                icon={<RiEyeLine />}
-                onClick={() => onOpenDetails(account.Id_Account)}
-              />
-              <IconButton
-                isRound
-                variant="outline"
-                aria-label="Config"
-                icon={<RiSettings3Line />}
-                onClick={onOpenConfig}
-              />
-            </Flex>
-          </HStack>
+      <Card
+        width="100%"
+        rounded="lg"
+        boxShadow="lg"
+        borderWidth={1}
+        borderColor={'gray.300'}>
+        <CardHeader paddingY={2} paddingBottom={0} paddingX={2}>
+          <Heading size="lg">{account.Account}</Heading>
         </CardHeader>
-        <CardBody>
+        <CardBody paddingY={1} paddingTop={0} paddingX={2}>
+          <Flex direction="column" justifyContent="flex-start">
+            <Text fontSize="lg">
+              Total Usado: {FormatCurreny(account.Total)}
+            </Text>
+            <Text fontSize="lg">
+              Limite: {FormatCurreny(account.Limit_amount)}
+            </Text>
+          </Flex>
         </CardBody>
+        <CardFooter padding={1}>
+          <Flex direction="column" w="100%" alignItems="center">
+            <Button
+              width="95%"
+              leftIcon={<RiEyeLine />}
+              borderColor={'gray.400'}
+              variant="outline"
+              onClick={() => onOpenDetails(account.Id_Account)}
+              rounded="lg">
+              Ver Detalles
+            </Button>
+          </Flex>
+        </CardFooter>
       </Card>
       <ConfigAccountModal
         open={openConfig}
