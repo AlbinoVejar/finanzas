@@ -41,9 +41,7 @@ const Dashboard = () => {
                 />
               ))}
           </SimpleGrid>
-          {!!Expenses && Expenses.length > 0 && (
-            <ExpenseDashboard expenses={Expenses} total={Total} />
-          )}
+          <ExpenseDashboard expenses={Expenses} total={Total} />
         </Stack>
       )}
     </>

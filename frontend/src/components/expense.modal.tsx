@@ -282,7 +282,7 @@ const ExpenseModal = () => {
                   name="description"
                   control={control}
                   render={({ field }) => (
-                    <Textarea size="xs" resize="none" {...field} />
+                    <Textarea resize="none" {...field} />
                   )}
                 />
                 {renderErrorsText(

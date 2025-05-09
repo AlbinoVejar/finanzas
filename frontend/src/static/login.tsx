@@ -9,6 +9,7 @@ import {
   Heading,
   Alert,
   AlertIcon,
+  useBreakpointValue,
 } from '@chakra-ui/react'
 import {
   Controller,
@@ -32,6 +33,7 @@ const schemaLogin = z.object({
 })
 
 const Login = () => {
+  const variant = useBreakpointValue({base: '80%', sm: '70%', md: '60%', lg: '60%'});
   const [submitted, setSubmitted] = useState<boolean>(false);
   const [userState, setValue] = useRecoilState(UserState);
   const { LoginMutation } = useAuthQuery()
@@ -75,7 +77,7 @@ const Login = () => {
         borderRadius="lg"
         borderWidth="2px"
         width="100%"
-        height="60%"
+        height={variant}
         alignContent="center"
         px={6}
       >

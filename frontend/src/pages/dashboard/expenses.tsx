@@ -1,4 +1,4 @@
-import { Button, Card, CardBody, CardHeader, Flex, Heading } from '@chakra-ui/react';
+import { Box, Button, Card, CardBody, CardHeader, Flex, Stat, StatGroup, StatHelpText, StatLabel, StatNumber, Tag, Text, useMediaQuery } from '@chakra-ui/react';
 import Quicktable from '../../components/quicktable';
 import { ExpenseDetails } from '../../types/expense.type';
 import { useRecoilState } from 'recoil';
@@ -6,6 +6,8 @@ import { ModalTypeState } from '../../types/modal.type';
 import { ModalState } from '../../context/modalState';
 import ExpenseModal from '../../components/expense.modal';
 import { RiAddFill } from '@remixicon/react';
+import dayjs from 'dayjs';
+import ListTable from '../../components/listTable';
 
 type propsTypes = {
   expenses: ExpenseDetails[];
@@ -13,6 +15,7 @@ type propsTypes = {
 };
 
 const ExpenseDashboard = ({ expenses, total }: propsTypes) => {
+  const [isMobileDevice] = useMediaQuery('(max-width: 62em)');
   const [openModal, setOpenModal] = useRecoilState<ModalTypeState<any>>(ModalState)
   const onOpenExpenseModal = () => {
     setOpenModal({ ...openModal, expense: true, details: null })
@@ -35,9 +38,13 @@ const ExpenseDashboard = ({ expenses, total }: propsTypes) => {
   return (
     <>
       <Card width='90%'>
-        <CardHeader>
-          <Flex justifyContent="space-between">
-            <Heading>Mis gastos</Heading>
+        <CardHeader paddingBottom='1%'>
+          <Tag size='lg'>{dayjs().format('dddd D MMMM YYYY')}</Tag>
+          <Flex direction='column' justifyContent={{ sm: 'flex-start', md: 'space-between' }} gap={2}>
+            <Flex direction='column'>
+              <Text fontSize='3xl'><strong>{expenses?.length ?? 0}</strong> Gastos hoy</Text>
+              <Text fontSize='4xl'><strong>${total ?? 0}</strong> pesos</Text>
+            </Flex>
             <Button
               colorScheme="blue"
               leftIcon={<RiAddFill />}
@@ -46,21 +53,27 @@ const ExpenseDashboard = ({ expenses, total }: propsTypes) => {
               Agregar Gasto
             </Button>
           </Flex>
-          <Heading>Gastos del día del hoy: {expenses.length} - Total Gastado: ${total}</Heading>
         </CardHeader>
         <CardBody>
-          <Quicktable
-            headers={[
-              { id: 'Account', label: 'Cuenta', empty: '-' },
-              { id: 'Category', label: 'Categoría', empty: '-' },
-              { id: 'Description', label: 'Descripción', empty: '-' },
-              { id: 'Amount', label: 'Monto', empty: '-' },
-              { id: 'Date_expense', label: 'Fecha', empty: '-' },
-            ]}
-            data={expenses}
-            keyTable="accountsDashboard"
-            config={{ showMenuAction: false }}
-          />
+          {
+            isMobileDevice ? (
+              <ListTable expenses={expenses} />
+            ) : (
+
+              <Quicktable
+                headers={[
+                  { id: 'Account', label: 'Cuenta', empty: '-' },
+                  { id: 'Category', label: 'Categoría', empty: '-' },
+                  { id: 'Description', label: 'Descripción', empty: '-' },
+                  { id: 'Amount', label: 'Monto', empty: '-' },
+                  { id: 'Date_expense', label: 'Fecha', empty: '-' },
+                ]}
+                data={expenses ?? []}
+                keyTable="accountsDashboard"
+                config={{ showMenuAction: false }}
+              />
+            )
+          }
         </CardBody>
       </Card>
 
