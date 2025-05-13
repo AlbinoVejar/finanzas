@@ -43,7 +43,7 @@ const ExpenseDashboard = ({ expenses, total }: propsTypes) => {
         <CardBody paddingTop='2%'>
           {
             isMobileDevice ? (
-              <ListTable expenses={expenses} />
+              <ListTable expenses={expenses} showActions={false} />
             ) : (
               <Quicktable
                 headers={[

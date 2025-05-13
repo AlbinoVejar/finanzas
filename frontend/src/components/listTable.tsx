@@ -1,11 +1,12 @@
-import { Card, CardBody, CardHeader, SimpleGrid, Stat, StatHelpText, StatLabel, StatNumber, Tag, Text, useBreakpointValue } from '@chakra-ui/react'
+import { Card, CardBody, CardFooter, CardHeader, SimpleGrid, Stat, StatHelpText, StatLabel, StatNumber, Tag, Text, useBreakpointValue } from '@chakra-ui/react'
 import { ExpenseDetails } from '../types/expense.type';
 
 type propsTypes = {
   expenses: ExpenseDetails[];
+  showActions: boolean;
 };
 
-const ListTable = ({ expenses }: propsTypes) => {
+const ListTable = ({ expenses, showActions = false }: propsTypes) => {
   const variant = useBreakpointValue({
     sm: 1, md: 2
   });
@@ -14,9 +15,9 @@ const ListTable = ({ expenses }: propsTypes) => {
       !!expenses &&
         expenses.length > 0 ?
         (
-          <SimpleGrid spacing={2} overflowY='auto' m='1%' maxHeight='50vh' columns={variant}>
+          <SimpleGrid spacing={4} overflowY='auto' m='1%' maxHeight='50vh' columns={variant}>
             {expenses.map((item: ExpenseDetails) => (
-              <Card width="100%" rounded='lg' boxShadow='lg' borderWidth={1}>
+              <Card key={item.Id} width="100%" rounded='lg' boxShadow='lg' borderWidth={1}>
                 <CardHeader display='flex' gap={2} p={2}>
                   <Tag size='lg' variant='solid' colorScheme='blue'>{item.Account}</Tag>
                   <Tag size='lg' variant='solid' colorScheme='green'>{item.Category}</Tag>
@@ -30,6 +31,9 @@ const ListTable = ({ expenses }: propsTypes) => {
                     </Stat>
                   </SimpleGrid>
                 </CardBody>
+                {showActions && <CardFooter>
+                  {}
+                </CardFooter>}
               </Card>
             ))}
           </SimpleGrid>

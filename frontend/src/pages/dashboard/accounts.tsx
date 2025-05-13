@@ -5,17 +5,11 @@ import {
   CardFooter,
   CardHeader,
   Flex,
-  HStack,
   Heading,
-  IconButton,
-  StackDivider,
-  Stat,
-  StatLabel,
   Text,
-  VStack,
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
-import { RiEyeLine, RiSettings3Line } from '@remixicon/react';
+import { RiEyeLine } from '@remixicon/react';
 import { FormatCurreny } from '../../utils';
 import { Account, TotalWasteAccount } from '../../types/account.type';
 import ConfigAccountModal from '../../components/config-account.modal';
@@ -39,15 +33,6 @@ const AccountsDashboard = ({ account }: propsTypes) => {
   const { mutateAsync } = updateAccount;
   const onOpenDetails = (value: number | undefined): void => {
     navigate(`cuenta/${value}`);
-  };
-  const onOpenConfig = () => {
-    setAccountSelected({
-      Id: account.Id_Account,
-      Name: account.Account,
-      Credit: account.Credit,
-      Limit_amount: account.Limit_amount,
-    });
-    setOpenConfig(true);
   };
 
   const onEditAccount = async (values: Account) => {
@@ -78,7 +63,7 @@ const AccountsDashboard = ({ account }: propsTypes) => {
             </Text>
           </Flex>
         </CardBody>
-        <CardFooter padding={1}>
+        <CardFooter padding={2}>
           <Flex direction="column" w="100%" alignItems="center">
             <Button
               width="95%"

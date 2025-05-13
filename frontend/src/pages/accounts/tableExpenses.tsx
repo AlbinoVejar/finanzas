@@ -1,12 +1,10 @@
-import { Button, ButtonGroup, Divider, FormControl, FormLabel, IconButton, Select, Stack, Table, TableContainer, Tbody, Td, Th, Thead, Tr, VStack } from '@chakra-ui/react'
-import { TableHeaders, TableHeadersID } from './headers'
+import { Button, ButtonGroup, Divider, FormControl, FormLabel, IconButton, Select, Stack, useMediaQuery, VStack } from '@chakra-ui/react'
 import SelectDates from '../../components/selectDates'
 import { RiLayoutGridFill, RiTable2 } from '@remixicon/react'
 import { useRecoilState } from 'recoil'
 import { UserStateType } from '../../types/user.type'
 import { UserState } from '../../context/userState'
 import useExpenses from '../../hooks/useExpenses.hook'
-import TableAction from './tableAction'
 import DeleteDialog from '../../components/delete.dialog'
 import { useEffect, useRef } from 'react'
 import { Expense } from '../../types/expense.type'
@@ -14,8 +12,11 @@ import { ModalState } from '../../context/modalState'
 import { ModalTypeState } from '../../types/modal.type'
 import useToastComponent from '../../components/toast.component'
 import useCategories from '../../hooks/useCategories.hook'
+import ListTable from '../../components/listTable'
+import Quicktable from '../../components/quicktable'
 
 const TableAllExpenses = () => {
+  const [isMobileDevice] = useMediaQuery('(max-width: 62em)');
   const [userState, setUserState] = useRecoilState<UserStateType>(UserState);
   const { details, filters, refetches } = userState;
   const { data: itemsCategories } = useCategories().GetItemsCategories()
@@ -69,7 +70,26 @@ const TableAllExpenses = () => {
           </ButtonGroup>
         </Stack>
         <Divider />
-        <TableContainer width="100%" maxHeight='80vh' overflowY='auto' padding={2}>
+        {
+          isMobileDevice ? (
+            <ListTable expenses={data} showActions={false} />
+          ) : (
+            <Quicktable
+              headers={[
+                { id: '#', label: 'Cuenta', empty: '-' },
+                { id: 'Category', label: 'Categoría', empty: '-' },
+                { id: 'Description', label: 'Descripción', empty: '-' },
+                { id: 'Amount', label: 'Monto', empty: '-' },
+                { id: 'Date_expense', label: 'Fecha', empty: '-' },
+                { id: 'Actions', label: 'Acciones', empty: '-' }
+              ]}
+              data={data ?? []}
+              keyTable="allExpensesDashboard"
+              config={{ showMenuAction: false }}
+            />
+          )
+        }
+        {/* <TableContainer width="100%" maxHeight='80vh' overflowY='auto' padding={2}>
           <Table variant='striped'>
             <Thead>
               <Tr>
@@ -105,7 +125,7 @@ const TableAllExpenses = () => {
               }
             </Tbody>
           </Table>
-        </TableContainer>
+        </TableContainer> */}
       </VStack>
       <DeleteDialog title='Eliminar Gasto' message='¿Estás seguro de eliminar Gasto?' htmlRef={cancelRef} onConfirm={onDeleteExpense} />
     </>
