@@ -23,7 +23,7 @@ const ExpenseDashboard = ({ expenses, total }: propsTypes) => {
 
   return (
     <>
-      <Card width='90%' rounded='lg' boxShadow='lg' borderWidth={1} borderColor={'gray.300'}>
+      <Card width='100%' rounded='lg' boxShadow='lg' borderWidth={1} borderColor={'gray.300'}>
         <CardHeader paddingBottom='1%'>
           <Tag size='lg'>{dayjs().format('dddd D MMMM YYYY')}</Tag>
           <Flex direction={['column', 'row']} justifyContent={{ sm: 'flex-start', md: 'space-between' }} gap={2}>
@@ -43,7 +43,7 @@ const ExpenseDashboard = ({ expenses, total }: propsTypes) => {
         <CardBody paddingTop='2%'>
           {
             isMobileDevice ? (
-              <ListTable expenses={expenses} showActions={false} />
+              <ListTable expenses={expenses} />
             ) : (
               <Quicktable
                 headers={[

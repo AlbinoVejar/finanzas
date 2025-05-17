@@ -1,4 +1,4 @@
-import { Flex, SimpleGrid, Stack } from '@chakra-ui/react';
+import { Flex, Stack } from '@chakra-ui/react';
 import { useRecoilValue } from 'recoil';
 import { TotalWasteAccount } from '../../types/account.type';
 import AccountsDashboard from './accounts';

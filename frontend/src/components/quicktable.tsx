@@ -78,7 +78,7 @@ const Quicktable = <T,>({
   };
 
   return (
-    <TableContainer borderWidth="2px" borderRadius="lg">
+    <TableContainer borderWidth="2px" borderRadius="lg" width='100%'>
       <Table size='md' variant="striped">
         <Thead bg="gainsboro" textColor="black">
           <Tr>

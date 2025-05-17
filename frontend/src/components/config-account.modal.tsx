@@ -76,6 +76,7 @@ const ConfigAccountModal = ({
         valuesSubmit = { ...values, Id: details.Id };
       }
       onHandlerSubmit(valuesSubmit);
+      reset()
     }
   };
 

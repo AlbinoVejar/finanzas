@@ -82,22 +82,24 @@ const GlobalConfiguration = () => {
   return (
     <>
       <Modal
+        scrollBehavior='inside'
         isOpen={globalConfiguration}
-        isCentered
         onClose={() => {
           setOpen({ ...open, globalConfiguration: false });
         }}
         closeOnEsc
-        blockScrollOnMount
         closeOnOverlayClick={false}
-        size="full">
+        blockScrollOnMount
+        trapFocus={false}
+        size="full"
+        >
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Configuración</ModalHeader>
           <ModalCloseButton />
           <Divider />
           <ModalBody>
-            <Stack direction="column" gap={12}>
+            <Stack direction="column" gap={12} maxHeight='90dvh' overflowY='auto'>
               <TablesSection
                 title="Categoria"
                 data={itemsCategories ?? []}

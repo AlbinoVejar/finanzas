@@ -7,13 +7,14 @@ import { UserState } from '../../context/userState'
 import useExpenses from '../../hooks/useExpenses.hook'
 import DeleteDialog from '../../components/delete.dialog'
 import { useEffect, useRef } from 'react'
-import { Expense } from '../../types/expense.type'
+import { Expense, ExpenseDetails } from '../../types/expense.type'
 import { ModalState } from '../../context/modalState'
 import { ModalTypeState } from '../../types/modal.type'
 import useToastComponent from '../../components/toast.component'
 import useCategories from '../../hooks/useCategories.hook'
 import ListTable from '../../components/listTable'
 import Quicktable from '../../components/quicktable'
+import ExpenseModal from '../../components/expense.modal'
 
 const TableAllExpenses = () => {
   const [isMobileDevice] = useMediaQuery('(max-width: 62em)');
@@ -39,11 +40,20 @@ const TableAllExpenses = () => {
     }
   }
 
+  const onUpdateExpense = async (item: ExpenseDetails) => {
+    setModalState({...modalState, details: item, expense: true})
+  }
+
   useEffect(() => {
     if (Array.isArray(itemsCategories) && itemsCategories.length > 0) {
       setUserState({ ...userState, items: { ...userState.items, categories: itemsCategories } })
     }
   }, [itemsCategories]);
+
+  const actionListTable: any = {
+    onEditHandler: onUpdateExpense,
+    onDeleteHandler: onDeleteExpense
+  }
 
   return (
     <>
@@ -72,7 +82,7 @@ const TableAllExpenses = () => {
         <Divider />
         {
           isMobileDevice ? (
-            <ListTable expenses={data} showActions={false} />
+            <ListTable expenses={data} actions={actionListTable} />
           ) : (
             <Quicktable
               headers={[
@@ -89,45 +99,9 @@ const TableAllExpenses = () => {
             />
           )
         }
-        {/* <TableContainer width="100%" maxHeight='80vh' overflowY='auto' padding={2}>
-          <Table variant='striped'>
-            <Thead>
-              <Tr>
-                {TableHeaders.map((value: string, index: number) => (
-                  <Th key={`header_row_${index}_${value}`}>{value}</Th>
-                ))}
-              </Tr>
-            </Thead>
-            <Tbody>
-              {
-                isDataExist ? (
-                  data.map((row: any, index: number) => (
-                    <Tr key={`tr_row_${index}`}>
-                      {
-                        TableHeadersID.map((value: string) => {
-                          if (value === "Acciones") {
-                            return <Td key={`td_row_actions_${index}`}>
-                              <TableAction row={row} />
-                            </Td>
-                          } else {
-                            return <Td key={`td_row_${value}_${index}`}>{value === '#' ? index + 1 : row[value]}</Td>
-                          }
-                        })
-                      }
-
-                    </Tr>
-                  ))
-                ) : (
-                  <Tr>
-                    <Td colSpan={TableHeadersID.length}>Sin datos</Td>
-                  </Tr>
-                )
-              }
-            </Tbody>
-          </Table>
-        </TableContainer> */}
       </VStack>
       <DeleteDialog title='Eliminar Gasto' message='¿Estás seguro de eliminar Gasto?' htmlRef={cancelRef} onConfirm={onDeleteExpense} />
+      <ExpenseModal />
     </>
   )
 }
