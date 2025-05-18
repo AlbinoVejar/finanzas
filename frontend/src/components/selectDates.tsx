@@ -30,9 +30,10 @@ const SelectDates = () => {
       setUserState({
         ...userState,
         filters: {
+          ...userState.filters,
           init_date: newDateInitFilter,
           end_date: newDateEndFilter,
-          current: dayjs().format(FormatDate)
+          current: dayjs().format(FormatDate),
         }
       })
       setDate(`${newDateInitFilter} - `)
@@ -42,6 +43,7 @@ const SelectDates = () => {
       setUserState({
         ...userState,
         filters: {
+          ...userState.filters,
           init_date: newDateInitFilter,
           end_date: newDateEndFilter,
           current: dayjs().format(FormatDate)
