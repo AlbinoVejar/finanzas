@@ -7,6 +7,8 @@ export type UserStateType = {
     init_date: string;
     end_date: string;
     current: string;
+    id_account: number;
+    id_category: number;
   },
   details: TotalWasteAccount,
   refetches: {

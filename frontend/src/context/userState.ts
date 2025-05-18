@@ -29,6 +29,8 @@ export const UserState: RecoilState<UserStateType> = atom<UserStateType>({
       init_date: dayjs().startOf('month').format('YYYY-MM-DD'),
       end_date: dayjs().endOf('month').format('YYYY-MM-DD'),
       current: dayjs().format('YYYY-MM-DD'),
+      id_account: 0,
+      id_category: 0
     },
     details: {
       Id_Account: 0,
