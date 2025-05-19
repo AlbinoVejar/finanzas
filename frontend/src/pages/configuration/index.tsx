@@ -33,7 +33,8 @@ const GlobalConfiguration = () => {
 
   const { getAllItemsAccounts, createAccount, updateAccount, deleteAccount } =
     useAccounts();
-  const { data: itemsAccounts, refetch: refetchAccounts } = getAllItemsAccounts();
+  const { data: itemsAccounts, refetch: refetchAccounts } =
+    getAllItemsAccounts();
   const { mutateAsync: CreateMutationAccount } = createAccount;
   const { mutateAsync: UpdateMutationAccount } = updateAccount;
   const { mutateAsync: DeleteMutationAccount } = deleteAccount;
@@ -82,24 +83,27 @@ const GlobalConfiguration = () => {
   return (
     <>
       <Modal
-        scrollBehavior='inside'
+        scrollBehavior="inside"
         isOpen={globalConfiguration}
         onClose={() => {
           setOpen({ ...open, globalConfiguration: false });
         }}
         closeOnEsc
-        closeOnOverlayClick={false}
+        closeOnOverlayClick
         blockScrollOnMount
-        trapFocus={false}
-        size="full"
-        >
+        allowPinchZoom
+        size="full">
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Configuración</ModalHeader>
           <ModalCloseButton />
           <Divider />
           <ModalBody>
-            <Stack direction="column" gap={12} maxHeight='90dvh' overflowY='auto'>
+            <Stack
+              direction="column"
+              gap={12}
+              maxHeight="90dvh"
+              overflowY="auto">
               <TablesSection
                 title="Categoria"
                 data={itemsCategories ?? []}
@@ -121,8 +125,9 @@ const GlobalConfiguration = () => {
           <ModalFooter>
             <Button
               variant="outline"
-              onClick={() => setOpen({ ...open, globalConfiguration: false })}
-            >Cerrar</Button>
+              onClick={() => setOpen({ ...open, globalConfiguration: false })}>
+              Cerrar
+            </Button>
           </ModalFooter>
         </ModalContent>
         <ConfigCategoryModal

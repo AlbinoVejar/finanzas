@@ -23,31 +23,31 @@ import {
   Textarea,
   FormErrorMessage,
   Input,
-} from '@chakra-ui/react'
-import { useRecoilState } from 'recoil'
-import { ModalState } from '../context/modalState'
-import { Category } from '../types/category.type'
-import { Controller, SubmitHandler, useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
-import { Expense, NewExpense } from '../types/expense.type'
-import useExpenses from '../hooks/useExpenses.hook'
-import { Account } from '../types/account.type'
-import { UserState } from '../context/userState'
-import { UserStateType } from '../types/user.type'
-import { useEffect } from 'react'
-import useAccounts from '../hooks/useAccounts.hook'
-import { ModalTypeState } from '../types/modal.type'
-import useCategories from '../hooks/useCategories.hook'
-import useToastComponent from './toast.component'
-import dayjs from 'dayjs'
+} from '@chakra-ui/react';
+import { useRecoilState } from 'recoil';
+import { ModalState } from '../context/modalState';
+import { Category } from '../types/category.type';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { Expense, NewExpense } from '../types/expense.type';
+import useExpenses from '../hooks/useExpenses.hook';
+import { Account } from '../types/account.type';
+import { UserState } from '../context/userState';
+import { UserStateType } from '../types/user.type';
+import { useEffect } from 'react';
+import useAccounts from '../hooks/useAccounts.hook';
+import { ModalTypeState } from '../types/modal.type';
+import useCategories from '../hooks/useCategories.hook';
+import useToastComponent from './toast.component';
+import dayjs from 'dayjs';
 
 interface IExpenseInputs {
-  account: string
-  category: string
-  amount: number
-  description: string
-  date_expense: string
+  account: string;
+  category: string;
+  amount: number;
+  description: string;
+  date_expense: string;
 }
 
 const schemaExpense = z.object({
@@ -56,25 +56,28 @@ const schemaExpense = z.object({
   amount: z.coerce.number().positive(),
   description: z.string().optional(),
   date_expense: z.string().optional(),
-})
+});
 
 const ExpenseModal = () => {
-  const [open, setOpen] = useRecoilState<ModalTypeState<Expense>>(ModalState)
-  const { expense, details: rowDetails } = open
+  const [open, setOpen] = useRecoilState<ModalTypeState<Expense>>(ModalState);
+  const { expense, details: rowDetails } = open;
   const [userState, setUserState] = useRecoilState<UserStateType>(UserState);
   const { filters, details, refetches } = userState;
   const { detailsAccount: getDetailsAccount } = refetches;
-  const { getAllItemsAccounts } = useAccounts()
-  const { data: itemsAccounts } = getAllItemsAccounts()
-  const { data: itemsCategories } = useCategories().GetItemsCategories()
+  const { getAllItemsAccounts } = useAccounts();
+  const { data: itemsAccounts } = getAllItemsAccounts();
+  const { data: itemsCategories } = useCategories().GetItemsCategories();
   const { NewExpense, GetAllExpenses, updateExpense } = useExpenses();
-  const { refetch: refecthAllExpenses } = GetAllExpenses(details.Id_rel_Account, filters);
+  const { refetch: refecthAllExpenses } = GetAllExpenses(
+    details.Id_rel_Account,
+    filters
+  );
   const useToast = useToastComponent();
   const {
     control,
     handleSubmit,
     formState: { errors, isValid, defaultValues },
-    reset
+    reset,
   } = useForm<IExpenseInputs>({
     defaultValues: {
       account: '',
@@ -84,39 +87,48 @@ const ExpenseModal = () => {
       date_expense: '',
     },
     resolver: zodResolver(schemaExpense),
-  })
+  });
 
   useEffect(() => {
     if (!!rowDetails) {
       reset({
         ...defaultValues,
-        account: String(rowDetails.Id_rel_Account) ?? String(details.Id_rel_Account),
-        category: String(itemsCategories?.find((e) => (e.Name === rowDetails.Category))?.Id) ?? '',
+        account:
+          String(rowDetails.Id_rel_Account) ?? String(details.Id_rel_Account),
+        category:
+          String(
+            itemsCategories?.find((e) => e.Name === rowDetails.Category)?.Id
+          ) ?? '',
         amount: Number(rowDetails.Amount) ?? 0,
         description: rowDetails.Description ?? '',
-        date_expense: rowDetails.Date_expense ?? ''
-      })
+        date_expense: rowDetails.Date_expense ?? '',
+      });
     } else {
       reset({
         account: String(details.Id_rel_Account),
         category: '',
         amount: 0,
         description: '',
-        date_expense: ''
+        date_expense: '',
       });
     }
-  }, [rowDetails])
-  
+  }, [rowDetails]);
 
   useEffect(() => {
     if (Array.isArray(itemsCategories) && itemsCategories.length > 0) {
-      setUserState({ ...userState, items: { ...userState.items, categories: itemsCategories } })
+      setUserState({
+        ...userState,
+        items: { ...userState.items, categories: itemsCategories },
+      });
     }
   }, [itemsCategories]);
 
   useEffect(() => {
     if (Array.isArray(itemsAccounts) && itemsAccounts.length > 0) {
-      setUserState({ ...userState, items: { ...userState.items, accounts: itemsAccounts } })
+      setUserState({
+        ...userState,
+        items: { ...userState.items, accounts: itemsAccounts },
+      });
     }
   }, [itemsAccounts]);
 
@@ -130,23 +142,29 @@ const ExpenseModal = () => {
           Id_rel_Category: Number(data.category),
           Description: data.description,
           Id_rel_Account: Number(data.account),
-          Date_expense: dayjs(data.date_expense).format("YYYY-MM-DD")
-        }
+          Date_expense: dayjs(data.date_expense).format('YYYY-MM-DD'),
+        };
         if (!rowDetails) {
-          await NewExpense.mutateAsync(
-            newExpense
-          )
-          useToast({ status: 'success', title: 'Exito', description: 'Gastó agregado con exito' });
+          await NewExpense.mutateAsync(newExpense);
+          useToast({
+            status: 'success',
+            title: 'Exito',
+            description: 'Gastó agregado con exito',
+          });
         } else {
           const newValues: Expense = {
             ...newExpense,
             Category: rowDetails.Category,
             Date_expense: rowDetails.Date_expense,
             Id: rowDetails.Id,
-            Id_rel_Expense: rowDetails.Id_rel_Expense
-          }
+            Id_rel_Expense: rowDetails.Id_rel_Expense,
+          };
           await updateExpense.mutateAsync(newValues);
-          useToast({ status: 'success', title: 'Exito', description: 'Gastó actualizado con exito' });
+          useToast({
+            status: 'success',
+            title: 'Exito',
+            description: 'Gastó actualizado con exito',
+          });
           setOpen({ ...open, details: null, expense: false });
         }
         reset();
@@ -154,36 +172,43 @@ const ExpenseModal = () => {
         getDetailsAccount();
       }
     } catch (error) {
-      useToast({ status: 'error', title: 'Error', description: 'Ocurrió un error' });
+      useToast({
+        status: 'error',
+        title: 'Error',
+        description: 'Ocurrió un error',
+      });
     }
-  }
+  };
 
   const renderErrorsText = (
     errorMessage: string | undefined,
     helpText: string
   ) => {
     if (Boolean(errorMessage)) {
-      return <FormErrorMessage>{errorMessage}</FormErrorMessage>
+      return <FormErrorMessage>{errorMessage}</FormErrorMessage>;
     } else {
-      return <FormHelperText>{helpText}</FormHelperText>
+      return <FormHelperText>{helpText}</FormHelperText>;
     }
-  }
+  };
   return (
     <Modal
+      scrollBehavior="inside"
       isOpen={expense}
-      onClose={() => {reset();
-      setOpen({ ...open, expense: false, details: null }); 
-    }
-    }
+      onClose={() => {
+        reset();
+        setOpen({ ...open, expense: false, details: null });
+      }}
       isCentered
       blockScrollOnMount
       closeOnOverlayClick={false}
-      size="xl"
-    >
+      allowPinchZoom
+      size={{ base: 'xl', sm: 'full', md: '3xl', lg: '3xl' }}>
       <ModalOverlay />
       <ModalContent>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <ModalHeader>{rowDetails ? 'Actualizar gasto' : 'Agregar gasto'}</ModalHeader>
+          <ModalHeader>
+            {rowDetails ? 'Actualizar gasto' : 'Agregar gasto'}
+          </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <VStack spacing={2}>
@@ -197,8 +222,7 @@ const ExpenseModal = () => {
                       {itemsAccounts?.map(({ Name, Id }: Account) => (
                         <option
                           key={`option_value_account_${Id}`}
-                          value={String(Id)}
-                        >
+                          value={String(Id)}>
                           {Name}
                         </option>
                       ))}
@@ -216,7 +240,7 @@ const ExpenseModal = () => {
                   name="date_expense"
                   control={control}
                   render={({ field }) => (
-                    <Input placeholder='Date' type='date' {...field}/>
+                    <Input placeholder="Date" type="date" {...field} />
                   )}
                 />
                 {renderErrorsText(
@@ -234,8 +258,7 @@ const ExpenseModal = () => {
                       {itemsCategories?.map(({ Name, Id }: Category) => (
                         <option
                           key={`option_value_category_${Id}`}
-                          value={String(Id)}
-                        >
+                          value={String(Id)}>
                           {Name}
                         </option>
                       ))}
@@ -260,8 +283,7 @@ const ExpenseModal = () => {
                         min={0}
                         defaultValue={0.0}
                         width="100%"
-                        {...field}
-                      >
+                        {...field}>
                         <NumberInputField borderLeftRadius={0} />
                         <NumberInputStepper>
                           <NumberIncrementStepper />
@@ -281,9 +303,7 @@ const ExpenseModal = () => {
                 <Controller
                   name="description"
                   control={control}
-                  render={({ field }) => (
-                    <Textarea resize="none" {...field} />
-                  )}
+                  render={({ field }) => <Textarea resize="none" {...field} />}
                 />
                 {renderErrorsText(
                   errors?.description?.message,
@@ -301,8 +321,7 @@ const ExpenseModal = () => {
                 onClick={() => {
                   reset();
                   setOpen({ ...open, expense: false, details: null });
-                }}
-              >
+                }}>
                 Cancelar
               </Button>
               <Button variant="solid" colorScheme="blue" type="submit">
@@ -313,7 +332,7 @@ const ExpenseModal = () => {
         </form>
       </ModalContent>
     </Modal>
-  )
-}
+  );
+};
 
-export default ExpenseModal
+export default ExpenseModal;

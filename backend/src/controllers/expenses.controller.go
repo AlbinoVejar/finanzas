@@ -113,8 +113,10 @@ func GetDashboardByUser(context *fiber.Ctx) error {
 	defer dbClose()
 	response.Accounts = accounts
 	response.Expenses = expenses
-	for _, item := range accounts {
-		response.Total += item.Total
+	if len(expenses) > 0 {
+		for _, item := range expenses {
+			response.Total += item.Amount
+		}
 	}
 	if err != nil || errAccount != nil {
 		return context.SendStatus(fiber.ErrBadRequest.Code)
