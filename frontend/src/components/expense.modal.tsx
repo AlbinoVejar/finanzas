@@ -202,7 +202,7 @@ const ExpenseModal = () => {
       blockScrollOnMount
       closeOnOverlayClick={false}
       allowPinchZoom
-      size={{ base: 'xl', sm: 'full', md: '3xl', lg: '3xl' }}>
+      size={{ base: 'full', sm: 'full', md: '3xl', lg: '3xl' }}>
       <ModalOverlay />
       <ModalContent>
         <form onSubmit={handleSubmit(onSubmit)}>
