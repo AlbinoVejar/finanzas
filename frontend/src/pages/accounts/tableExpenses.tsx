@@ -80,7 +80,7 @@ const TableAllExpenses = () => {
         <FilterExpenses isDataExist={isDataExist} />
         <Divider />
         {isMobileDevice ? (
-          <ListTable expenses={data} actions={actionListTable} />
+          <ListTable expenses={data ?? []} actions={actionListTable} />
         ) : (
           <Quicktable
             headers={[
