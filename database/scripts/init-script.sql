@@ -406,18 +406,13 @@ END //
 -- #region UPDATE
 DROP PROCEDURE IF EXISTS update_expense //
 CREATE PROCEDURE update_expense(
-  _id_expense integer, 
+  _id_expense integer,
+  _id_rel_account integer,
+  _id_rel_category integer,
   _description TEXT, 
   _amount FLOAT,
   _date TIMESTAMP
 ) BEGIN 
-SET
-  @id_rel_account = 0, @id_rel_category = 0;
-SELECT 
-  id_rel_account, id_rel_category INTO @id_rel_account, @id_rel_category
-FROM rel_expense
-WHERE
-  id_expense = _id_expense;
 UPDATE 
   expenses 
 SET 
@@ -430,8 +425,8 @@ UPDATE
   rel_expense
 SET
   modified = CURRENT_TIMESTAMP(),
-  id_rel_account = @id_rel_account,
-  id_rel_category = @id_rel_category
+  id_rel_account = _id_rel_account,
+  id_rel_category = _id_rel_category
 WHERE
   id_expense = _id_expense;
 END //

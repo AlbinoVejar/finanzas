@@ -16,10 +16,12 @@ func UpdateExpense(context *fiber.Ctx) error {
 	}
 	id_account, _ := context.ParamsInt("id")
 	db, dbClose := config.Connection()
-	var expense models.Expense
+	var expense models.ExpenseRequest
 	context.BodyParser(&expense)
-	err := db.Exec("CALL update_expense(?,?,?,?)",
+	err := db.Exec("CALL update_expense(?,?,?,?,?,?)",
 		id_account,
+		expense.Id_rel_Account,
+		expense.Id_rel_Category,
 		expense.Description,
 		expense.Amount,
 		expense.Date_expense).Error

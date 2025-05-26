@@ -1,5 +1,5 @@
 import { ResponseAPI } from "../types/response.type";
-import { Expense, NewExpense } from "../types/expense.type";
+import { Expense, ExpenseDetails, NewExpense } from "../types/expense.type";
 import axiosConfig from "../utils/axiosConfig";
 
 const mainUrl: string = "/expenses";
@@ -13,7 +13,7 @@ export const CreateExpense = async (expense: NewExpense): Promise<ResponseAPI<an
   }
 }
 
-export const GetExpenseByAccount = async (filter: any): Promise<ResponseAPI<any>> => {
+export const GetExpenseByAccount = async (filter: any): Promise<ResponseAPI<ExpenseDetails[]>> => {
   try {
     const { data } = await axiosConfig.get(`${mainUrl}/totals?init=${filter.init_date}&end=${filter.end_date}${filter.id ? '&id_account='+filter.id : ''}`);
     return data;

@@ -7,6 +7,16 @@ type Expense struct {
 	Date_expense string
 }
 
+type ExpenseRequest struct {
+	Id              int
+	Id_rel_Expense  int
+	Id_rel_Category int
+	Id_rel_Account  int
+	Description     string
+	Amount          float32
+	Date_expense    string
+}
+
 type NewExpense struct {
 	Description     string
 	Amount          float32
@@ -32,14 +42,14 @@ type ExpenseByAccount struct {
 }
 
 type ExpenseDetails struct {
-	Id int
-	Account string
-	Category string
-	Amount float32
-	Description string
-	Date_expense string
-	Id_expense int
-	Id_rel_account int
+	Id              int
+	Account         string
+	Category        string
+	Amount          float32
+	Description     string
+	Date_expense    string
+	Id_expense      int
+	Id_rel_account  int
 	Id_rel_category int
-	Id_user int
+	Id_user         int
 }
