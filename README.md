@@ -16,7 +16,17 @@
 
 ###
 
-<p align="left">To record all my daily expenses and to be able to make decisions in the management of my money.<br>That's all.<br><br>My motivation was to experiment with ViteJS and GO with Fiber for my API and using docker for good control.<br><br>On the Frontend I used React with the ChakraUI component library, Recoil for the Shared state, RemixIcons and Zoid for the form.<br><br>Database: MariaDB with stored procedures.</p>
+<p align="left">To record all my daily expenses and to be able to make decisions in the management of my money.<br>That's all.<br><br>My motivation was to experiment with ViteJS and <b>GO with Fiber for my API</b> and using docker for good control.
+<br><br>On the Frontend:
+  <ui>
+    <li>ViteJS</li>
+    <li>React</li>
+    <li>ChakraUI, component library</li>
+    <li>Recoil for the Shared state</li>
+    <li>Remix Icons</li>
+    <li>Zoid Forms</li>
+  </ui>
+<br><br>Database: MariaDB with stored procedures.</p>
 
 ###
 
